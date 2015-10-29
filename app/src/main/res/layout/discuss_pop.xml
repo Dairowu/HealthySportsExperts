@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ic_myspinner_list_background_down"
+    android:divider="@drawable/divider"
+    android:showDividers="middle"
+  >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_alert"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="@drawable/selector_pop_item"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_alert"
+             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:text="消息提醒"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_theme"
+        android:gravity="center_vertical"
+        android:background="@drawable/selector_pop_item"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_theme"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:text="我的主题"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_reply"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="@drawable/selector_pop_item"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_reply"
+             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:text="我的回复"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

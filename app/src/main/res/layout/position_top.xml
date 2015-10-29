@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/top_bg"
+    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/btn_recorder"
+        style="@style/top_btn"
+        android:text="记录与建议"
+        android:background="@drawable/top_btn_sel_drawable"
+        android:layout_marginLeft="82dp"
+        />
+
+    <Button
+        android:id="@+id/btn_sportShow"
+        style="@style/top_btn"
+        android:text="　运动秀　"
+        android:layout_toRightOf="@+id/btn_recorder"
+        android:background="@drawable/top_btn_nor_drawable"
+        />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/btn_discuss"
+        android:background="@drawable/icon_discuss_nor"
+        android:layout_marginRight="10dp"
+        android:layout_alignBottom="@id/btn_sportShow"
+        android:layout_alignParentRight="true"
+         />
+
+</RelativeLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:background="#b3e5fc"
+>
+    <RelativeLayout
+        android:id="@+id/r_layout"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/icon_ring"
+>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="步数"
+            android:textSize="14sp"
+            android:textColor="@color/ring_text_color"
+            android:id="@+id/textView"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:id="@+id/tv_stepNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            style="@style/TextAppearance.AppCompat.Display2"
+            android:textColor="#ffffff"
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="目标5200"
+            android:textColor="@color/ring_text_color"
+            android:textSize="14sp"
+            android:layout_below="@+id/tv_stepNumber"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="170dp"
+        android:text="10月29日星期四"
+        android:textColor="#ffffff"
+        android:drawableLeft="@drawable/icon_share_bg"
+        android:drawablePadding="8dp"
+        style="@style/top_btn"
+        android:gravity = "center_vertical|center_horizontal"
+        android:layout_below="@id/r_layout"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/top_btn_sel_drawable"
+         />
+
+    <TextView
+        android:id="@+id/tv_recorder"
+        android:layout_width="170dp"
+        style="@style/top_btn"
+        android:text="查看所有记录"
+        android:textColor="#ffffff"
+        android:drawableRight="@drawable/icon_recorder"
+        android:drawablePadding="8dp"
+        android:gravity = "center_vertical|center_horizontal"
+        android:layout_below="@id/r_layout"
+        android:layout_toRightOf="@id/tv_date"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/top_btn_sel_drawable"
+         />
+
+</RelativeLayout>
