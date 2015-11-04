@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -12,8 +13,19 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import cn.xietong.healthysportsexperts.R;
+import cn.xietong.healthysportsexperts.app.App;
+import cn.xietong.healthysportsexperts.model.DatabaseHelper;
+import cn.xietong.healthysportsexperts.model.UserInfo;
+import cn.xietong.healthysportsexperts.utils.SQLiteUtils;
 import cn.xietong.healthysportsexperts.utils.Service_Calculate_Step;
+import cn.xietong.healthysportsexperts.utils.StepListener;
+import cn.xietong.healthysportsexperts.utils.UserUtils;
 
 /**计步界面
  * Created by Administrator on 2015/10/18.
@@ -21,12 +33,29 @@ import cn.xietong.healthysportsexperts.utils.Service_Calculate_Step;
 public class FragmentPagePosition_son1 extends BaseFragment {
 
     public static final int UPDATE_TEXT = 1;
+    //一整天的毫秒数
+    public static final long DAYTIME_MILL = 86400000;
     private View view;
+    //步数显示
     private TextView tv_stepNumber;
+    //日期显示
     private TextView tv_date;
     private Intent intent;
-    boolean right;
+    //同一天内退出应用之前的数据
+    private int oldCount;
     Service_Calculate_Step.MyBinder binder;
+    SharedPreferences mPreferences = App.getInstance().getSharedPreferencesInstance();
+    SharedPreferences.Editor mEditor = mPreferences.edit();
+    //数据库操作对象
+    DatabaseHelper dbHelper = App.getInstance().getDBHelper();
+    //用户从使用程序到现在为止的每一天的操作数据
+    List<UserInfo> userLists = null;
+    //用户操作后的数据
+    UserInfo user = new UserInfo();
+    //计步监听器
+    StepListener mStepListener = App.getInstance().getStepListener();
+    //定义日期格式
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM月dd日EEEE", Locale.CHINA);
 
     /**
      * 通过此步操作获得binder对象，再通过其获得Service中记录的步数
@@ -64,8 +93,36 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        UserUtils.loadFromDatabase();
+        userLists = UserUtils.getList();
+
+        if(userLists!=null&&userLists.size()>0) {
+            //存储的最近一天的时间
+            Long recentTime = Long.parseLong(userLists.get(0).getDatatime());
+            //当前时间
+            Long nowTime = new Date().getTime();
+            String old = simpleDateFormat.format(new Date(recentTime));
+            String now = simpleDateFormat.format(new Date());
+            //通过比较最近一次的时间和今天时间是否相同，判断是否将数据库中记录的步数设置为今天已经计的步数，
+            // 如果不是则将今天与记录之间的天数里的记录添加上并且值为0
+            if ((old.equals(now))) {
+                oldCount = userLists.get(0).getCount();
+                mStepListener.setCount(oldCount);
+            } else {
+                //记录的最近一天与当前时间间的天数
+                int among_days_number = (int) ((nowTime - recentTime)/DAYTIME_MILL - 1);
+                if(among_days_number > 0){
+                    for(int i = 0;i < among_days_number;i++){
+                        user.setCount(0);
+                        user.setDatatime((recentTime+DAYTIME_MILL*i)+"");
+                        SQLiteUtils.insert(dbHelper,user,"step");
+                    }
+                }
+            }
+        }
+
         Intent bindIntent = new Intent(context,Service_Calculate_Step.class);
-        right = context.getApplicationContext().bindService(bindIntent, conn, Context.BIND_AUTO_CREATE);
+        context.getApplicationContext().bindService(bindIntent, conn, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -92,8 +149,7 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL,new Locale("zh","CN")) ;
-//        tv_date.setText(df.format(new Date()));
+        tv_date.setText(simpleDateFormat.format(new Date()));
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -113,4 +169,15 @@ public class FragmentPagePosition_son1 extends BaseFragment {
                 }
             }).start();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        user.setCount(binder.getCount());
+        user.setDatatime(new Date().getTime()+"");
+        SQLiteUtils.insert(dbHelper,user,"step");
+//        mEditor.putInt("oldCount",binder.getCount());
+//        mEditor.commit();
+    }
+
 }

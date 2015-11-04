@@ -4,15 +4,20 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
+import java.util.Calendar;
+
 /**计步用的传感器监听器
  * Created by Administrator on 2015/10/22.
  */
 public class StepListener implements SensorEventListener {
 
+    public static  final int ALL_DAY_TIME = 1440;
+    //时间处理类
+    private Calendar cal;
     //当前步数
-    int count = 0;
+    private int count = 0;
     //对步数进行部分计数
-    int i = 0;
+    private int i = 0;
 
     //存放三轴数据
     float[] oriValues = new float[3];
@@ -20,7 +25,7 @@ public class StepListener implements SensorEventListener {
     //用于存放计算阈值的波峰波谷差值
     float[] tempValue = new float[valueNum];
     //是否为第一次开始或者中断后开始计数
-    boolean isStart = false;
+    boolean isStart = true;
     int tempCount = 0;
     //是否上升的标志位
     boolean isDirectionUp = false;
@@ -83,7 +88,6 @@ public class StepListener implements SensorEventListener {
             if (DetectorPeak(values, gravityOld)) {
                 timeOfLastPeak = timeOfThisPeak;
                 timeOfNow = System.currentTimeMillis();
-//                Log.i("info",(timeOfNow-timeOfLastPeak)+"      "+(peakOfWave - valleyOfWave)+"     "+ThreadValue);
                 if (timeOfNow - timeOfLastPeak >= 250
                         && (peakOfWave - valleyOfWave >= ThreadValue)) {
                     timeOfThisPeak = timeOfNow;
@@ -96,6 +100,7 @@ public class StepListener implements SensorEventListener {
 
                     if(timeOfNow - timeOfLastPeak > 3000){
                         isStart = true;
+                        i = 0;
                     }
                     if(isStart){
                         i++;
@@ -150,11 +155,9 @@ public class StepListener implements SensorEventListener {
         if (!isDirectionUp && lastStatus
                 && (continueUpFormerCount >= 2 || oldValue >= 20)) {
             peakOfWave = oldValue;
-//            Log.i("info",peakOfWave+"peakOfWave");
             return true;
         } else if (!lastStatus && isDirectionUp) {
             valleyOfWave = oldValue;
-//            Log.i("info",valleyOfWave+"valleyOfWave");
             return false;
         } else {
             return false;
@@ -209,6 +212,19 @@ public class StepListener implements SensorEventListener {
     }
 
     public int getCount() {
-        return count;
+        cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR);
+        int minute = cal.get(Calendar.MINUTE);
+        int minute_of_day = hour*60+minute;
+        if(minute_of_day!=ALL_DAY_TIME) {
+            return count;
+        }else {
+            setCount(0);
+        }
+        return 0;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }
