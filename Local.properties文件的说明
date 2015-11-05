@@ -1,2 +1,4 @@
 Local.properties是储存本地 AndroidSDK路径的文件，请大家下载Local.properties.example后更改名称为Local.properties并且把里面
 的路径改为自己SDK所在路径 ，切记！！！！
+大家只需要把自己写的文件上传到服务器，其他没有修改过的文件不要上传到服务器，以免冲突！！
+把那些不需要上传的文件加到git Ignore里面就不会上传到服务器了
