@@ -1,12 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
-    <ImageView
+    <include layout="@layout/my_top"
+       />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        />
+        android:divider="@drawable/divider"
+        android:showDividers="middle"
+        android:background="@color/main_bg_color"
+        android:orientation="vertical"
+      >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:clickable="true"
+            android:background="@drawable/selector_pop_item"
+            android:id="@+id/relativeLayout">
+
+            <ImageView
+                android:id="@+id/iv_head_photo"
+                style="@style/my_iv_message"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/icon_head_photo"
+             />
+
+
+            <TextView
+                android:id="@+id/tv_name"
+                style="@style/my_tv_message_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="8dp"
+                android:text="名字"
+                android:layout_toRightOf="@id/iv_head_photo"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/my_tv_message_small"
+                android:text="我们是协同工作室的成员，我们热爱Android,dsaflksalfdlkalksadlfa;sfkakf"
+                android:singleLine="true"
+                android:layout_below="@id/tv_name"
+                android:layout_alignLeft="@+id/tv_name"
+                android:layout_alignStart="@+id/tv_name" />
+
+        </RelativeLayout>
+
+
+        <Button
+            style="@style/my_btn"
+            android:id="@+id/btn_id"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:drawableLeft="@drawable/icon_id_btn"
+            android:text="我的账号"
+            />
+
+        <Button
+            style="@style/my_btn"
+            android:id="@+id/btn_remind"
+            android:text="消息与提醒"
+            android:drawableLeft="@drawable/icon_btn_remind"
+            />
+
+        <Button
+            style="@style/my_btn"
+            android:id="@+id/btn_about"
+            android:text="关于软件"
+            android:drawableLeft="@drawable/icon_btn_about"
+            />
+
+        <Button
+            style="@style/my_btn"
+            android:id="@+id/btn_exit"
+            android:text="退出登录"
+            android:drawableLeft="@drawable/icon_btn_exit"
+          />
+
+    </LinearLayout>
+
 
 </LinearLayout>

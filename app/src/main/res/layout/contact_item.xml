@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_pop_item">
+
+    <ImageView
+        android:id="@+id/iv_contact_head_photo"
+        style="@style/my_iv_message"
+        android:src="@drawable/icon_head_photo"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_contact_name"
+        style="@style/my_tv_message_large"
+        android:text="0000"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_contact_head_photo"
+        android:layout_marginLeft="5dp"
+        />
+
+</RelativeLayout>

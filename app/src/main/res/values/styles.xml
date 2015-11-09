@@ -25,10 +25,50 @@
 
     <style name="myProgressBatStyle">
         　　<item name="android:indeterminateDrawable">@drawable/progressbar_bg</item>
-        　　<item name="android:minWidth">45dip</item>
         　　<item name="android:maxWidth">45dip</item>
         　　<item name="android:minHeight">45dip</item>
         　　<item name="android:maxHeight">45dip</item>
+    </style>
+
+    <style name="my_btn">
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/selector_pop_item</item>
+
+    </style>
+
+    <style name="my_iv_message">
+
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+
+    </style>
+
+    <!-- 聊天列表昵称等一系列大文字-->
+    <style name="my_tv_message_large">
+
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#000000</item>
+
+    </style>
+
+    <!-- 聊天列表中消息等一系列小文字-->
+    <style name="my_tv_message_small">
+
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#a7a7a7</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_marginTop">5dp</item>
+
     </style>
 
 </resources>

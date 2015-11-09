@@ -26,9 +26,9 @@ public class SQLiteUtils {
             values.put("count",user.getCount());
             db.insert("step",null,values);
             db.close();
+            values.clear();
         }
 
-        values.clear();
     }
 
     /**

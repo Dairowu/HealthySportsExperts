@@ -14,6 +14,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     //建表语句，为计步数和日期建立一张表，主键为日期
     public static final String CREATE_STEPDATA = "create table step(datetime verchar(30),count integer)";
+    //建表语句，为每一个联系人建表，主键为自增的ID
+//    public static final String CREATE_CONTACT = "create table contact(id integer primary key autoincrement," +
+//            "head_photo blob,name text," +
+//            "number verchar(15),sex text," +
+//            "sign text)";
 
     public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -32,6 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(CREATE_STEPDATA);
+//        db.execSQL(CREATE_CONTACT);
 
     }
 

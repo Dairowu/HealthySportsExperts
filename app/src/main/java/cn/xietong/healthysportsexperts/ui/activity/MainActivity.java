@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import cn.bmob.v3.Bmob;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.ui.fragment.FragmentPageMessage;
 import cn.xietong.healthysportsexperts.ui.fragment.FragmentPageMy;
@@ -45,6 +46,8 @@ public class MainActivity extends FragmentActivity {
 
         //初始化视图
         initView();
+        //初始化Bmob SDK
+        Bmob.initialize(this, "f1a3d5dc79f46ed06d79284d3131fb8d");
     }
 
     private void initView() {

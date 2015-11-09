@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:background="@drawable/selector_pop_item"
+    >
+
+    <ImageView
+        android:id="@+id/iv_message_head_photo"
+        style="@style/my_iv_message"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/icon_head_photo"
+        />
+
+    <TextView
+        android:id="@+id/tv_message_name"
+        style="@style/my_tv_message_large"
+        android:text="00000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/iv_message_head_photo"/>
+
+    <TextView
+        android:id="@+id/tv_message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/tv_message_name"
+        android:textColor="#d1d1d1"
+        android:textSize="10sp"
+        android:layout_marginRight="8dp"
+        android:text="16:32"
+        />
+
+    <TextView
+        android:id="@+id/tv_message_what"
+        style="@style/my_tv_message_small"
+        android:text="嗯嗯"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_message_name"
+        android:layout_alignLeft="@+id/tv_message_name"
+        />
+
+</RelativeLayout>
