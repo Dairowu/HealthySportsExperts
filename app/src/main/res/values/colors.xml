@@ -10,5 +10,6 @@
     <color name="divider_color">#a3c8c8c8</color>
     <color name="ring_color">#4fc3f7</color>
     <color name="ring_text_color">#0288d1</color>
+    <color name="main_bg_color">#b3e5fc</color>
 
 </resources>
