@@ -7,5 +7,9 @@
 # Location of the SDK. This is only used by Gradle.
 # For customization when using a Version Control System, please read the
 # header note.
-#Mon Nov 09 20:18:27 CST 2015
+#Thu Nov 05 14:51:35 CST 2015
+
+#windows下路径的写法为sdk.dir=你的盘符\:\\你的 SDK路径
+#注意：路径的分隔符用反斜杠！！！
+#下面是参考示例：
 sdk.dir=F\:\\Abdroid_environment\\adt\\sdk
