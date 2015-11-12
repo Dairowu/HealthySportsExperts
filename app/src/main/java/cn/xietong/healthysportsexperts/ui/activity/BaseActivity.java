@@ -1,9 +1,11 @@
 package cn.xietong.healthysportsexperts.ui.activity;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 /**所有的Activity都要继承自该Activity
@@ -32,6 +34,27 @@ public abstract class BaseActivity extends AppCompatActivity {
     public abstract void initViews();
 
     public abstract  void setupViews();
+
+    /**
+     * Activity切换
+     * @param cla 要切换到的目标Activity.class
+     */
+    public void startAnimActivity(Class<?> cla) {
+        this.startActivity(new Intent(this, cla));
+    }
+
+    public void startAnimActivity(Intent intent) {
+        this.startActivity(intent);
+    }
+
+    /** 打印Log
+     * ShowLog
+     * @return void
+     * @throws
+     */
+    public void ShowLog(String msg){
+        Log.i("life", msg);
+    }
 
     public void showToast(String info){
         Toast.makeText(BaseActivity.this,info,Toast.LENGTH_SHORT).show();
