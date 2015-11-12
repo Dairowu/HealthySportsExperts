@@ -1,10 +1,12 @@
 package cn.xietong.healthysportsexperts.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.List;
 
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.adpter.PostListViewAdapter;
+import cn.xietong.healthysportsexperts.ui.activity.PostActivity;
 import cn.xietong.healthysportsexperts.utils.Post;
 
 /**
@@ -35,13 +38,13 @@ public class FragmentPagePosition_son2 extends BaseFragment {
         mlistView = (ListView) mContentView.findViewById(R.id.list_posts);
         swipeRefreshLayout = (SwipeRefreshLayout) mContentView.findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(new LSListener());
-//        swipeRefreshLayout.setColorSchemeResources(R.color.abc_color_highlight_material, R.color.bottom_nor_color);
         posts = new ArrayList<>();
         posts.add(new Post("hahah"));
         posts.add(new Post("hahah"));
         posts.add(new Post("hahah"));
         postListViewAdapter = new PostListViewAdapter(mContentView.getContext(), R.layout.post_item, posts);
         mlistView.setAdapter(postListViewAdapter);
+        mlistView.setOnItemClickListener(new ListViewListener());
     }
 
     private Handler myHandler = new Handler() {
@@ -67,5 +70,14 @@ public class FragmentPagePosition_son2 extends BaseFragment {
     public void setupViews(Bundle savedInstanceState) {
 
     }
+    class ListViewListener implements AdapterView.OnItemClickListener{
 
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if(view.getId()!=0){
+                Intent intent = new Intent(getContext(), PostActivity.class);
+                startActivity(intent);
+            }
+        }
+    }
 }

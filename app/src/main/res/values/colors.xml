@@ -11,5 +11,6 @@
     <color name="ring_color">#4fc3f7</color>
     <color name="ring_text_color">#0288d1</color>
     <color name="main_bg_color">#b3e5fc</color>
-
+    <color name="comment_tag">#03a9f4</color>
+    <color name="comment">#b3e5fc</color>
 </resources>
