@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent" android:layout_height="match_parent">
+
+<include layout="@layout/topbar"
+    android:id="@+id/topBar"/>
+
+    <ImageView
+        android:id="@+id/iv_setPicture"
+        android:src="@drawable/icon_head"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@+id/et_nickname"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:id="@+id/et_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="8dp"
+        android:background="@drawable/input_bg"
+        android:layout_marginTop="@dimen/hightest_margintop"
+        android:layout_toLeftOf="@id/iv_setPicture"
+        android:hint="请输入昵称"
+        android:textColorHint="@color/text_color_hint"
+        android:layout_below="@id/topBar"/>
+
+    <EditText
+        android:id="@+id/et_setSignature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_setPicture"
+        android:padding="8dp"
+        android:background="@drawable/input_bg"
+        android:layout_marginTop="@dimen/hightest_margintop"
+        android:maxLength="70"
+        android:hint="个性签名"
+        android:singleLine="false"
+        android:lines="2"
+        android:textColorHint="@color/text_color_hint"
+       />
+
+    <TextView
+        style="@style/my_tv_message_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_setSignature"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="8dp"
+        android:text="一句话描述自己，让Ta更了解你"
+        />
+
+    <TextView
+        android:id="@+id/tv_setSignatureNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="70"
+        android:textColor="@color/base_color_text_black"
+        android:layout_below="@id/et_setSignature"
+        android:layout_marginTop="8dp"
+        android:paddingRight="8dp"
+        android:layout_alignParentRight="true"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_gender"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/input_bg"
+        android:layout_marginTop="@dimen/hightest_margintop"
+        android:layout_below="@id/tv_setSignatureNumber"
+        >
+
+        <RadioButton
+            android:id="@+id/rb_man"
+            style="@style/my_left_radiobutton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:checked="true"
+            android:text="男"
+            android:textSize="17sp"
+            />
+
+        <RadioButton
+            android:id="@+id/rb_woman"
+            style="@style/my_right_radiobutton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="女"
+            android:textSize="17sp"
+            />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_complete"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/btn_login_selector"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/rg_gender"
+        android:text="完成注册"
+        android:textColor="@color/base_color_text_white"
+        android:textSize="@dimen/text_size_large"/>
+
+</RelativeLayout>

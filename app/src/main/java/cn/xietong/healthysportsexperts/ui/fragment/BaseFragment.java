@@ -8,17 +8,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import cn.bmob.im.BmobUserManager;
+import cn.xietong.healthysportsexperts.R;
+import cn.xietong.healthysportsexperts.app.App;
+import cn.xietong.healthysportsexperts.ui.view.TopBar;
+
 /**项目基Fragment,所有的Fragment均需要继承该Fragment
  * Created by Administrator on 2015/10/27.
  */
 public abstract  class BaseFragment extends Fragment{
 
+    public App mApplication;
+    public LayoutInflater mInflater;
     private String TAG;
     private View mContentView;
+    protected TopBar topBar;
+    BmobUserManager mUserManager;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mApplication = App.getInstance();
+        mInflater = LayoutInflater.from(getActivity());
+        mUserManager = BmobUserManager.getInstance(getActivity());
     }
 
     @Nullable
@@ -50,6 +63,40 @@ public abstract  class BaseFragment extends Fragment{
     protected abstract void initViews(View mContentView);
 
     public abstract  void setupViews(Bundle savedInstanceState);
+
+    public View findViewById(int paramInt) {
+        return mContentView.findViewById(paramInt);
+    }
+
+    /**
+     * 只有标题
+     * @param title 标题
+     */
+    public void initTopbarForOnlyTitle(String title){
+        topBar = (TopBar) getActivity().findViewById(R.id.topBar);
+        topBar.setDefaultTitle(title);
+    }
+
+    /**
+     * 有返回按钮
+     * @param title 标题
+     * @param mListener 监听器
+     */
+    public void initTopbarFofLeft(String title,TopBar.topbarClickListener mListener){
+        topBar = (TopBar) getActivity().findViewById(R.id.topBar);
+        topBar.setTitleAndLeftImageButton(title,mListener);
+    }
+
+    /**
+     * 带有两个按钮
+     * @param title 标题
+     * @param text 右部按钮的显示文本
+     * @param mListener 监听器
+     */
+    public void initTopbarForBoth(String title,String text,TopBar.topbarClickListener mListener){
+        topBar = (TopBar) getActivity().findViewById(R.id.topBar);
+        topBar.setTitleAndBothButton(title,text,mListener);
+    }
 
     /**显示一个Toast
      * @param info 要显示的内容

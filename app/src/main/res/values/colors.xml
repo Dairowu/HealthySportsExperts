@@ -17,8 +17,10 @@
 
     <color name="sel_color">#03a9f4</color>
 
+    <color name="text_color_hint">#dddddd</color>
+    <color name="top_title_color">#c7000000</color>
     <color name="transparent_color">#00000000</color>
     <color name="tabhost_bg_color">#f5f5f5</color>
     <color name="tabhost_stroke_color">#a3adadad</color>
-    
+
 </resources>

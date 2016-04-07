@@ -20,7 +20,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/hightest_margintop"
             android:clickable="true"
             android:background="@drawable/selector_pop_item"
             android:id="@+id/relativeLayout">
@@ -31,7 +31,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/icon_head_photo"
-             />
+            />
 
 
             <TextView
@@ -46,6 +46,7 @@
                 />
 
             <TextView
+                android:id="@+id/tv_signature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/my_tv_message_small"

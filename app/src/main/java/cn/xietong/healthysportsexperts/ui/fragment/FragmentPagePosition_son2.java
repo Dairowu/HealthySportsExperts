@@ -1,6 +1,5 @@
 package cn.xietong.healthysportsexperts.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xietong.healthysportsexperts.R;
-import cn.xietong.healthysportsexperts.adpter.PostListViewAdapter;
-import cn.xietong.healthysportsexperts.ui.activity.PostActivity;
 import cn.xietong.healthysportsexperts.utils.Post;
+
+//import cn.xietong.healthysportsexperts.adpter.PostListViewAdapter;
+//import cn.xietong.healthysportsexperts.ui.activity.PostActivity;
 
 /**
  * 发帖界面
@@ -24,7 +24,7 @@ import cn.xietong.healthysportsexperts.utils.Post;
 public class FragmentPagePosition_son2 extends BaseFragment {
     private ListView mlistView;
     private List<Post> posts;
-    private PostListViewAdapter postListViewAdapter;
+//    private PostListViewAdapter postListViewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private static final int REFRESH_COMPLETE = 0X110;
 
@@ -42,8 +42,8 @@ public class FragmentPagePosition_son2 extends BaseFragment {
         posts.add(new Post("hahah"));
         posts.add(new Post("hahah"));
         posts.add(new Post("hahah"));
-        postListViewAdapter = new PostListViewAdapter(mContentView.getContext(), R.layout.post_item, posts);
-        mlistView.setAdapter(postListViewAdapter);
+//        postListViewAdapter = new PostListViewAdapter(mContentView.getContext(), R.layout.post_item, posts);
+//        mlistView.setAdapter(postListViewAdapter);
         mlistView.setOnItemClickListener(new ListViewListener());
     }
 
@@ -52,7 +52,7 @@ public class FragmentPagePosition_son2 extends BaseFragment {
             switch (msg.what) {
                 case REFRESH_COMPLETE:
                     posts.add(new Post("hahah"));
-                    postListViewAdapter.notifyDataSetChanged();
+//                    postListViewAdapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
                     break;
             }
@@ -75,8 +75,8 @@ public class FragmentPagePosition_son2 extends BaseFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if(view.getId()!=0){
-                Intent intent = new Intent(getContext(), PostActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getContext(), PostActivity.class);
+//                startActivity(intent);
             }
         }
     }

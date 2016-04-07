@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.xietong.healthysportsexperts.R;
-import cn.xietong.healthysportsexperts.app.App;
 import cn.xietong.healthysportsexperts.model.DatabaseHelper;
 import cn.xietong.healthysportsexperts.model.UserInfo;
 import cn.xietong.healthysportsexperts.utils.SQLiteUtils;
@@ -44,16 +42,14 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     //同一天内退出应用之前的数据
     private int oldCount;
     Service_Calculate_Step.MyBinder binder;
-    SharedPreferences mPreferences = App.getInstance().getSharedPreferencesInstance();
-    SharedPreferences.Editor mEditor = mPreferences.edit();
     //数据库操作对象
-    DatabaseHelper dbHelper = App.getInstance().getDBHelper();
+    DatabaseHelper dbHelper = mApplication.getDBHelper();
     //用户从使用程序到现在为止的每一天的操作数据
     List<UserInfo> userLists = null;
     //用户操作后的数据
     UserInfo user = new UserInfo();
     //计步监听器
-    StepListener mStepListener = App.getInstance().getStepListener();
+    StepListener mStepListener = mApplication.getStepListener();
     //定义日期格式
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM月dd日EEEE", Locale.CHINA);
 
@@ -176,8 +172,6 @@ public class FragmentPagePosition_son1 extends BaseFragment {
         user.setCount(binder.getCount());
         user.setDatatime(new Date().getTime()+"");
         SQLiteUtils.insert(dbHelper,user,"step");
-//        mEditor.putInt("oldCount",binder.getCount());
-//        mEditor.commit();
     }
 
 }

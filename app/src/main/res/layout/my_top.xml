@@ -13,8 +13,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:text="我"
-        android:textSize="18sp"
-        android:textColor="#c7000000"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@color/top_title_color"
         />
 
 </LinearLayout>

@@ -11,6 +11,29 @@
         <item name="android:windowExitAnimation">@anim/push_out</item>
     </style>
 
+    <style name="my_left_radiobutton">
+        
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/radiobutton_bg</item>
+        <item name="android:drawableLeft">@drawable/ic_user_gender_boy</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">15dp</item>
+        
+    </style>
+
+
+    <style name="my_right_radiobutton">
+
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/radiobutton_bg</item>
+        <item name="android:drawableRight">@drawable/ic_user_gender_girl</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingRight">15dp</item>
+
+    </style>
+    
     <!-- 顶部按钮的基本样式-->
     <style name="top_btn">
         <item name="android:layout_width">wrap_content</item>
@@ -31,11 +54,10 @@
         <item name="android:textColor">#888888</item>
     </style>
 
-    <style name="myProgressBatStyle">
-        　　<item name="android:indeterminateDrawable">@drawable/progressbar_bg</item>
-        　　<item name="android:maxWidth">45dip</item>
-        　　<item name="android:minHeight">45dip</item>
-        　　<item name="android:maxHeight">45dip</item>
+    <style name="myProgressBarStyle" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progressbar_bg</item>
+    　　<item name="android:minHeight">8dip</item>
+    　　<item name="android:maxHeight">45dip</item>
     </style>
 
     <style name="my_btn">
@@ -51,6 +73,7 @@
 
     </style>
 
+    <!-- 消息提醒信息中的图片-->
     <style name="my_iv_message">
 
         <item name="android:scaleType">fitXY</item>
@@ -76,6 +99,17 @@
         <item name="android:textColor">#a7a7a7</item>
         <item name="android:singleLine">true</item>
         <item name="android:layout_marginTop">5dp</item>
+
+    </style>
+
+    <!-- 控制消息提醒的按钮-->
+    <style name="my_toggle_button" parent="@android:style/Widget.CompoundButton">
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/btn_toggle</item>
+        <item name="android:textOn">@null</item>
+        <item name="android:textOff">@null</item>
+        <item name="android:clickable">true</item>
+        <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
 
     </style>
 

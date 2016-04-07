@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <include layout="@layout/topbar"
+        android:id="@+id/topBar"
+        />
+
+    <EditText
+        android:id="@+id/et_register_phonenumber"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/hightest_margintop"
+        android:background="@drawable/input_bg"
+        android:paddingLeft="8dp"
+        android:hint="请输入登陆手机号"
+        android:phoneNumber="true"
+        android:textColorHint="@color/text_color_hint"
+        />
+
+    <EditText
+        android:id="@+id/et_register_password"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/hightest_margintop"
+        android:background="@drawable/input_bg"
+        android:paddingLeft="8dp"
+        android:hint="请输入登陆密码"
+        android:password="true"
+        android:textColorHint="@color/text_color_hint"
+        />
+
+    <EditText
+        android:id="@+id/et_register_password_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/hightest_margintop"
+        android:background="@drawable/input_bg"
+        android:paddingLeft="8dp"
+        android:hint="确认登陆密码"
+        android:password="true"
+        android:textColorHint="@color/text_color_hint"
+        />
+
+    <Button
+        android:id="@+id/btn_nextstep"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/btn_login_selector"
+        android:layout_marginTop="20dp"
+        android:text="下一步"
+        android:textColor="@color/base_color_text_white"
+        android:textSize="@dimen/text_size_large"/>
+
+</LinearLayout>

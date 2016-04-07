@@ -1,12 +1,17 @@
 package cn.xietong.healthysportsexperts.model;
 
-import cn.bmob.v3.BmobUser;
+import android.annotation.TargetApi;
+import android.os.Build;
+
+import java.util.Objects;
+
+import cn.bmob.im.bean.BmobChatUser;
 import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by Administrator on 2015/11/9.
  */
-public class MyUser extends BmobUser{
+public class MyUser extends BmobChatUser {
 
     /**
      *
@@ -18,6 +23,9 @@ public class MyUser extends BmobUser{
      */
     private String sortLetters;
 
+
+    private String signature;
+
     /**
      * 性别-true-男
      */
@@ -28,7 +36,11 @@ public class MyUser extends BmobUser{
      */
     private BmobFile head_photo;
 
-    public boolean isSex() {
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public boolean getSex() {
         return sex;
     }
 
@@ -50,6 +62,43 @@ public class MyUser extends BmobUser{
 
     public void setHead_photo(BmobFile head_photo) {
         this.head_photo = head_photo;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object otherObject) {
+
+        if(this == otherObject) return true;
+
+        if(otherObject == null) return false;
+
+        if(getClass() != otherObject.getClass()) return false;
+
+        MyUser other = (MyUser) otherObject;
+
+        return Objects.equals(getUsername(),other.getUsername()) &&
+                Objects.equals(getMobilePhoneNumber(),other.getMobilePhoneNumber()) &&
+                sex == other.sex && Objects.equals(signature,other.signature);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername(),getMobilePhoneNumber(),sex,signature);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + "[name=" + getUsername() + ",mobilePhoneNumber=" + getMobilePhoneNumber()
+                +",sex=" + sex + "signature=" + signature + "]";
     }
 
 }

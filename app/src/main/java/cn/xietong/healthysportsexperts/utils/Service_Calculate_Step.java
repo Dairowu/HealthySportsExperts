@@ -72,6 +72,7 @@ public class Service_Calculate_Step extends Service {
                 mRemoteViews.setProgressBar(R.id.progress_step,goalCount,0,false);
                 mRemoteViews.setTextViewText(R.id.tv_ntf_step,count + "步");
                 mRemoteViews.setTextViewText(R.id.tv_kal,0+"kal");
+                mRemoteViews.setTextViewText(R.id.tv_kal,0+"kal");
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 PendingIntent pendingIntent =  PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);

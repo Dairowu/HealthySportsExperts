@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.xietong.healthysportsexperts.ui.view.TopBar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/topBar"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:paddingLeft="8dp"
+    android:background="@drawable/top_bg"
+
+    custom:topLeftBackground="@drawable/btn_back_bg"
+    custom:topTitleTextSize="@dimen/text_size_large"
+    custom:topTitleTextColor="@color/top_title_color"
+
+    custom:topRightBackground="@drawable/btn_complete_bg"
+    >
+
+</cn.xietong.healthysportsexperts.ui.view.TopBar>
