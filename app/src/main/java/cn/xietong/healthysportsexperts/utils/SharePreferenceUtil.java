@@ -23,6 +23,7 @@ public class SharePreferenceUtil {
 	private String SHARED_KEY_VIBRATE = "shared_key_vibrate";
 	private String SHARED_KEY_AVATAR = "shared_key_viatar";
 
+
 	// 是否允许推送通知
 	public boolean isAllowPushNotify() {
 		return mSharedPreferences.getBoolean(SHARED_KEY_NOTIFY, true);
