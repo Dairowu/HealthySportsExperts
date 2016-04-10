@@ -8,9 +8,12 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.bmob.im.BmobChat;
 import cn.bmob.im.BmobUserManager;
 import cn.bmob.im.bean.BmobChatUser;
+import cn.bmob.im.db.BmobDB;
 import cn.xietong.healthysportsexperts.model.DatabaseHelper;
+import cn.xietong.healthysportsexperts.utils.CollectionUtils;
 import cn.xietong.healthysportsexperts.utils.SharePreferenceUtil;
 import cn.xietong.healthysportsexperts.utils.StepListener;
 
@@ -33,8 +36,8 @@ public class App extends Application {
         instance = this;
         dbHelper = new DatabaseHelper(this,DATABASE_NAME);
         stepListener = new StepListener();
+        init();//Magic,2016.4.8
         //imageLoader = ImageLoader.build(this);
-
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);
     }
@@ -68,12 +71,18 @@ public class App extends Application {
     private Map<String,BmobChatUser> contactList = new HashMap<String,BmobChatUser>();
 
     public Map<String, BmobChatUser> getContactList() {
+        if(contactList.size()==0)return null;
         return contactList;
     }
 
+    /**
+     * 设置好友user list到内存中
+     *
+     * @param contactList
+     */
     public void setContactList(Map<String, BmobChatUser> contactList) {
-        if(contactList!=null){
-            contactList.clear();
+        if(this.contactList!=null){
+            this.contactList.clear();
         }
         this.contactList = contactList;
     }
@@ -87,5 +96,18 @@ public class App extends Application {
         BmobUserManager.getInstance(getApplicationContext()).logout();
         setContactList(null);
 
+    }
+
+    /**
+     * Magic,2016.4.8
+     */
+    private void init(){
+        BmobChat.DEBUG_MODE = true;
+        if (BmobUserManager.getInstance(getApplicationContext())
+                .getCurrentUser() != null) {
+            // 获取本地好友user list到内存,方便以后获取好友list
+            contactList = CollectionUtils.list2map(BmobDB.create(
+                    getApplicationContext()).getContactList());
+        }
     }
 }

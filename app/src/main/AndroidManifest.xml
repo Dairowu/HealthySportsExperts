@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.xietong.healthysportsexperts" >
+    <meta-data
+        android:name="Bmob_APP_KEY"
+        android:value="f1a3d5dc79f46ed06d79284d3131fb8d" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -17,7 +20,6 @@
         android:protectionLevel="normal" >
     </permission>
     <uses-permission android:name="cn.bmob.permission.push" /> <!-- 添加自定义的权限 -->
-
 
     <application
         android:name=".app.App"
@@ -53,9 +55,51 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity android:name=".ui.activity.ChoosePhotoActivity"/>
+        <activity android:name=".ui.activity.Activity_NewFriend"/>
+        <activity android:name=".ui.activity.Activity_SearchFriend"/>
+        <activity android:name=".ui.activity.Activity_Chatting"
+            android:windowSoftInputMode="adjustPan"/>
 
         <service android:name=".utils.Service_Calculate_Step"
            />
+        <!--林思旭 -->
+        <service
+            android:name="cn.bmob.push.lib.service.PushService"
+            android:exported="true"
+            android:label="PushService"
+            android:permission="cn.bmob.permission.push"
+            android:process="cn.bmob.push" >
+            <intent-filter>
+                <action android:name="cn.bmob.push.lib.service.PushService" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name="cn.bmob.push.PushReceiver" >
+            <intent-filter android:priority="2147483647" > <!-- 优先级加最高 -->
+                <!-- 系统启动完成后会调用 -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- 解锁完成后会调用 -->
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <!-- 监听网络连通性 -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Magic,IM聊天所需的Push end -->
+        <receiver android:name="cn.xietong.healthysportsexperts.receiver.MyNewMessageReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="cn.bmob.push.action.MESSAGE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 个性功能中的启动定时检测服务，可选功能 -->
+        <service android:name="cn.bmob.im.poll.BmobPollService">
+            <intent-filter>
+                <action android:name="cn.bmob.im.service.BmobPollService" />
+            </intent-filter>
+        </service>
+
 
     </application>
 

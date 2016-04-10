@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView_target_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/activity_add_user_head"
+        android:layout_alignParentLeft="true"/>
+    <TextView
+        android:id="@+id/txt_target_receive_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="aa"
+        android:layout_below="@id/imageView_target_receive"/>
+    
+    <cn.xietong.healthysportsexperts.ui.view.BmobTextView
+        android:id="@+id/txt_textcontent_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white"
+        android:layout_toRightOf="@id/imageView_target_receive">
+    </cn.xietong.healthysportsexperts.ui.view.BmobTextView>
+    
+    <ImageView
+        android:id="@+id/imageView_current_sending"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"
+        android:background="@drawable/activity_add_user_head"/>
+
+    <TextView
+        android:id="@+id/txt_current_sending_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/imageView_current_sending"
+        android:text="bb"/>
+    <cn.xietong.healthysportsexperts.ui.view.BmobTextView
+        android:id="@+id/txt_textcontent_sending"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue"
+        android:layout_toLeftOf="@id/imageView_current_sending">
+    </cn.xietong.healthysportsexperts.ui.view.BmobTextView>
+    
+</RelativeLayout>

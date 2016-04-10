@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--林思旭 2016.4.8 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color">
+    <View 
+        android:id="@+id/view_lineOne"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+
+    <include layout="@layout/search_friend_head"
+             android:id="@+id/include_newFriendActivity_head"
+             android:layout_width="match_parent"
+             android:layout_height="50dp"
+             android:layout_below="@id/view_lineOne"/>
+     
+      
+    <View 
+        android:id="@+id/view_lineTwo"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@id/include_newFriendActivity_head"/>
+    
+    <ListView 
+        android:id="@+id/listView_receive_friend_request"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/view_lineTwo"
+        android:background="@color/tabhost_bg_color">
+    </ListView>
+    
+
+</RelativeLayout>

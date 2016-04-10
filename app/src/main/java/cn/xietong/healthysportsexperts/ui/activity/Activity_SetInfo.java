@@ -18,14 +18,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.io.File;
-
+import cn.xietong.healthysportsexperts.config.BmobConstants;
 import cn.bmob.v3.listener.SaveListener;
 import cn.xietong.healthysportsexperts.R;
-import cn.xietong.healthysportsexperts.config.BmobConstants;
 import cn.xietong.healthysportsexperts.model.MyUser;
 import cn.xietong.healthysportsexperts.utils.ActivityCollector;
 import cn.xietong.healthysportsexperts.utils.CommonUtils;
-import cn.xietong.healthysportsexperts.utils.SysimageUtils;
 
 /**
  * Created by deng on 2015/11/25.
@@ -33,7 +31,7 @@ import cn.xietong.healthysportsexperts.utils.SysimageUtils;
 public class Activity_SetInfo extends BaseActivity{
 
     private static final int MAX_LENGTH = 70;
-    SysimageUtils sysimageUtils;
+//    SysimageUtils sysimageUtils;
     EditText et_nickname,et_signature;
     TextView tv_signatureNumber;
     RadioGroup rg;
@@ -112,8 +110,7 @@ public class Activity_SetInfo extends BaseActivity{
                 Intent intent = new Intent(Intent.ACTION_PICK, null);
                 intent.setDataAndType(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intent,
-                        BmobConstants.REQUESTCODE_UPLOADAVATAR_LOCATION);
+                startActivityForResult(intent,BmobConstants.REQUESTCODE_TAKE_CAMERA);//2016.4.8注释掉
 //                sysimageUtils = new SysimageUtils(Activity_SetInfo.this);
 //                sysimageUtils.startActionPick();
             }

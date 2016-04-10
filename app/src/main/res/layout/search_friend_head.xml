@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--林思旭,2016.4.8 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/main_bg_color"
+    android:orientation="horizontal" >
+     <View 
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"/>
+     <EditText 
+        android:id="@+id/edit_addFriendActivity_friends"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
+        android:drawableLeft="@drawable/activity_add_search_friend_head"
+        android:background="@drawable/search_friend_shape"
+        android:hint="搜索好友">
+    </EditText>    
+    <View 
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"/>
+    
+
+</LinearLayout>

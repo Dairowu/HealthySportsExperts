@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 林思旭，2016.4.8 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:shape="rectangle">
+    <size android:width="250dp" android:height="40dp"/>
+    <solid android:color="#FFFFFF"/>
+    <stroke android:width="2dip"
+        android:color="@color/ring_color" />
+    <corners android:radius="10dip"/>
+    
+
+</shape>
