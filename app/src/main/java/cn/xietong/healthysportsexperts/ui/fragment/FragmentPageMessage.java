@@ -149,7 +149,7 @@ public class FragmentPageMessage extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.btn_add_contact:
                 /**
-                 * 林思旭，2016.4.9
+                 * 林思旭，2016.4.10
                  */
                 Intent intent = new Intent(getActivity(), Activity_SearchFriend.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
