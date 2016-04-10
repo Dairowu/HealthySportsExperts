@@ -1,5 +1,6 @@
 package cn.xietong.healthysportsexperts.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xietong.healthysportsexperts.R;
+import cn.xietong.healthysportsexperts.ui.activity.Activity_SearchFriend;
 
 /**对应着Tab里第二个按钮所显示的界面，跟计步界面一样，该布局应该包含两个Fragment
  * 一个显示消息界面，一个显示联系人界面
@@ -146,7 +148,12 @@ public class FragmentPageMessage extends BaseFragment implements View.OnClickLis
                 setSelect(1);
                 break;
             case R.id.btn_add_contact:
-
+                /**
+                 * 林思旭，2016.4.9
+                 */
+                Intent intent = new Intent(getActivity(), Activity_SearchFriend.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
                 break;
             default:
                 break;
