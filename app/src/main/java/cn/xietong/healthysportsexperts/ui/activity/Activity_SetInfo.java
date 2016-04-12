@@ -18,12 +18,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.io.File;
-import cn.xietong.healthysportsexperts.config.BmobConstants;
+
 import cn.bmob.v3.listener.SaveListener;
 import cn.xietong.healthysportsexperts.R;
+import cn.xietong.healthysportsexperts.config.BmobConstants;
 import cn.xietong.healthysportsexperts.model.MyUser;
 import cn.xietong.healthysportsexperts.utils.ActivityCollector;
 import cn.xietong.healthysportsexperts.utils.CommonUtils;
+import cn.xietong.healthysportsexperts.utils.SysimageUtils;
 
 /**
  * Created by deng on 2015/11/25.
@@ -31,7 +33,7 @@ import cn.xietong.healthysportsexperts.utils.CommonUtils;
 public class Activity_SetInfo extends BaseActivity{
 
     private static final int MAX_LENGTH = 70;
-//    SysimageUtils sysimageUtils;
+    SysimageUtils sysimageUtils;
     EditText et_nickname,et_signature;
     TextView tv_signatureNumber;
     RadioGroup rg;
@@ -46,24 +48,25 @@ public class Activity_SetInfo extends BaseActivity{
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        Log.i("info","setInfoRestart");
         final File croppedFile = new File(getCacheDir(), "cropped.jpg");
-
-        if(croppedFile.exists()){
-
+        if(croppedFile.exists()) {
             iv_headphoto.setImageURI(Uri.fromFile(croppedFile));
-//            DisplayImageOptions options = new DisplayImageOptions.Builder()
+        }
+//           DisplayImageOptions options = new DisplayImageOptions.Builder()
 //                    .cacheInMemory(true)
 //                    .cacheOnDisk(true)
 //                    .bitmapConfig(Bitmap.Config.RGB_565)
 //                    .build();
 //
 //            ImageLoader.getInstance().displayImage(String.valueOf(croppedFile),iv_headphoto,options);
-        }
+
     }
 
     @Override
     public void initViews() {
-
+        Log.i("info","onCreate");
         initTopbarForLeft("完成注册", new OnTopbarButtonClickListener());
         topBar.setButtonVisable(1,false);
         et_nickname = (EditText) findViewById(R.id.et_nickname);
@@ -130,7 +133,7 @@ public class Activity_SetInfo extends BaseActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == BmobConstants.REQUESTCODE_UPLOADAVATAR_LOCATION
+        if(requestCode == BmobConstants.REQUESTCODE_TAKE_CAMERA
         &&resultCode == Activity.RESULT_OK){
             Intent intent = new Intent(Activity_SetInfo.this,ChoosePhotoActivity.class);
             intent.setData(data.getData());

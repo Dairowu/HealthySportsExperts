@@ -100,7 +100,7 @@ public abstract class BaseActivity extends FragmentActivity {
      * @throws
      */
     public void ShowLog(String msg){
-        Log.i("life", msg);
+        Log.i("info", msg);
     }
 
     public void showToast(String info){

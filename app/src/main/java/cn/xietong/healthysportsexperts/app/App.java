@@ -71,7 +71,7 @@ public class App extends Application {
     private Map<String,BmobChatUser> contactList = new HashMap<String,BmobChatUser>();
 
     public Map<String, BmobChatUser> getContactList() {
-        if(contactList.size()==0)return null;
+        if(contactList == null || contactList.size()==0)return null;
         return contactList;
     }
 

@@ -105,7 +105,6 @@
     <!-- 控制消息提醒的按钮-->
     <style name="my_toggle_button" parent="@android:style/Widget.CompoundButton">
         <item name="android:button">@null</item>
-        <item name="android:background">@drawable/btn_toggle</item>
         <item name="android:textOn">@null</item>
         <item name="android:textOff">@null</item>
         <item name="android:clickable">true</item>

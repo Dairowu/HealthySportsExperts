@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent" android:layout_height="match_parent">
 
-<include layout="@layout/topbar"
+    <include layout="@layout/topbar"
     android:id="@+id/topBar"/>
 
     <ImageView
@@ -10,6 +10,8 @@ android:layout_width="match_parent" android:layout_height="match_parent">
         android:src="@drawable/icon_head"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
         android:layout_alignBottom="@+id/et_nickname"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

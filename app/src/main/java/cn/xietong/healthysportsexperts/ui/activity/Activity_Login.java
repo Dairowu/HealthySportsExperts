@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -106,10 +105,11 @@ public class Activity_Login extends BaseActivity implements View.OnClickListener
             public void onSuccess() {
 
                 updateUserInfos();
+                getCurrentUserFriend();//Magic,2016.4.8
                 progress.dismiss();
-//                Intent intent = new Intent(Activity_Login.this,MainActivity.class);
-//                startActivity(intent);//注释掉是因为我需要在进去前完成数据的加载.Magic,2016.4.8
-                GetcurrentUserFriend();//Magic,2016.4.8
+                Intent intent = new Intent(Activity_Login.this,MainActivity.class);
+                startActivity(intent);//注释掉是因为我需要在进去前完成数据的加载.Magic,2016.4.8
+                finish();
             }
 
             @Override
@@ -127,26 +127,33 @@ public class Activity_Login extends BaseActivity implements View.OnClickListener
         super.onDestroy();
     }
     //2016.3.31(获取当前账号的好友)
-    private void GetcurrentUserFriend(){
+    private void getCurrentUserFriend(){
         BmobUserManager.getInstance(this).queryCurrentContactList(new FindListener<BmobChatUser>() {
 
             @Override
             public void onSuccess(List<BmobChatUser> arg0) {
                 // TODO Auto-generated method stub
-                Log.i(TAG,"arg0="+arg0);
+                Log.i("info","arg0="+arg0);
                 Log.i(TAG,"CollectionUtils.list2map(arg0)="+CollectionUtils.list2map(arg0));
                 App.getInstance().setContactList(CollectionUtils.list2map(arg0));//将arg0数据保存在缓存区
                 Log.i(TAG, "CustomApplcation:" + App.getInstance().getContactList() + "");
-                Intent intent = new Intent(Activity_Login.this,MainActivity.class);
-                startActivity(intent);
-                finish();
+//                Intent intent = new Intent(Activity_Login.this,MainActivity.class);
+//                startActivity(intent);
+//                finish();
 
             }
 
             @Override
             public void onError(int arg0, String arg1) {
-                // TODO Auto-generated method stub
-                Toast.makeText(Activity_Login.this,"登陆失败",Toast.LENGTH_SHORT).show();
+                // TODO Auto-generated method stubv
+//                ShowLog("arg0 = " + arg0 + "arg1 =" + arg1);
+//                if(arg1.equals("暂无好友")) {
+                App.getInstance().setContactList(CollectionUtils.list2map(null));
+//                    Intent intent = new Intent(Activity_Login.this, MainActivity.class);
+//                    startActivity(intent);
+//                    Toast.makeText(Activity_Login.this, "暂无好友！" + arg1, Toast.LENGTH_SHORT).show();
+//                    finish();
+//                }
             }
         });
     }

@@ -19,7 +19,7 @@
         android:layout_marginTop="35dp"
         android:id="@+id/tv_accept" />
 
-    <ToggleButton
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/toggle_btn_accept"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,6 +28,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/tv_accept"
+        android:layout_marginRight="10dp"
         android:checked="true" />
 
     <TextView
@@ -42,7 +43,7 @@
         android:layout_below="@id/tv_accept"
         android:id="@+id/tv_voice" />
 
-    <ToggleButton
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/toggle_btn_voice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,6 +52,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/tv_voice"
+        android:layout_marginRight="10dp"
         android:checked="true" />
 
     <View
@@ -72,7 +74,7 @@
         android:layout_below="@id/view_devider"
         android:id="@+id/tv_vibrate" />
 
-    <ToggleButton
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/toggle_btn_vibrate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,6 +83,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/tv_vibrate"
+        android:layout_marginRight="10dp"
         android:checked="true" />
 
 </RelativeLayout>

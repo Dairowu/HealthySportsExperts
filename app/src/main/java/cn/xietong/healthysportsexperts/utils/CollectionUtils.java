@@ -25,9 +25,11 @@ public class CollectionUtils {
 	 * @throws
 	 */
 	public static Map<String,BmobChatUser> list2map(List<BmobChatUser> users){
-		Map<String,BmobChatUser> friends = new HashMap<String, BmobChatUser>();
-		for(BmobChatUser user : users){
-			friends.put(user.getUsername(), user);
+		Map<String, BmobChatUser> friends = new HashMap<String, BmobChatUser>();
+		if(users != null) {
+			for (BmobChatUser user : users) {
+				friends.put(user.getUsername(), user);
+			}
 		}
 		return friends;
 	}

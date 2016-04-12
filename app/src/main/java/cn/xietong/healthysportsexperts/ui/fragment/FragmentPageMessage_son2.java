@@ -90,8 +90,6 @@ public class FragmentPageMessage_son2 extends BaseFragment {
         }else{
             image_new_message.setVisibility(View.GONE);
         }
-        //2016.3.29
-        characterParser = new CharacterParser();
         initOnclickListener();
         myThread.start();
     }
@@ -224,8 +222,8 @@ public class FragmentPageMessage_son2 extends BaseFragment {
         //设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
         intentFilter.setPriority(2);
         intentFilter.addAction(New_Message);
-        getActivity().registerReceiver(receive_friend, intentFilter);
-    }
+        getActivity().registerReceiver(receive_friend,intentFilter);
+   }
     class NewFriendMessageReceive extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

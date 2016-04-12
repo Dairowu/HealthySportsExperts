@@ -5,6 +5,8 @@
       <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.lyft/scissors/1.0.3/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.lyft/scissors/1.0.3/5f54b4e1d817d039beb81603e136563fbf87dbdd/scissors-1.0.3-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
