@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -35,6 +36,7 @@ import cn.bmob.im.BmobChatManager;
 import cn.bmob.im.bean.BmobChatUser;
 import cn.bmob.im.bean.BmobMsg;
 import cn.bmob.im.config.BmobConfig;
+import cn.bmob.im.db.BmobDB;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.adapter.ChatAdapter;
 import cn.xietong.healthysportsexperts.adapter.GridViewAdapter;
@@ -45,7 +47,7 @@ import cn.xietong.healthysportsexperts.utils.FaceTextUtils;
 import cn.xietong.healthysportsexperts.utils.MessageJson;
 
 /**
- * Created by 林思旭 on 2016/4/9.
+ * Created by 林思旭 on 2016/4/9.。。
  */
 public class Activity_Chatting extends BaseActivity implements View.OnClickListener {
     private static String TAG = "Activity_Chatting";
@@ -67,15 +69,22 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private ChatAdapter adapter;
     private NewMessageReceiver receiver;
     private View view;
+    //4.17
+    private SwipeRefreshLayout myRefreshLayout;
     String msg = "";
     String targetId = "";
     String targetName = "";
+    String targetNick = "";
     String current_name;
     String current_targetId = "";
+    String  current_Nick = "我";
     BmobChatUser targetUser;
     BmobChatManager manager;
     private MessageJson messageJson;
-
+    private static int MsgPagerNum = 5;//2016.4.15
+    private int refreshNumber = 0;
+    private List<String> current_history_time,target_history_time;//储存时间
+    private List<String> current_history_content,target_history_content;//储存内容
     public static String ACTION_INTENT_RECEIVER = "NewMessage";
 
     @Override
@@ -88,9 +97,18 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         manager = BmobChatManager.getInstance(this);
         //注册接受广播
         initNewMessageBroadCast();
+        //加载历史消息的List数组
+        current_history_content = new ArrayList<String>();
+        target_history_content = new ArrayList<String>();
+        current_history_time = new ArrayList<String>();
+        target_history_time = new ArrayList<String>();
+
         DataList = new ArrayList<ChatData>();
         adapter = new ChatAdapter(Activity_Chatting.this, R.layout.activity_chatting_listview_item, DataList);
 
+        myRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh_history_content);
+        myRefreshLayout.setColorSchemeResources(R.color.main_bg_color, R.color.ring_color,
+                R.color.ring_text_color , R.color.sel_color);//2016.4.7(设置旋转刷新颜色)
         view = (View)findViewById(R.id.include_button);
         et_msg = (EditText)view.findViewById(R.id.et_input_context);
         btn_send = (Button)view.findViewById(R.id.btn_send);
@@ -105,19 +123,35 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         Log.i(TAG, targetUser.getUsername()+"");
         targetId = targetUser.getObjectId();
         targetName = targetUser.getUsername();
+        targetNick = targetUser.getNick();
         //获取登录用户的信息
+//        current_Nick = BmobChatUser.getCurrentUser(this).get;
         current_name = BmobChatUser.getCurrentUser(this).getUsername();
         Log.i(TAG, BmobChatUser.getCurrentUser(this).getUsername());
         current_targetId = BmobChatUser.getCurrentUser(this).getObjectId();
         Log.i(TAG, targetId+"");
-
-        initFace();//11.23
+        initFace();//11.23+
         initOnClickListener();//监听普通的按钮点击
-
-
+//        loadHistoryContent();//加载历史消息(这里还是出现长度问题)
     }
     //按钮的监听
     private void initOnClickListener(){
+        //2016.4.17,下拉刷新
+        myRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                clearList();//清空数组
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshNumber += 5;
+                        loadHistoryContent();
+                        myRefreshLayout.setRefreshing(false);
+                    }
+                },4000);//刷新2秒
+            }
+        });
+
         imageView_face.setOnClickListener(this);
 
         et_msg.setOnTouchListener(new View.OnTouchListener() {
@@ -179,7 +213,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                     showLayout = false;
                     Log.i(TAG, "<0"+offsetY+" "+rawY+" "+lastY);
                 }
-                return true;
+                return onTouchEvent(event);
             }
         });
     }
@@ -195,7 +229,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             case R.id.btn_send:{
                 msg = et_msg.getText().toString();
                 BmobMsg message = BmobMsg.createTextSendMsg(this, targetId, msg);
-                initChaList(msg, current_name,true); //true为自己发送消息的文本识别
+                initChaList(msg, current_Nick,true); //true为自己发送消息的文本识别
                 et_msg.setText("");
                 manager.sendTextMessage(targetUser, message);
                 Log.i(TAG,"成功发送消息给对方");
@@ -341,7 +375,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 messageJson = parseMessage(intent.getStringExtra("Json"));
                 if( current_targetId.equals(messageJson.gettId())){
                     Log.i(TAG, messageJson.gettId());
-                    initChaList(messageJson.getMc(), targetName ,false);
+                    initChaList(messageJson.getMc(), targetNick ,false);
                     Log.i(TAG, "Broadcast");
                 }
             }
@@ -363,6 +397,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         // TODO Auto-generated method stub
         super.onDestroy();
         unregisterReceiver(receiver);
+        finish();
     }
     /**
      * 隐藏软键盘
@@ -435,5 +470,105 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             finish();
         }
         return true;
+    }
+    /**
+     * 加载消息历史，从数据库中读出,加载自己发出去的话(应该通过时间的比对来加载历史消息)
+     */
+    private void initCurrentMsg() {
+        List<BmobMsg> list = BmobDB.create(this).queryMessages(targetId,
+                MsgPagerNum);
+        Log.i(TAG, "size=" + list.size() + "list=" + list);
+        if(list.size() > 0){
+            for(int i = 0; i < list.size() && i < refreshNumber; i++){
+                list.get(i).getMsgTime();
+                String current_content = list.get(list.size()-1 - i).getContent();
+                String current_time = list.get(list.size()-1 - i).getMsgTime();
+                current_history_time.add(current_time);
+                current_history_content.add(current_content);
+                Log.i(TAG, "content=" + current_content);
+            }
+        }
+    }//查询对方发过来的话
+    private void initTargetMsg(){
+        List<BmobMsg> list_target = BmobDB.create(this,targetId).queryMessages(targetId, MsgPagerNum);
+        Log.i(TAG, "sizeTarget=" + list_target.size() + " " + "list_target=" + list_target);
+        if(list_target.size() > 0){
+            for(int i = 0; i < list_target.size() && i < refreshNumber; i++){
+                String target_content = list_target.get(list_target.size()-1 - i ).getContent();
+                String target_time = list_target.get(list_target.size()-1 -i).getMsgTime();
+                target_history_time.add(target_time);
+                target_history_content.add(target_content);
+            }
+        }
+
+    }
+    /**
+     * 加载历史消息并且显示在UI上面(2016.4.17)
+     */
+    private void loadHistoryContent(){
+        initTargetMsg();
+        initCurrentMsg();
+        if(current_history_content.size() > 0 && target_history_content.size() == 0){//只有自己发送消息时候
+            for(int k = current_history_content.size() - 1; k >= 0; k--){
+                initChaList(current_history_content.get(k), current_Nick, true);
+            }
+        }
+        if(current_history_content.size() == 0 && target_history_content.size() > 0){//只有别人发送消息给自己，自己没发信息给别人
+            for (int k = target_history_content.size() - 1; k >= 0; k--){
+                initChaList(target_history_content.get(k) , targetNick , false);
+            }
+        }
+        if(current_history_content.size() > 0 && target_history_content.size() > 0){//双方都有历史消息
+            Log.i(TAG,"load");
+            for(int i = current_history_content.size() - 1 ,j = target_history_content.size() - 1; i >= 0 || j >= 0;) {
+                Log.i(TAG,"for");
+                if(j == 0){
+                    initChaList(current_history_content.get(i), current_Nick, true);
+                    if(i > 0){
+                        i--;
+                        continue;
+                    }
+                    Log.i(TAG,"j==0");
+                }
+                if (i == 0){
+                    initChaList(target_history_content.get(j) , targetNick , false);
+                    if(j > 0){
+                        j--;
+                        continue;
+                    }
+                    if(j==0)break;
+                    Log.i(TAG, "i==0");
+
+                }
+                if( j > 0 && i > 0){
+                    if(current_history_time.get(i).compareTo(target_history_time.get(j)) < 0){ //历史时间小于它返回小于0
+                        initChaList(current_history_content.get(i) , current_Nick , true);
+                        i--;
+                        Log.i(TAG,"<0");
+                    }else if(current_history_time.get(i).compareTo(target_history_time.get(j)) == 0){ //历史时间相同返回0
+                        initChaList(current_history_content.get(i) , current_Nick , true);
+                        initChaList(target_history_content.get(j) , targetNick ,false);
+                        i--;
+                        j--;
+                        Log.i(TAG,"==0"+"i="+i+"j="+j);
+                    }else if(current_history_time.get(i).compareTo(target_history_time.get(j)) > 0){ //历史时间大于他返回大于0
+                        initChaList(target_history_content.get(j) , targetNick , false);
+                        j--;
+                        Log.i(TAG,">0");
+                    }
+                }
+            }
+        }
+    }
+    /**
+     * 清空List数组里面的数据
+     */
+    private void clearList(){
+        Log.i(TAG , "清楚数组");
+        adapter.clear();
+        current_history_content.clear();
+        current_history_time.clear();
+        target_history_content.clear();
+        target_history_time.clear();
     }
 }

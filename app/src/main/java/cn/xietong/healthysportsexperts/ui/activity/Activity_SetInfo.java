@@ -25,15 +25,13 @@ import cn.xietong.healthysportsexperts.config.BmobConstants;
 import cn.xietong.healthysportsexperts.model.MyUser;
 import cn.xietong.healthysportsexperts.utils.ActivityCollector;
 import cn.xietong.healthysportsexperts.utils.CommonUtils;
-import cn.xietong.healthysportsexperts.utils.SysimageUtils;
 
 /**
- * Created by deng on 2015/11/25.
+ * Created by deng on 2015/11/25.。。
  */
 public class Activity_SetInfo extends BaseActivity{
 
     private static final int MAX_LENGTH = 70;
-    SysimageUtils sysimageUtils;
     EditText et_nickname,et_signature;
     TextView tv_signatureNumber;
     RadioGroup rg;

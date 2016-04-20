@@ -12,8 +12,7 @@ public class DialogTips extends DialogBase {
 	 * 构造函数
 	 * @param context
 	 */
-	public DialogTips(Context context, String title,String message,String 
-
+	public DialogTips(Context context, String title,String message,String
 buttonText,boolean hasNegative,boolean hasTitle) {
 		super(context);
 		super.setMessage(message);
@@ -39,8 +38,7 @@ buttonText,boolean hasNegative,boolean hasTitle) {
 		super.setCancel(false);
 	}
 	
-	public DialogTips(Context context, String message,String buttonText,String 
-
+	public DialogTips(Context context, String message,String buttonText,String
 negetiveText,String title,boolean isCancel) {
 		super(context);
 		super.setMessage(message);

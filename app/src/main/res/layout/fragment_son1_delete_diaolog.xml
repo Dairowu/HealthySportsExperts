@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/ig_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_logo"
+        android:layout_gravity="center" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@color/sel_color"/>
+    <TextView
+        android:id="@+id/txt_delete_recent_message"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="删除会话"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:textStyle="italic"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/base_color_text_gray"/>
+    <TextView
+        android:id="@+id/txt_set_unread_message"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="标为未读"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:textStyle="italic"/>
+
+</LinearLayout>

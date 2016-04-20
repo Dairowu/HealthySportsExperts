@@ -24,5 +24,7 @@
     <color name="tabhost_stroke_color">#a3adadad</color>
     <color name="guide_color">#898989</color>
     <color name="dialog_color_title">#f82c22</color>
+    <color name="dimgrey">#696969</color>
+    <color name="gray">#808080</color>
 
 </resources>
