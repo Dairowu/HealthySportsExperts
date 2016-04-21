@@ -26,8 +26,8 @@ import cn.xietong.healthysportsexperts.model.MyUser;
 import cn.xietong.healthysportsexperts.utils.ActivityCollector;
 import cn.xietong.healthysportsexperts.utils.CommonUtils;
 
-/**
- * Created by deng on 2015/11/25.。。
+/**注册时用户设置个人信息的界面
+ * Created by deng on 2015/11/25.
  */
 public class Activity_SetInfo extends BaseActivity{
 
@@ -46,25 +46,14 @@ public class Activity_SetInfo extends BaseActivity{
     @Override
     protected void onRestart() {
         super.onRestart();
-
-        Log.i("info","setInfoRestart");
         final File croppedFile = new File(getCacheDir(), "cropped.jpg");
         if(croppedFile.exists()) {
             iv_headphoto.setImageURI(Uri.fromFile(croppedFile));
         }
-//           DisplayImageOptions options = new DisplayImageOptions.Builder()
-//                    .cacheInMemory(true)
-//                    .cacheOnDisk(true)
-//                    .bitmapConfig(Bitmap.Config.RGB_565)
-//                    .build();
-//
-//            ImageLoader.getInstance().displayImage(String.valueOf(croppedFile),iv_headphoto,options);
-
     }
 
     @Override
     public void initViews() {
-        Log.i("info","onCreate");
         initTopbarForLeft("完成注册", new OnTopbarButtonClickListener());
         topBar.setButtonVisable(1,false);
         et_nickname = (EditText) findViewById(R.id.et_nickname);
@@ -73,7 +62,6 @@ public class Activity_SetInfo extends BaseActivity{
         rg = (RadioGroup) findViewById(R.id.rg_gender);
         btn_complete = (Button) findViewById(R.id.btn_complete);
         iv_headphoto = (ImageView) findViewById(R.id.iv_setPicture);
-
     }
 
     @Override
@@ -112,8 +100,6 @@ public class Activity_SetInfo extends BaseActivity{
                 intent.setDataAndType(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent,BmobConstants.REQUESTCODE_TAKE_CAMERA);//2016.4.8注释掉
-//                sysimageUtils = new SysimageUtils(Activity_SetInfo.this);
-//                sysimageUtils.startActionPick();
             }
         });
 
@@ -137,7 +123,6 @@ public class Activity_SetInfo extends BaseActivity{
             intent.setData(data.getData());
             startActivity(intent);
         }
-//        sysimageUtils.actionResult(requestCode,resultCode,data,iv_headphoto);
     }
 
     private void register() {
@@ -174,8 +159,6 @@ public class Activity_SetInfo extends BaseActivity{
 
         final MyUser mUser = new MyUser();
 
-        Log.i("info",phonenumber+"  "+password);
-
         mUser.setUsername(phonenumber);
         mUser.setPassword(password);
         mUser.setNick(nick);
@@ -201,5 +184,11 @@ public class Activity_SetInfo extends BaseActivity{
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        final File croppedFile = new File(getCacheDir(), "cropped.jpg");
     }
 }

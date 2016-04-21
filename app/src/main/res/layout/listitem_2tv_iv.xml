@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_pop_item"
+    >
+
+    <ImageView
+        android:id="@+id/id_listItem_iv"
+        style="@style/my_iv_message"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/icon_head_photo"
+        />
+
+
+    <TextView
+        android:id="@+id/id_listItem_title"
+        style="@style/my_tv_message_large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="8dp"
+        android:text="名字"
+        android:layout_toRightOf="@id/id_listItem_iv"
+        />
+
+    <TextView
+        android:id="@+id/id_listItem_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/my_tv_message_small"
+        android:text="我们是协同工作室的成员，我们热爱Android,dsaflksalfdlkalksadlfa;sfkakf"
+        android:singleLine="true"
+        android:layout_below="@id/id_listItem_title"
+        android:layout_alignLeft="@+id/id_listItem_title"
+        android:layout_alignStart="@+id/id_listItem_title" />
+
+</RelativeLayout>

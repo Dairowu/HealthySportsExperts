@@ -3,7 +3,6 @@ package cn.xietong.healthysportsexperts.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.util.Log;
 
 import com.lyft.android.scissors.CropView;
 
@@ -19,10 +18,10 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
-import static rx.schedulers.Schedulers.io;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
+import static rx.schedulers.Schedulers.io;
 
-/**
+/**选择用户照片的Activity
  * Created by 邓贺文 on 2016/4/4.
  */
 public class ChoosePhotoActivity extends BaseActivity{
@@ -43,12 +42,9 @@ public class ChoosePhotoActivity extends BaseActivity{
         ButterKnife.bind(this);
 
         Uri uri = getIntent().getData();
-        Log.i("info",uri.toString());
 
         cropView.extensions()
                 .load(uri.toString());
-
-        Log.i("info",cropView.getHeight()+" width "+ cropView.getWidth());
 
         initTopbarForBoth("", "", new TopBar.topbarClickListener() {
             @Override
@@ -60,10 +56,9 @@ public class ChoosePhotoActivity extends BaseActivity{
             @Override
             public void rightClick() {
                 final File croppedFile = new File(getCacheDir(), "cropped.jpg");
-
                 Observable<Void> onSave = Observable.from(cropView.extensions()
                         .crop()
-                        .quality(100)
+                        .quality(87)
                         .format(Bitmap.CompressFormat.JPEG)
                         .into(croppedFile))
                         .subscribeOn(io())
@@ -85,6 +80,7 @@ public class ChoosePhotoActivity extends BaseActivity{
                             @Override
                             public void onFailure(int i, String s) {
                                 showToast("头像上传失败"+s);
+                                mApplication.getSharedPreferencesUtil().setAvatarUrl(null);
                             }
                         });
                         finish();

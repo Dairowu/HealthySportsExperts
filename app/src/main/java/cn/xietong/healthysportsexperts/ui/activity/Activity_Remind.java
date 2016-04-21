@@ -1,29 +1,33 @@
 package cn.xietong.healthysportsexperts.ui.activity;
 
-import android.support.v7.widget.SwitchCompat;
-import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.TextView;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.xietong.healthysportsexperts.R;
+import cn.xietong.healthysportsexperts.adapter.SetRemindAdapter;
+import cn.xietong.healthysportsexperts.config.BmobConstants;
+import cn.xietong.healthysportsexperts.model.ItemListSwitch;
 import cn.xietong.healthysportsexperts.utils.SharePreferenceUtil;
 
-/**
+/**用户设置提醒相关的配置信息
  * Created by Administrator on 2015/11/15.
  */
-public class Activity_Remind extends BaseActivity implements CompoundButton.OnCheckedChangeListener{
+public class Activity_Remind extends BaseActivity {
 
-    //初始化三个选择按钮
-    private SwitchCompat switch_accept,switch_voice,switch_vibrate;
-
-    private TextView tv_voice,tv_vibrate;
-    private View v_devier;
+    private ListView mList;
+    private List<ItemListSwitch> mDatas;
+    //传递给Adapter的布局数组
+    private int[] layouts;
+    private SetRemindAdapter mAdapter;
 
     SharePreferenceUtil mSharedUtil;
 
     @Override
     public int getLayoutId() {
-        return R.layout.notify_swich;
+        return R.layout.activity_myinfo;
     }
 
     @Override
@@ -33,85 +37,74 @@ public class Activity_Remind extends BaseActivity implements CompoundButton.OnCh
 
         mSharedUtil = mApplication.getSharedPreferencesUtil();
 
-        switch_accept = (SwitchCompat) findViewById(R.id.toggle_btn_accept);
-        switch_voice  = (SwitchCompat) findViewById(R.id.toggle_btn_voice);
-        switch_vibrate = (SwitchCompat) findViewById(R.id.toggle_btn_vibrate);
-
-        tv_voice  = (TextView) findViewById(R.id.tv_voice );
-        tv_vibrate = (TextView) findViewById(R.id.tv_vibrate);
-
-        v_devier = findViewById(R.id.view_devider);
-
-        switch_accept.setOnCheckedChangeListener(this);
-        switch_voice.setOnCheckedChangeListener(this);
-        switch_vibrate.setOnCheckedChangeListener(this);
+        topBar.setButtonVisable(1,false);
+        mList = (ListView) findViewById(R.id.id_list_userInfo);
+        mDatas = new ArrayList<>();
+        layouts = new int[]{R.layout.listitem_1tv,R.layout.listitem_tv_swich};
+        initData();
+        mAdapter = new SetRemindAdapter(this,mDatas,layouts);
+        mList.setAdapter(mAdapter);
 
     }
 
     @Override
     public void setupViews() {
 
-        boolean isAllowNotify = mSharedUtil.isAllowPushNotify();
-
-        switch_accept.setChecked(isAllowNotify);
-        if(isAllowNotify){
-            switch_voice.setVisibility(View.VISIBLE);
-            switch_vibrate.setVisibility(View.VISIBLE);
-            boolean isAllowVoice = mSharedUtil.isAllowVoice();
-            if(isAllowVoice){
-                switch_voice.setChecked(true);
-            }else{
-                switch_voice.setChecked(false);
-            }
-
-            boolean isAllowVibrate = mSharedUtil.isAllowVibrate();
-            if(isAllowVibrate){
-                switch_vibrate.setChecked(true);
-            }else{
-                switch_vibrate.setChecked(false);
-            }
-        }else {
-            switch_voice.setVisibility(View.INVISIBLE);
-            tv_voice.setVisibility(View.INVISIBLE);
-            switch_vibrate.setVisibility(View.INVISIBLE);
-            tv_vibrate.setVisibility(View.INVISIBLE);
-            v_devier.setVisibility(View.INVISIBLE);
-        }
-
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    /**
+     * 初始化List的数据
+     */
+    public void initData(){
+        final ItemListSwitch item1 = new ItemListSwitch(BmobConstants.LAYOUT_TV_SWITCH,"接收新消息通知", mSharedUtil.isAllowPushNotify());
 
-        switch (buttonView.getId()){
-            case R.id.toggle_btn_accept:
-                switch_accept.setChecked(isChecked);
-                mSharedUtil.setPushNotifyEnable(isChecked);
+        final ItemListSwitch item2 = new ItemListSwitch(BmobConstants.LAYOUT_TV_SWITCH,"声音", mSharedUtil.isAllowVoice());
+
+        final ItemListSwitch item3 = new ItemListSwitch(BmobConstants.LAYOUT_TV_SWITCH,"震动", mSharedUtil.isAllowVibrate());
+
+        ItemListSwitch item4 = new ItemListSwitch(BmobConstants.LAYOUT_ONE_TV,"",false);
+
+        item1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                item1.setChecked(isChecked);
+                //通过判断是否选中决定是否加载后两行
                 if(!isChecked){
-                    switch_voice.setVisibility(View.INVISIBLE);
-                    tv_voice.setVisibility(View.INVISIBLE);
-                    switch_vibrate.setVisibility(View.INVISIBLE);
-                    tv_vibrate.setVisibility(View.INVISIBLE);
-                    v_devier.setVisibility(View.INVISIBLE);
-                }else{
-                    switch_voice.setVisibility(View.VISIBLE);
-                    tv_voice.setVisibility(View.VISIBLE);
-                    switch_vibrate.setVisibility(View.VISIBLE);
-                    tv_vibrate.setVisibility(View.VISIBLE);
-                    v_devier.setVisibility(View.VISIBLE);
+                    mDatas.remove(item2);
+                    mDatas.remove(item3);
+                    mAdapter.notifyDataSetChanged();
+                }else if(mDatas.size() == 3){
+                    mDatas.add(item2);
+                    mDatas.add(item3);
+                    mAdapter.notifyDataSetChanged();
                 }
-                break;
-            case R.id.toggle_btn_voice:
-                switch_voice.setChecked(isChecked);
-                mSharedUtil.setAllowVoiceEnable(isChecked);
-                break;
-            case R.id.toggle_btn_vibrate:
-                switch_vibrate.setChecked(isChecked);
-                mSharedUtil.setAllowVibrateEnable(isChecked);
-                break;
-            default:
-                break;
-        }
 
+                mSharedUtil.setPushNotifyEnable(isChecked);
+            }
+        });
+
+        item2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                item2.setChecked(isChecked);
+                mSharedUtil.setAllowVoiceEnable(isChecked);
+            }
+        });
+
+        item3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                item3.setChecked(isChecked);
+                mSharedUtil.setAllowVibrateEnable(isChecked);
+            }
+        });
+
+        mDatas.add(item4);
+        mDatas.add(item1);
+        mDatas.add(item4);
+        if( mSharedUtil.isAllowPushNotify()){
+            mDatas.add(item2);
+            mDatas.add(item3);
+        }
     }
 }

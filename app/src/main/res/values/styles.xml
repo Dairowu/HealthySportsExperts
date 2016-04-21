@@ -1,5 +1,5 @@
 <resources>
-
+    
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -60,12 +60,11 @@
     　　<item name="android:maxHeight">45dip</item>
     </style>
 
-    <style name="my_btn">
+    <style name="my_btn" parent="my_tv_message_large">
 
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:paddingLeft">20dp</item>
-        <item name="android:layout_marginTop">18dp</item>
         <item name="android:textSize">17sp</item>
         <item name="android:drawablePadding">10dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -99,6 +98,15 @@
         <item name="android:textColor">#a7a7a7</item>
         <item name="android:singleLine">true</item>
         <item name="android:layout_marginTop">5dp</item>
+
+    </style>
+
+    <!-- 一些提示性的中等大小文字-->
+    <style name="my_tv_message_middle">
+
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#a7a7a7</item>
+        <item name="android:singleLine">true</item>
 
     </style>
 
@@ -164,6 +172,5 @@
         <item name="android:textColor">@color/dialog_color_title</item>
     </style>
     <!--Magic -->
-
 
 </resources>

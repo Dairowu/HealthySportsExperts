@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:gravity="center_vertical"
+    android:background="#ffffff"
+    >
+
+    <TextView
+        android:id="@+id/id_listItem_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:paddingLeft="16dp"
+        style="@style/my_tv_message_large"
+        android:text="接收新消息通知"
+         />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/id_listItem_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:checked="true"
+        android:focusable="true"/>
+
+</RelativeLayout>

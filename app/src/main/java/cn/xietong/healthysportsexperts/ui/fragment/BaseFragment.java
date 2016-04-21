@@ -73,7 +73,7 @@ public abstract  class BaseFragment extends Fragment{
      * @param title 标题
      */
     public void initTopbarForOnlyTitle(String title){
-        topBar = (TopBar) getActivity().findViewById(R.id.topBar);
+        topBar = (TopBar) mContentView.findViewById(R.id.topBar);
         topBar.setDefaultTitle(title);
     }
 

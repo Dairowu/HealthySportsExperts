@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.model.DatabaseHelper;
 import cn.xietong.healthysportsexperts.model.UserInfo;
@@ -26,7 +27,7 @@ import cn.xietong.healthysportsexperts.utils.StepListener;
 import cn.xietong.healthysportsexperts.utils.UserUtils;
 
 /**计步界面
- * Created by Administrator on 2015/10/18.
+ * Created by deng on 2015/10/18.
  */
 public class FragmentPagePosition_son1 extends BaseFragment {
 
@@ -134,6 +135,24 @@ public class FragmentPagePosition_son1 extends BaseFragment {
 
     @Override
     public void setupViews(Bundle savedInstanceState) {
+
+        tv_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OnekeyShare onekeyShare = new OnekeyShare();
+//                Platform platform = ShareSDK.getPlatform(getActivity(), SinaWeibo.NAME);
+//                platform.SSOSetting(true);
+//                onekeyShare.disableSSOWhenAuthorize();
+                onekeyShare.setTitle("一键分享");
+                onekeyShare.setTitleUrl("http://mob.com");
+                onekeyShare.setText("我今天走了"+binder.getCount()+"步!健康运动每一天。");
+                onekeyShare.setComment("测试文本");
+                onekeyShare.setSite("Jiankang");
+                onekeyShare.setSiteUrl("http://sharesdk.cn");
+                onekeyShare.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
+                onekeyShare.show(getActivity());
+            }
+        });
 
     }
 

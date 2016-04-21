@@ -32,6 +32,15 @@ public class BmobConstants {
 	public static final int REQUESTCODE_TAKE_LOCATION = 0x000003;//位置
 	public static final String EXTRA_STRING = "extra_string";
 
+	/**
+	 * 一些布局类型标识符
+	 */
+	public static final int LAYOUT_ONE_TV  = 0;
+	public static final int LAYOUT_TV_SWITCH = 1;
+	public static final int LAYOUT_TWO_TV  = 1;
+	public static final int LAYOUT_IV_TV  = 1;
+	public static final int LAYOUT_TV_IV  = 2;
+	public static final int LAYOUT_TWOTV_IV  = 2;
 
 	public static final String ACTION_REGISTER_SUCCESS_FINISH ="register.success.finish";//注册成功之后登陆页面退出
 }

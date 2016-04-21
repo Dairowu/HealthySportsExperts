@@ -9,7 +9,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import cn.xietong.healthysportsexperts.R;
 
 /**
- * Created by Administrator on 2015/11/10.
+ * Created by mr.deng on 2015/11/10.
  */
 public class TopBar extends RelativeLayout{
 
@@ -38,7 +37,7 @@ public class TopBar extends RelativeLayout{
 
 
     private TextView mTitleView;
-    private Button mRightButton;
+    private ImageButton mRightButton;
     private ImageButton mLeftButton;
 
     private topbarClickListener mListener;
@@ -65,7 +64,7 @@ public class TopBar extends RelativeLayout{
 
         mLeftButton = new ImageButton(context);
         mTitleView = new TextView(context);
-        mRightButton = new Button(context);
+        mRightButton = new ImageButton(context);
 
         mRightButton.setOnClickListener(new OnClickListener() {
             @Override
