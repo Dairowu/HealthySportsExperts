@@ -63,7 +63,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private EditText et_msg;
     private Button btn_send;
     private ListView listView_msg;
-    private List<ChatData> DataList ;
+    private List<ChatData> DataList;
     private ViewPager viewpager;
     //11.23
     private ChatAdapter adapter;
@@ -132,7 +132,9 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         Log.i(TAG, targetId+"");
         initFace();//11.23+
         initOnClickListener();//监听普通的按钮点击
-//        loadHistoryContent();//加载历史消息(这里还是出现长度问题)
+        refreshNumber += 2;//默认显示历史消息2条
+        loadHistoryContent();//加载历史消息(这里还是出现长度问题)
+        refreshNumber = 0;//重新设置回0,方便下面刷新自身相加
     }
     //按钮的监听
     private void initOnClickListener(){
@@ -168,6 +170,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 }else{
                     if(showLayout == true){
                         Log.i(TAG,"收起来");
+                        imageView_face.setSelected(false);
                         Layout_send_face.setVisibility(View.GONE);
                         showLayout = false;
                         KeyShow = true;
@@ -227,9 +230,10 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send:{
+                imageView_face.setSelected(false);//2016.4.22
                 msg = et_msg.getText().toString();
                 BmobMsg message = BmobMsg.createTextSendMsg(this, targetId, msg);
-                initChaList(msg, current_Nick,true); //true为自己发送消息的文本识别
+                initChaList(msg, current_Nick, message.getMsgTime() ,true); //true为自己发送消息的文本识别
                 et_msg.setText("");
                 manager.sendTextMessage(targetUser, message);
                 Log.i(TAG,"成功发送消息给对方");
@@ -238,7 +242,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             //11.23(点击表情事件)
             case R.id.imageView_sendImageView :{
                 Log.i(TAG, "点击表情");
-//			Toast.makeText(this, "imageView", Toast.LENGTH_LONG).show();
                 if (showLayout == false) {
                     //2016.3.19(成功)
                     if(KeyShow == true){
@@ -247,12 +250,14 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                         Log.i(TAG, "KeyShow=="+KeyShow+"");
                         KeyShow = false;
                     }else{
+                        imageView_face.setSelected(true);//2016.4.22
                         Layout_send_face.setVisibility(View.VISIBLE);
+                        Log.i(TAG, "TRUE");
                     }
-//
                     showLayout = true;
                     Log.i(TAG, "Visible");
                 } else {
+                    imageView_face.setSelected(false);//2016.4.22
                     Layout_send_face.setVisibility(View.GONE);
                     showLayout = false;
                     KeyShow = true;
@@ -334,11 +339,12 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
      *
      * @param content 聊天的内容
      * @param chatname 聊天对象名字
+     * @param time //d当前聊天时间
      * @param flag  判断是否是当前聊天对象的信息,false为接受到对方信息，true为自己发信息
      */
 
-    private void initChaList(String content , String chatname , Boolean flag){
-        ChatData myChat = new ChatData(content,chatname,flag);
+    private void initChaList(String content , String chatname , String time,Boolean flag){
+        ChatData myChat = new ChatData(content,chatname,time,flag);
         DataList.add(myChat);
         adapter.notifyDataSetChanged();
         listView_msg.setAdapter(adapter);
@@ -375,7 +381,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 messageJson = parseMessage(intent.getStringExtra("Json"));
                 if( current_targetId.equals(messageJson.gettId())){
                     Log.i(TAG, messageJson.gettId());
-                    initChaList(messageJson.getMc(), targetNick ,false);
+                    initChaList(messageJson.getMc(), targetNick , messageJson.getFt() ,false);
                     Log.i(TAG, "Broadcast");
                 }
             }
@@ -403,6 +409,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
      * 隐藏软键盘
      */
     public void hideSoftInputView() {
+        imageView_face.setSelected(false);
         InputMethodManager manager = ((InputMethodManager) this
                 .getSystemService(Activity.INPUT_METHOD_SERVICE));
         if (Activity_Chatting.this.getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
@@ -417,6 +424,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
      * 显示软键盘
      */
     public void showSoftInputView() {
+        imageView_face.setSelected(false);
         if (Activity_Chatting.this.getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE) {
             if (Activity_Chatting.this.getCurrentFocus() != null)
                 ((InputMethodManager) (Activity_Chatting.this)
@@ -440,6 +448,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             // TODO Auto-generated method stub
             super.handleMessage(msg);
             if(msg.what == SHOW){
+                imageView_face.setSelected(true);
                 Layout_send_face.setVisibility(View.VISIBLE);
             }
         }
@@ -510,12 +519,12 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         initCurrentMsg();
         if(current_history_content.size() > 0 && target_history_content.size() == 0){//只有自己发送消息时候
             for(int k = current_history_content.size() - 1; k >= 0; k--){
-                initChaList(current_history_content.get(k), current_Nick, true);
+                initChaList(current_history_content.get(k), current_Nick, current_history_time.get(k), true);
             }
         }
         if(current_history_content.size() == 0 && target_history_content.size() > 0){//只有别人发送消息给自己，自己没发信息给别人
             for (int k = target_history_content.size() - 1; k >= 0; k--){
-                initChaList(target_history_content.get(k) , targetNick , false);
+                initChaList(target_history_content.get(k) , targetNick , target_history_time.get(k), false);
             }
         }
         if(current_history_content.size() > 0 && target_history_content.size() > 0){//双方都有历史消息
@@ -523,15 +532,14 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             for(int i = current_history_content.size() - 1 ,j = target_history_content.size() - 1; i >= 0 || j >= 0;) {
                 Log.i(TAG,"for");
                 if(j == 0){
-                    initChaList(current_history_content.get(i), current_Nick, true);
+                    initChaList(current_history_content.get(i), current_Nick, current_history_time.get(i), true);
                     if(i > 0){
                         i--;
                         continue;
                     }
-                    Log.i(TAG,"j==0");
                 }
                 if (i == 0){
-                    initChaList(target_history_content.get(j) , targetNick , false);
+                    initChaList(target_history_content.get(j) , targetNick , target_history_time.get(j), false);
                     if(j > 0){
                         j--;
                         continue;
@@ -542,17 +550,17 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 }
                 if( j > 0 && i > 0){
                     if(current_history_time.get(i).compareTo(target_history_time.get(j)) < 0){ //历史时间小于它返回小于0
-                        initChaList(current_history_content.get(i) , current_Nick , true);
+                        initChaList(current_history_content.get(i) , current_Nick , current_history_time.get(i), true);
                         i--;
                         Log.i(TAG,"<0");
                     }else if(current_history_time.get(i).compareTo(target_history_time.get(j)) == 0){ //历史时间相同返回0
-                        initChaList(current_history_content.get(i) , current_Nick , true);
-                        initChaList(target_history_content.get(j) , targetNick ,false);
+                        initChaList(current_history_content.get(i) , current_Nick , current_history_time.get(i), true);
+                        initChaList(target_history_content.get(j) , targetNick , target_history_time.get(j) , false);
                         i--;
                         j--;
                         Log.i(TAG,"==0"+"i="+i+"j="+j);
                     }else if(current_history_time.get(i).compareTo(target_history_time.get(j)) > 0){ //历史时间大于他返回大于0
-                        initChaList(target_history_content.get(j) , targetNick , false);
+                        initChaList(target_history_content.get(j) , targetNick , target_history_time.get(j) , false);
                         j--;
                         Log.i(TAG,">0");
                     }

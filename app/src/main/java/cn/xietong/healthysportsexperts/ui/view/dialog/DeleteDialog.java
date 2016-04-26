@@ -19,17 +19,9 @@ public class DeleteDialog extends Dialog implements View.OnClickListener{
         public void onClick(View view);
     }
 
-    public DeleteDialog(Context context, int themeResId) {
-        super(context, themeResId);
-    }
-
     public DeleteDialog(Context context , DeleteListener listener) {
         super(context);
         listener_delete = listener;
-    }
-
-    protected DeleteDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
     }
 
     @Override

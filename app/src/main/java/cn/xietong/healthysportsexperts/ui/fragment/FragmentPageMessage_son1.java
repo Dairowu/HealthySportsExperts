@@ -75,6 +75,12 @@ public class FragmentPageMessage_son1 extends BaseFragment implements AdapterVie
         showDialog(recent,view);
         return true;
     }
+
+    /**
+     *
+     * @param recent 需要删除的最近聊天对话框
+     * @param itemview ListView的Item
+     */
     private void showDialog(final BmobRecent recent,final View itemview){
         dialog = new DeleteDialog(getActivity(), new DeleteDialog.DeleteListener() {
             @Override
@@ -98,7 +104,7 @@ public class FragmentPageMessage_son1 extends BaseFragment implements AdapterVie
         });
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-        params.width = 200;
+        params.width = 250;
         params.height = 150;
         params.gravity = Gravity.CENTER;
         dialog.getWindow().setAttributes(params);

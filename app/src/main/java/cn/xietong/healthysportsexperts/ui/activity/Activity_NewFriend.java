@@ -68,15 +68,15 @@ public class Activity_NewFriend extends BaseActivity implements AdapterView.OnIt
      * 监听点击事件
      */
     private void initOnclickListener(){
-//        edit_searchView_friend.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//                Intent intent_searchNewFriend_activity = new Intent(AddFriendActivity.this,SeachNewFriendActivity.class);
-//                startActivity(intent_searchNewFriend_activity);
-//            }
-//        });
+        edit_searchView_friend.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent intent_searchNewFriend_activity = new Intent(Activity_NewFriend.this,Activity_SearchFriend.class);
+                startActivity(intent_searchNewFriend_activity);
+            }
+        });
         include_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

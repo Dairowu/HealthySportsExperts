@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg_color">
+    android:background="@color/ring_color">
     <View 
         android:id="@+id/view_lineOne"
         android:layout_width="match_parent"
@@ -11,6 +11,7 @@
         android:id="@+id/layout_search_friends"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="4dp"
         android:orientation="horizontal">
      <View 
         android:layout_width="0dp"
@@ -20,7 +21,7 @@
         android:id="@+id/edit_search_friends"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="5"
+        android:layout_weight="6"
         android:layout_below="@id/view_lineOne"
         android:drawableLeft="@drawable/activity_add_search_friend_head"
         android:background="@drawable/search_friend_shape"
@@ -33,10 +34,12 @@
     <Button 
         android:id="@+id/btn_search_friends"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="36dp"
         android:layout_weight="1"
         android:background="@drawable/btn_login_selector"
-        android:text="搜索"/>
+        android:text="搜索"
+        android:textSize="16sp"
+        android:textColor="@color/base_color_text_white"/>
     <View 
         android:layout_width="0dp"
         android:layout_height="match_parent"

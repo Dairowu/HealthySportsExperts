@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--林思旭 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/activity_chatting_biaoqing_true" android:state_selected="true"/>
+    <item android:drawable="@drawable/activity_chatting_biaoqing_false" android:state_selected="false"/>
+
+</selector>

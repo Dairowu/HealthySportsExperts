@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/base_color_text_white">
     <ImageView
         android:id="@+id/ig_title"
         android:layout_width="wrap_content"
@@ -21,6 +22,7 @@
         android:layout_height="50dp"
         android:text="删除会话"
         android:textSize="20sp"
+        android:textColor="@color/ring_color"
         android:gravity="center"
         android:textStyle="italic"/>
     <View
@@ -33,6 +35,7 @@
         android:layout_height="50dp"
         android:text="标为未读"
         android:textSize="20sp"
+        android:textColor="@color/ring_color"
         android:gravity="center"
         android:textStyle="italic"/>
 

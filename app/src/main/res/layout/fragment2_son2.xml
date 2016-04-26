@@ -41,17 +41,18 @@
             android:layout_width="0dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.0"
-            android:padding="5dp"
+            android:padding="4dp"
             android:singleLine="true"
-            android:text="new_friends"
+            android:text="新朋友"
+            android:textStyle="italic"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/main_bg_color"/>
+        android:layout_height="3dp"
+        android:background="@color/ring_color"/>
 
     <ListView
         android:id="@+id/lv_contact"

@@ -13,12 +13,14 @@ import java.util.List;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.ui.view.BmobTextView;
 import cn.xietong.healthysportsexperts.utils.ChatData;
+import cn.xietong.healthysportsexperts.utils.TimeUtil;
 
 /**
  * 林思旭，2016.4.9
  */
 public class ChatAdapter extends ArrayAdapter<ChatData> {
 
+	private String TAG = "ChatAdapter";
 	private Boolean flag;
 	private int resourceId;
 	public ChatAdapter(Context context, int viewresource,List<ChatData> objects) {
@@ -31,6 +33,13 @@ public class ChatAdapter extends ArrayAdapter<ChatData> {
 		// TODO Auto-generated method stub
 		ChatData chatData = getItem(position);
 		View view = LayoutInflater.from(getContext()).inflate(resourceId, null);
+		TextView txt_time = (TextView)view.findViewById(R.id.txt_content_time);
+		if(chatData.getTime()!=null){
+			long msg_time = Long.parseLong(chatData.getTime());
+			txt_time.setText(TimeUtil.getChatTime(msg_time + 12*3600));
+		}else{
+			txt_time.setVisibility(View.GONE);
+		}
 		//接受方
 		BmobTextView txt_Content_receive = (BmobTextView)view.findViewById(R.id.txt_textcontent_receive);//接受到信息背景是白色的
 		TextView txt_receive_Name = (TextView)view.findViewById(R.id.txt_target_receive_Name);
@@ -38,10 +47,8 @@ public class ChatAdapter extends ArrayAdapter<ChatData> {
 		//发送方
 		BmobTextView txt_Content_send = (BmobTextView)view.findViewById(R.id.txt_textcontent_sending);
 		ImageView ig_ChatView_send = (ImageView)view.findViewById(R.id.imageView_current_sending);
-	    TextView txt_ChatName_send = (TextView)view.findViewById(R.id.txt_current_sending_Name);
+		TextView txt_ChatName_send = (TextView)view.findViewById(R.id.txt_current_sending_Name);
 
-
-	    
 		if(chatData.getFlag() == true){
 
 			txt_Content_send.setVisibility(View.VISIBLE);
@@ -55,8 +62,8 @@ public class ChatAdapter extends ArrayAdapter<ChatData> {
 
 			txt_Content_send.setText(chatData.getChatContent());
 			txt_ChatName_send.setText(chatData.getChatname());
-			
-		}else{
+
+		}else {
 			txt_Content_receive.setVisibility(View.VISIBLE);
 			txt_receive_Name.setVisibility(View.VISIBLE);
 			ig_ChatView_receive.setVisibility(View.VISIBLE);
@@ -67,13 +74,11 @@ public class ChatAdapter extends ArrayAdapter<ChatData> {
 
 			txt_Content_receive.setText(chatData.getChatContent());
 			txt_receive_Name.setText(chatData.getChatname());
-		    
-			
+
+
 		}
-	    
-		
 		return view;
 	}
-	
+
 
 }

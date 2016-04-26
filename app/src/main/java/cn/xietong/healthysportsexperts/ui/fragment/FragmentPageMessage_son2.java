@@ -151,7 +151,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
 //				Log.i(TAG, "filledData - 3");
                 Log.i(TAG, "Username="+sortModel.getUsername() + "");
                 String pinyin = characterParser.getSelling(sortModel.getNick());//出现空指针(忘记New了)改变了(获取Nick来排序)
-                String sortString = pinyin.substring(0, 1).toUpperCase();
+                String sortString = pinyin.substring(0, 1).toUpperCase();//获取第一个字母的拼音
                 // 正则表达式，判断首字母是否是英文字母
                 if (sortString.matches("[A-Z]")) {
                     sortModel.setSortLetters(sortString.toUpperCase());
@@ -161,7 +161,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             } else {
                 sortModel.setSortLetters("#");
             }
-			Log.i(TAG, "sortModel="+sortModel+"");
+			Log.v(TAG, "sortModel="+sortModel+"");
             friends.add(sortModel);
         }
         // 根据a-z进行排序(排序成功)
@@ -169,7 +169,10 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             @Override
             public int compare(MyUser lhs, MyUser rhs) {
                 // TODO Auto-generated method stub
-                return lhs.getUsername().compareTo(rhs.getUsername());
+                if(lhs.getNick()==null)return 1;
+                if(rhs.getNick()==null)return -1;
+                Log.i(TAG,"lhs.getNick()="+lhs.getNick()+"   "+"rhs.getNick()="+rhs.getNick());
+                return lhs.getNick().compareToIgnoreCase(rhs.getNick());//compareToIgnoreCase不区分大小写，compareTo区分大小写
             }
         });
     }

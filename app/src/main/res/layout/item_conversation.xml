@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:minHeight="65dp"
         android:paddingBottom="5.0dip"
-        android:paddingTop="5.0dip" 
-        >
+        android:paddingTop="5.0dip">
 
         <ImageView
             android:id="@+id/iv_recent_avatar"
@@ -20,6 +19,7 @@
             android:layout_gravity="center_vertical"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
+            android:padding="4dp"
             android:src="@drawable/fragment_userfriend_head" />
 
         <TextView
@@ -33,6 +33,7 @@
             android:ellipsize="end"
             android:gravity="left|center"
             android:singleLine="true"
+            android:elevation="2dp"
             android:textColor="@drawable/recent_name_text_color_selector"
             />
 
@@ -69,15 +70,12 @@
 
         <TextView
             android:id="@+id/tv_recent_unread"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/tv_recent_time"
-            android:layout_marginRight="10.0dip"
-            android:layout_marginTop="5.0dip"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="50dp"
             android:background="@drawable/recent_new_message"
-            android:gravity="center"
             android:textColor="#ffffffff"
+            android:elevation="1dp"
             android:textStyle="bold"
             android:textSize="25sp" />
     </RelativeLayout>

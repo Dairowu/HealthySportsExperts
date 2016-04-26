@@ -166,7 +166,6 @@ public class TimeUtil {
 		Log.i("info","otherDay="+otherDay);
 		int temp = Integer.parseInt(sdf.format(today))
 				- Integer.parseInt(sdf.format(otherDay));
-
 		switch (temp) {
 		case 0:
 			result = "今天 " + getHourAndMin(clearTime);
