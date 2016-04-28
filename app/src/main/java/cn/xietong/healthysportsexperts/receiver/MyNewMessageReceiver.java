@@ -22,8 +22,8 @@ import cn.bmob.im.config.BmobConfig;
 import cn.bmob.im.config.BmobConstant;
 import cn.bmob.im.db.BmobDB;
 import cn.bmob.im.inteface.EventListener;
+import cn.bmob.im.inteface.OnReceiveListener;
 import cn.bmob.im.util.BmobJsonUtil;
-import cn.bmob.im.util.BmobLog;
 import cn.bmob.v3.listener.FindListener;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.app.App;
@@ -81,7 +81,7 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
             jo = new JSONObject(json);
             String fromId = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TARGETID);
             //增加消息接收方的ObjectId--目的是解决多账户登陆同一设备时，无法接收到非当前登陆用户的消息。
-            String toId = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TOID);
+            final String toId = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TOID);
             //4.6
             String tag = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TAG);
             String targetId = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TARGETID);
@@ -89,11 +89,11 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
             String avatar = BmobJsonUtil.getString(jo,	BmobConstant.PUSH_KEY_TARGETAVATAR);
             String nick = BmobJsonUtil.getString(jo,	BmobConstant.PUSH_KEY_TARGETNICK);
 
-            BmobLog.i("targetId = " + targetId);
-            BmobLog.i("username = "+username);
-            BmobLog.i("nick = "+nick);
-            BmobLog.i("tag = "+tag);
-            BmobLog.i("avatar = "+avatar);
+            Log.i(TAG,"targetId = " + targetId);
+            Log.i(TAG,"username = "+username);
+            Log.i(TAG,"nick = "+nick);
+            Log.i(TAG,"tag = "+tag);
+            Log.i(TAG,"avatar = "+avatar);
             //聊天用户
             BmobChatUser targetUser = new BmobChatUser();
             targetUser.setObjectId(targetId==null?"":targetId);
@@ -101,28 +101,51 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
             targetUser.setNick(nick==null?"":nick);
             targetUser.setUsername(username==null?"":username);
             if(TextUtils.isEmpty(tag)){//不携带tag标签(聊天内容)
-                String message = BmobJsonUtil.getString(jo,	BmobConstant.PUSH_KEY_CONTENT);
-                int msgtype = BmobJsonUtil.getInt(jo, BmobConstant.PUSH_KEY_MSGTYPE);
+                //16:09
+                BmobChatManager.getInstance(context).createReceiveMsg(json, new OnReceiveListener() {
+                    @Override
+                    public void onSuccess(BmobMsg bmobMsg) {
+                        if (ehList.size() > 0) {// 有监听的时候，传递下去
+                            for (int i = 0; i < ehList.size(); i++) {
+                                ((EventListener) ehList.get(i)).onMessage(bmobMsg);
+                            }
+                        } else {
+                            boolean isAllow = App.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
+                            if(isAllow && currentUser!=null && currentUser.getObjectId().equals(toId)){//当前登陆用户存在并且也等于接收方id
+                                mNewNum++;
+                                showMsgNotify(context , bmobMsg);
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(int i, String s) {
+                        Log.i(TAG,"获取接收的消息失败："+s);
+                    }
+                });
+//                String message = BmobJsonUtil.getString(jo,	BmobConstant.PUSH_KEY_CONTENT);
+//                int msgtype = BmobJsonUtil.getInt(jo, BmobConstant.PUSH_KEY_MSGTYPE);
                 BmobMsg msg =BmobMsg.createTextSendMsg(context, targetId, json);
                 Log.i(TAG, "msg="+msg);
                 Intent intentJson = new Intent(Activity_Chatting.ACTION_INTENT_RECEIVER);
                 intentJson.putExtra("Json", Msgjson);
                 context.sendBroadcast(intentJson);
-                // 普通消息，
-                if (ehList.size() > 0) {// 有监听的时候，传递下去
-                    for (int i = 0; i < ehList.size(); i++) {
-                        ((EventListener) ehList.get(i)).onMessage(msg);
-                    }
-                } else {
-                    // 存储接收到的消息
-//					BmobChatManager.getInstance(context).saveReceiveMessage(true, msg);
-//					BmobDB.create(context, targetId).saveMessage(msg);//这样封装可以将信息发送到targetId用户中去
-                    boolean isAllow = App.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
-                    if(isAllow){
-                        mNewNum++;
-//						showNotification(context, targetUser, msg.getContent());
-                    }
-                }
+//                // 普通消息，（修改）
+//                if (ehList.size() > 0) {// 有监听的时候，传递下去
+//                    for (int i = 0; i < ehList.size(); i++) {
+//                        ((EventListener) ehList.get(i)).onMessage(msg);
+//                    }
+//                } else {
+//                    // 存储接收到的消息
+////					BmobChatManager.getInstance(context).saveReceiveMessage(true, msg);
+					  BmobDB.create(context, targetId).saveMessage(msg);//这样封装可以将信息发送到targetId用户中去
+////                  BmobDB.create(context,targetId).resetUnread(msg.getContent());
+//                    boolean isAllow = App.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
+//                    if(isAllow){
+//                        mNewNum++;
+////						showNotification(context, targetUser, msg.getContent());
+//                    }
+//                }
+//                //修改
             }else {
                 if(tag.equals(BmobConfig.TAG_ADD_CONTACT)){
                     BmobInvitation message_invitate =BmobInvitation.createReceiverInvitation(json);
@@ -138,7 +161,6 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
                     }else{
                         boolean isAllow = App.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
                         if(currentUser!=null && currentUser.getObjectId().equals(toId)){
-                            //ͬʱ����֪ͨ
                             String tickerText = message_invitate.getFromname()+"请求添加好友";
                             Intent intent_new_friend = new Intent(Activity_NewFriend.NEW_FRIEND_RECEIVE);
                             intent_new_friend.putExtra("new_friend", json);
@@ -208,26 +230,35 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
         }
     }
     /**
-     * showNotify
+     *  显示与聊天消息的通知
      * @Title: showNotify
      * @return void
      * @throws
      */
-    public void showNotification(Context context,BmobChatUser targetUser ,String content) {
-        // ����֪ͨ��
+    public void showMsgNotify(Context context,BmobMsg msg) {
+        // 更新通知栏
         int icon = R.drawable.ic_launcher;
         String trueMsg = "";
-        if(content.contains("\\ue")){
+        if(msg.getMsgType()==BmobConfig.TYPE_TEXT && msg.getContent().contains("\\ue")){
             trueMsg = "[表情]";
+        }else if(msg.getMsgType()==BmobConfig.TYPE_IMAGE){
+            trueMsg = "[图片]";
+        }else if(msg.getMsgType()==BmobConfig.TYPE_VOICE){
+            trueMsg = "[语音]";
+        }else if(msg.getMsgType()==BmobConfig.TYPE_LOCATION){
+            trueMsg = "[位置]";
         }else{
-            trueMsg = content;
+            trueMsg = msg.getContent();
         }
-        CharSequence tickerText = targetUser.getUsername() + ":" + trueMsg;
-        String contentTitle = targetUser.getUsername() + " (" + mNewNum + "条新消息)";
+        CharSequence tickerText = msg.getBelongUsername() + ":" + trueMsg;
+        String contentTitle = msg.getBelongUsername()+ " (" + mNewNum + "条新消息)";
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        BmobNotifyManager.getInstance(context).showNotifyWithExtras(true, true, icon, tickerText.toString(), contentTitle, tickerText.toString(), intent);
 
+        boolean isAllowVoice = App.getInstance().getSharedPreferencesUtil().isAllowVoice();
+        boolean isAllowVibrate = App.getInstance().getSharedPreferencesUtil().isAllowVibrate();
+
+        BmobNotifyManager.getInstance(context).showNotifyWithExtras(isAllowVoice,isAllowVibrate,icon, tickerText.toString(), contentTitle, tickerText.toString(),intent);
     }
 }

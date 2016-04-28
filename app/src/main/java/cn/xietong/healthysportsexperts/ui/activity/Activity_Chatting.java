@@ -40,6 +40,7 @@ import cn.bmob.im.db.BmobDB;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.adapter.ChatAdapter;
 import cn.xietong.healthysportsexperts.adapter.GridViewAdapter;
+import cn.xietong.healthysportsexperts.adapter.MessageChatAdapter;
 import cn.xietong.healthysportsexperts.adapter.ViewPagerAdapter;
 import cn.xietong.healthysportsexperts.utils.ChatData;
 import cn.xietong.healthysportsexperts.utils.FaceText;
@@ -71,7 +72,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private View view;
     //4.17
     private SwipeRefreshLayout myRefreshLayout;
-    String msg = "";
+    String ed_msg = "";
     String targetId = "";
     String targetName = "";
     String targetNick = "";
@@ -87,6 +88,8 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private List<String> current_history_content,target_history_content;//储存内容
     public static String ACTION_INTENT_RECEIVER = "NewMessage";
 
+    //2016.4.29
+    private MessageChatAdapter mAdapter;
     @Override
     public int getLayoutId() {
         return R.layout.activity_chatting;
@@ -120,16 +123,16 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         //组装聊天对象
         targetUser = (BmobChatUser) getIntent().getSerializableExtra("user");
         Log.i(TAG, "targetUser="+targetUser);
-        Log.i(TAG, targetUser.getUsername()+"");
+        Log.i(TAG, "targetUserName="+targetUser.getUsername()+"");
         targetId = targetUser.getObjectId();
         targetName = targetUser.getUsername();
         targetNick = targetUser.getNick();
         //获取登录用户的信息
 //        current_Nick = BmobChatUser.getCurrentUser(this).get;
         current_name = BmobChatUser.getCurrentUser(this).getUsername();
-        Log.i(TAG, BmobChatUser.getCurrentUser(this).getUsername());
+        Log.i(TAG, "current_name="+current_name);
         current_targetId = BmobChatUser.getCurrentUser(this).getObjectId();
-        Log.i(TAG, targetId+"");
+        Log.i(TAG, "targetId="+targetId+"");
         initFace();//11.23+
         initOnClickListener();//监听普通的按钮点击
         refreshNumber += 2;//默认显示历史消息2条
@@ -230,12 +233,12 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send:{
-                imageView_face.setSelected(false);//2016.4.22
-                msg = et_msg.getText().toString();
-                BmobMsg message = BmobMsg.createTextSendMsg(this, targetId, msg);
-                initChaList(msg, current_Nick, message.getMsgTime() ,true); //true为自己发送消息的文本识别
+                ed_msg = et_msg.getText().toString();
+                BmobMsg msg = BmobMsg.createTextSendMsg(this, targetId, ed_msg);
+                msg.setToId(targetId);
+                initChaList(ed_msg, current_Nick, msg.getMsgTime() ,true); //true为自己发送消息的文本识别
                 et_msg.setText("");
-                manager.sendTextMessage(targetUser, message);
+                manager.sendTextMessage(targetUser, msg);
                 Log.i(TAG,"成功发送消息给对方");
                 break;
             }
@@ -489,12 +492,14 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         Log.i(TAG, "size=" + list.size() + "list=" + list);
         if(list.size() > 0){
             for(int i = 0; i < list.size() && i < refreshNumber; i++){
-                list.get(i).getMsgTime();
-                String current_content = list.get(list.size()-1 - i).getContent();
-                String current_time = list.get(list.size()-1 - i).getMsgTime();
-                current_history_time.add(current_time);
-                current_history_content.add(current_content);
-                Log.i(TAG, "content=" + current_content);
+                if(list.get(list.size() - 1 - i).getToId().equals(targetId)) {
+                    Log.i(TAG,"Current="+list.get(i).getToId());
+                    String current_content = list.get(list.size() - 1 - i).getContent();
+                    String current_time = list.get(list.size() - 1 - i).getMsgTime();
+                    current_history_time.add(current_time);
+                    current_history_content.add(current_content);
+                    Log.i(TAG, "content=" + current_content);
+                }
             }
         }
     }//查询对方发过来的话
@@ -503,10 +508,14 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         Log.i(TAG, "sizeTarget=" + list_target.size() + " " + "list_target=" + list_target);
         if(list_target.size() > 0){
             for(int i = 0; i < list_target.size() && i < refreshNumber; i++){
-                String target_content = list_target.get(list_target.size()-1 - i ).getContent();
-                String target_time = list_target.get(list_target.size()-1 -i).getMsgTime();
-                target_history_time.add(target_time);
-                target_history_content.add(target_content);
+                if(list_target.get(list_target.size()-1 - i).getToId().equals(current_targetId)){
+                    Log.i(TAG,"Target_ID="+list_target.get(i).getToId());
+                    String target_content = list_target.get(list_target.size()-1 - i ).getContent();
+                    String target_time = list_target.get(list_target.size()-1 -i).getMsgTime();
+                    target_history_time.add(target_time);
+                    target_history_content.add(target_content);
+                    Log.i(TAG, "target_history_content=" + target_history_content);
+                }
             }
         }
 
@@ -517,15 +526,19 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private void loadHistoryContent(){
         initTargetMsg();
         initCurrentMsg();
-        if(current_history_content.size() > 0 && target_history_content.size() == 0){//只有自己发送消息时候
+        if(current_history_content.size() > 0 && target_history_content.size() == 0) {//只有自己发送消息时候
             for(int k = current_history_content.size() - 1; k >= 0; k--){
                 initChaList(current_history_content.get(k), current_Nick, current_history_time.get(k), true);
+                Log.i(TAG,"load1 - 1");
             }
+            Log.i(TAG,"load1");
         }
         if(current_history_content.size() == 0 && target_history_content.size() > 0){//只有别人发送消息给自己，自己没发信息给别人
             for (int k = target_history_content.size() - 1; k >= 0; k--){
                 initChaList(target_history_content.get(k) , targetNick , target_history_time.get(k), false);
+                Log.i(TAG,"load2 - 1");
             }
+            Log.i(TAG,"load2");
         }
         if(current_history_content.size() > 0 && target_history_content.size() > 0){//双方都有历史消息
             Log.i(TAG,"load");
@@ -535,6 +548,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                     initChaList(current_history_content.get(i), current_Nick, current_history_time.get(i), true);
                     if(i > 0){
                         i--;
+                        Log.i(TAG,"j==0 && i > 0");
                         continue;
                     }
                 }
@@ -542,11 +556,11 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                     initChaList(target_history_content.get(j) , targetNick , target_history_time.get(j), false);
                     if(j > 0){
                         j--;
+                        Log.i(TAG,"i==0 && j > 0");
                         continue;
                     }
                     if(j==0)break;
                     Log.i(TAG, "i==0");
-
                 }
                 if( j > 0 && i > 0){
                     if(current_history_time.get(i).compareTo(target_history_time.get(j)) < 0){ //历史时间小于它返回小于0
@@ -579,4 +593,5 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         target_history_content.clear();
         target_history_time.clear();
     }
+
 }

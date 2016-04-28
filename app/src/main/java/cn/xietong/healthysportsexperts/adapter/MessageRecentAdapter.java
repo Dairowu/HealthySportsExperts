@@ -47,6 +47,7 @@ public class MessageRecentAdapter extends ArrayAdapter<BmobRecent> implements Fi
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		final BmobRecent item = mData.get(position);
+		Log.i(TAG,"item="+item);
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.item_conversation, parent, false);
 		}
@@ -55,7 +56,6 @@ public class MessageRecentAdapter extends ArrayAdapter<BmobRecent> implements Fi
 		TextView tv_recent_msg = ViewHolder.get(convertView, R.id.tv_recent_msg);
 		TextView tv_recent_time = ViewHolder.get(convertView, R.id.tv_recent_time);
 		TextView tv_recent_unread = ViewHolder.get(convertView, R.id.tv_recent_unread);
-		
 		//填充数据
 		String avatar = item.getAvatar();
 		if(avatar!=null&& !avatar.equals("")){
@@ -65,14 +65,15 @@ public class MessageRecentAdapter extends ArrayAdapter<BmobRecent> implements Fi
 		}
 		
 		tv_recent_name.setText(item.getNick());
+		Log.i(TAG,"Nick="+item.getNick());
 		tv_recent_time.setText(TimeUtil.getChatTime(item.getTime() + 12*3600));//晚上测试下
-		Log.i(TAG, "item.getTime()=" + item.getTime());
 		Log.i(TAG, "getTime="+TimeUtil.getChatTime(item.getTime()));
-		int num = BmobDB.create(mContext).getUnreadCount(item.getTargetid());
+		Log.i(TAG,"type="+item.getType());
 		//显示内容
 		if(item.getType()==BmobConfig.TYPE_TEXT){
 			SpannableString spannableString = FaceTextUtils.toSpannableString(mContext, item.getMessage());
 			tv_recent_msg.setText(spannableString);
+			Log.i(TAG,"item.getMessage()="+item.getMessage());
 		}else if(item.getType()==BmobConfig.TYPE_IMAGE){
 			tv_recent_msg.setText("[图片]");
 		}else if(item.getType()==BmobConfig.TYPE_LOCATION){
@@ -84,7 +85,8 @@ public class MessageRecentAdapter extends ArrayAdapter<BmobRecent> implements Fi
 		}else if(item.getType()==BmobConfig.TYPE_VOICE){
 			tv_recent_msg.setText("[语音]");
 		}
-		
+		int num = BmobDB.create(mContext).getUnreadCount(item.getTargetid());//获取不了未读取的消息2016.4.28
+		Log.i(TAG,"item.getTargetid="+item.getTargetid()+"   "+"num="+num);
 		if (num > 0) {
 			tv_recent_unread.setVisibility(View.VISIBLE);
 			tv_recent_unread.setText(num + "");
