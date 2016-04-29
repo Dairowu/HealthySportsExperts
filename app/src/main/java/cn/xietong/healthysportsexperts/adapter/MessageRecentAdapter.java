@@ -66,7 +66,7 @@ public class MessageRecentAdapter extends ArrayAdapter<BmobRecent> implements Fi
 		
 		tv_recent_name.setText(item.getNick());
 		Log.i(TAG,"Nick="+item.getNick());
-		tv_recent_time.setText(TimeUtil.getChatTime(item.getTime() + 12*3600));//晚上测试下
+		tv_recent_time.setText(TimeUtil.getChatTime(item.getTime()));//晚上测试下
 		Log.i(TAG, "getTime="+TimeUtil.getChatTime(item.getTime()));
 		Log.i(TAG,"type="+item.getType());
 		//显示内容

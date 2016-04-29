@@ -137,7 +137,7 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
 //                } else {
 //                    // 存储接收到的消息
 ////					BmobChatManager.getInstance(context).saveReceiveMessage(true, msg);
-					  BmobDB.create(context, targetId).saveMessage(msg);//这样封装可以将信息发送到targetId用户中去
+//					  BmobDB.create(context, targetId).saveMessage(msg);//这样封装可以将信息发送到targetId用户中去
 ////                  BmobDB.create(context,targetId).resetUnread(msg.getContent());
 //                    boolean isAllow = App.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
 //                    if(isAllow){

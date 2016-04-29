@@ -36,7 +36,7 @@ public class ChatAdapter extends ArrayAdapter<ChatData> {
 		TextView txt_time = (TextView)view.findViewById(R.id.txt_content_time);
 		if(chatData.getTime()!=null){
 			long msg_time = Long.parseLong(chatData.getTime());
-			txt_time.setText(TimeUtil.getChatTime(msg_time + 12*3600));
+			txt_time.setText(TimeUtil.getChatTime(msg_time));
 		}else{
 			txt_time.setVisibility(View.GONE);
 		}
