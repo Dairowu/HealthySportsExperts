@@ -16,7 +16,7 @@ import cn.xietong.healthysportsexperts.utils.ChatData;
 import cn.xietong.healthysportsexperts.utils.TimeUtil;
 
 /**
- * 林思旭，2016.4.9
+ * 林思旭，2016.4.9(要删除的，已经废弃了)
  */
 public class ChatAdapter extends ArrayAdapter<ChatData> {
 

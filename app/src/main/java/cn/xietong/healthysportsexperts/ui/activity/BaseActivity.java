@@ -1,5 +1,7 @@
 package cn.xietong.healthysportsexperts.ui.activity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.app.App;
 import cn.xietong.healthysportsexperts.ui.view.TopBar;
+import cn.xietong.healthysportsexperts.ui.view.dialog.DialogTips;
 import cn.xietong.healthysportsexperts.utils.ActivityCollector;
 import cn.xietong.healthysportsexperts.utils.CollectionUtils;
 
@@ -139,6 +142,27 @@ public abstract class BaseActivity extends FragmentActivity {
         public void rightClick() {
 
         }
+    }
+    /** 显示下线的对话框
+     * showOfflineDialog
+     * @return void
+     * @throws
+     * @author 林思旭，2016.4.29
+     */
+    public void showOfflineDialog(final Context context) {
+        DialogTips dialog = new DialogTips(this,"您的账号已在其他设备上登录!", "重新登录");
+        // 设置成功事件
+        dialog.SetOnSuccessListener(new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int userId) {
+                App.getInstance().logout();
+                startActivity(new Intent(context, Activity_Login.class));
+                finish();
+                dialogInterface.dismiss();
+            }
+        });
+        // 显示确认对话框
+        dialog.show();
+        dialog = null;
     }
 
 }

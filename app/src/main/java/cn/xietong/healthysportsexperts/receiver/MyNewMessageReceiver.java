@@ -45,7 +45,7 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
     BmobUserManager userManager;
     BmobChatUser currentUser;
     // 事件监听
-    public ArrayList<EventListener> ehList = new ArrayList<EventListener>();
+    public static ArrayList<EventListener> ehList = new ArrayList<EventListener>();
     private String Msgjson;
     @Override
     public void onReceive(Context context, Intent intent) {

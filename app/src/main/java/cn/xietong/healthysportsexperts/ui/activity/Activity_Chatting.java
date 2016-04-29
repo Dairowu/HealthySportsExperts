@@ -1,8 +1,10 @@
 package cn.xietong.healthysportsexperts.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
@@ -25,32 +27,35 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.im.BmobChatManager;
+import cn.bmob.im.BmobNotifyManager;
 import cn.bmob.im.bean.BmobChatUser;
+import cn.bmob.im.bean.BmobInvitation;
 import cn.bmob.im.bean.BmobMsg;
 import cn.bmob.im.config.BmobConfig;
 import cn.bmob.im.db.BmobDB;
+import cn.bmob.im.inteface.EventListener;
+import cn.bmob.v3.listener.PushListener;
 import cn.xietong.healthysportsexperts.R;
-import cn.xietong.healthysportsexperts.adapter.ChatAdapter;
 import cn.xietong.healthysportsexperts.adapter.GridViewAdapter;
 import cn.xietong.healthysportsexperts.adapter.MessageChatAdapter;
 import cn.xietong.healthysportsexperts.adapter.ViewPagerAdapter;
-import cn.xietong.healthysportsexperts.utils.ChatData;
+import cn.xietong.healthysportsexperts.receiver.MyNewMessageReceiver;
+import cn.xietong.healthysportsexperts.ui.view.dialog.DialogTips;
+import cn.xietong.healthysportsexperts.utils.CommonUtils;
 import cn.xietong.healthysportsexperts.utils.FaceText;
 import cn.xietong.healthysportsexperts.utils.FaceTextUtils;
-import cn.xietong.healthysportsexperts.utils.MessageJson;
 
 /**
  * Created by 林思旭 on 2016/4/9.。。
  */
-public class Activity_Chatting extends BaseActivity implements View.OnClickListener {
+public class Activity_Chatting extends BaseActivity implements View.OnClickListener,EventListener {
     private static String TAG = "Activity_Chatting";
     //
     private ImageView imageView_face;
@@ -64,15 +69,10 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private EditText et_msg;
     private Button btn_send;
     private ListView listView_msg;
-    private List<ChatData> DataList;
     private ViewPager viewpager;
-    //11.23
-    private ChatAdapter adapter;
-    private NewMessageReceiver receiver;
     private View view;
     //4.17
     private SwipeRefreshLayout myRefreshLayout;
-    String ed_msg = "";
     String targetId = "";
     String targetName = "";
     String targetNick = "";
@@ -81,15 +81,13 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     String  current_Nick = "我";
     BmobChatUser targetUser;
     BmobChatManager manager;
-    private MessageJson messageJson;
-    private static int MsgPagerNum = 5;//2016.4.15
-    private int refreshNumber = 0;
-    private List<String> current_history_time,target_history_time;//储存时间
-    private List<String> current_history_content,target_history_content;//储存内容
+    private static int MsgPagerNum  = 0;//2016.4.15
     public static String ACTION_INTENT_RECEIVER = "NewMessage";
 
     //2016.4.29
     private MessageChatAdapter mAdapter;
+    private NewBroadcastReceiver  myreceiver;
+    public static final int NEW_MESSAGE = 0x001;// 收到消息
     @Override
     public int getLayoutId() {
         return R.layout.activity_chatting;
@@ -98,17 +96,8 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     @Override
     public void initViews() {
         manager = BmobChatManager.getInstance(this);
-        //注册接受广播
-        initNewMessageBroadCast();
-        //加载历史消息的List数组
-        current_history_content = new ArrayList<String>();
-        target_history_content = new ArrayList<String>();
-        current_history_time = new ArrayList<String>();
-        target_history_time = new ArrayList<String>();
-
-        DataList = new ArrayList<ChatData>();
-        adapter = new ChatAdapter(Activity_Chatting.this, R.layout.activity_chatting_listview_item, DataList);
-
+        //注册广播接收器
+        initMyNewMessageBroadCast();
         myRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh_history_content);
         myRefreshLayout.setColorSchemeResources(R.color.main_bg_color, R.color.ring_color,
                 R.color.ring_text_color , R.color.sel_color);//2016.4.7(设置旋转刷新颜色)
@@ -134,10 +123,10 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         current_targetId = BmobChatUser.getCurrentUser(this).getObjectId();
         Log.i(TAG, "targetId="+targetId+"");
         initFace();//11.23+
+        //2016.4.29
+        initOrRefresh();
+        listView_msg.setSelection(mAdapter.getCount() - 1);
         initOnClickListener();//监听普通的按钮点击
-        refreshNumber += 2;//默认显示历史消息2条
-        loadHistoryContent();//加载历史消息(这里还是出现长度问题)
-        refreshNumber = 0;//重新设置回0,方便下面刷新自身相加
     }
     //按钮的监听
     private void initOnClickListener(){
@@ -145,15 +134,28 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         myRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                clearList();//清空数组
+//                clearList();//清空数组
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        refreshNumber += 5;
-                        loadHistoryContent();
+//                        refreshNumber += 5;
+                        MsgPagerNum ++;
+//                        loadHistoryContent();
+                        int total = BmobDB.create(Activity_Chatting.this).queryChatTotalCount(targetId);
+                        Log.i(TAG,"记录总数：" + total);
+                        int currents = mAdapter.getCount();
+                        if (total <= currents) {
+                            Toast.makeText(Activity_Chatting.this,"消息已全部加载完成!",Toast.LENGTH_SHORT).show();
+                        } else {
+                            List<BmobMsg> msgList = initMsgData();
+                            mAdapter.setList(msgList);
+                            mAdapter.notifyDataSetChanged();
+                            listView_msg.setSelection(mAdapter.getCount() - currents - 1);
+                        }
+                        Log.i(TAG,"刷新");
                         myRefreshLayout.setRefreshing(false);
                     }
-                },4000);//刷新2秒
+                },4000);//刷新4秒
             }
         });
 
@@ -222,6 +224,17 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 return onTouchEvent(event);
             }
         });
+        //2016.4.29
+        // 重发按钮的点击事件
+        mAdapter.setOnInViewClickListener(R.id.iv_fail_resend,
+                new MessageChatAdapter.onInternalClickListener() {
+                    @Override
+                    public void OnClickListener(View parentV, View v,
+                                                Integer position, Object values) {
+                        // 重发消息
+                        showResendDialog(parentV, v, values);
+                    }
+                });
     }
 
     @Override
@@ -233,13 +246,23 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send:{
-                ed_msg = et_msg.getText().toString();
-                BmobMsg msg = BmobMsg.createTextSendMsg(this, targetId, ed_msg);
-                msg.setToId(targetId);
-                initChaList(ed_msg, current_Nick, msg.getMsgTime() ,true); //true为自己发送消息的文本识别
-                et_msg.setText("");
-                manager.sendTextMessage(targetUser, msg);
-                Log.i(TAG,"成功发送消息给对方");
+                final String msg = et_msg.getText().toString();
+                boolean isNetConnected = CommonUtils.isNetworkAvailable(this);
+                if (msg.equals("")) {
+                    Toast.makeText(this,"请输入发送消息!",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!isNetConnected) {
+                    Toast.makeText(this,"请检查你的网络",Toast.LENGTH_SHORT).show();
+                    // return;
+                }
+                // 组装BmobMessage对象
+                BmobMsg message = BmobMsg.createTextSendMsg(this, targetId, msg);
+                message.setExtra("Bmob");
+                // 默认发送完成，将数据保存到本地消息表和最近会话表中
+                manager.sendTextMessage(targetUser, message);
+                // 刷新界面
+                refreshMessage(message);
                 break;
             }
             //11.23(点击表情事件)
@@ -337,75 +360,12 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         return faceView;
 
     }
-    //11.23
-    /**
-     *
-     * @param content 聊天的内容
-     * @param chatname 聊天对象名字
-     * @param time //d当前聊天时间
-     * @param flag  判断是否是当前聊天对象的信息,false为接受到对方信息，true为自己发信息
-     */
 
-    private void initChaList(String content , String chatname , String time,Boolean flag){
-        ChatData myChat = new ChatData(content,chatname,time,flag);
-        DataList.add(myChat);
-        adapter.notifyDataSetChanged();
-        listView_msg.setAdapter(adapter);
-        listView_msg.setSelection(listView_msg.getCount()-1);
-        Log.i(TAG, "initChatList");
-    }
-
-    /**
-     *
-     * @param Json //解析接受到的数据
-     * @return  //返回接收到并且解析好的数据
-     */
-    private  MessageJson parseMessage(String Json){
-        MessageJson messageJson = new MessageJson();
-        try {
-            JSONObject myJson = new JSONObject(Json);
-            messageJson.setFt(myJson.getString("ft"));
-            messageJson.setFid(myJson.getString("fId"));
-            messageJson.setMc(myJson.getString("mc"));
-//			messageJson.setMc(replace(myJson.getString("mc")));
-            messageJson.settId(myJson.getString("tId"));
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return messageJson;
-    }
-
-    class NewMessageReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
-            if(intent.getAction().equals(ACTION_INTENT_RECEIVER)){
-                messageJson = parseMessage(intent.getStringExtra("Json"));
-                if( current_targetId.equals(messageJson.gettId())){
-                    Log.i(TAG, messageJson.gettId());
-                    initChaList(messageJson.getMc(), targetNick , messageJson.getFt() ,false);
-                    Log.i(TAG, "Broadcast");
-                }
-            }
-        }
-
-    }
-
-    private void initNewMessageBroadCast(){
-        // 注册接收消息广播
-        receiver = new NewMessageReceiver();
-        IntentFilter intentFilter = new IntentFilter(BmobConfig.BROADCAST_NEW_MESSAGE);
-        //设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
-        intentFilter.setPriority(3);
-        intentFilter.addAction(ACTION_INTENT_RECEIVER);
-        registerReceiver(receiver, intentFilter);
-    }
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        unregisterReceiver(receiver);
+        unregisterReceiver(myreceiver);
         finish();
     }
     /**
@@ -483,115 +443,212 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         }
         return true;
     }
+    //2016.4.29
     /**
-     * 加载消息历史，从数据库中读出,加载自己发出去的话(应该通过时间的比对来加载历史消息)
+     * 刷新界面
+     * @Title: refreshMessage
+     * @Description: TODO
+     * @param @param message
+     * @return void
+     * @throws
      */
-    private void initCurrentMsg() {
-        List<BmobMsg> list = BmobDB.create(this).queryMessages(targetId,
-                MsgPagerNum);
-        Log.i(TAG, "size=" + list.size() + "list=" + list);
-        if(list.size() > 0){
-            for(int i = 0; i < list.size() && i < refreshNumber; i++){
-                if(list.get(list.size() - 1 - i).getToId().equals(targetId)) {
-                    Log.i(TAG,"Current="+list.get(i).getToId());
-                    String current_content = list.get(list.size() - 1 - i).getContent();
-                    String current_time = list.get(list.size() - 1 - i).getMsgTime();
-                    current_history_time.add(current_time);
-                    current_history_content.add(current_content);
-                    Log.i(TAG, "content=" + current_content);
-                }
-            }
-        }
-    }//查询对方发过来的话
-    private void initTargetMsg(){
-        List<BmobMsg> list_target = BmobDB.create(this,targetId).queryMessages(targetId, MsgPagerNum);
-        Log.i(TAG, "sizeTarget=" + list_target.size() + " " + "list_target=" + list_target);
-        if(list_target.size() > 0){
-            for(int i = 0; i < list_target.size() && i < refreshNumber; i++){
-                if(list_target.get(list_target.size()-1 - i).getToId().equals(current_targetId)){
-                    Log.i(TAG,"Target_ID="+list_target.get(i).getToId());
-                    String target_content = list_target.get(list_target.size()-1 - i ).getContent();
-                    String target_time = list_target.get(list_target.size()-1 -i).getMsgTime();
-                    target_history_time.add(target_time);
-                    target_history_content.add(target_content);
-                    Log.i(TAG, "target_history_content=" + target_history_content);
-                }
-            }
-        }
-
-    }
-    /**
-     * 加载历史消息并且显示在UI上面(2016.4.17)
-     */
-    private void loadHistoryContent(){
-        initTargetMsg();
-        initCurrentMsg();
-        if(current_history_content.size() > 0 && target_history_content.size() == 0) {//只有自己发送消息时候
-            for(int k = current_history_content.size() - 1; k >= 0; k--){
-                initChaList(current_history_content.get(k), current_Nick, current_history_time.get(k), true);
-                Log.i(TAG,"load1 - 1");
-            }
-            Log.i(TAG,"load1");
-        }
-        if(current_history_content.size() == 0 && target_history_content.size() > 0){//只有别人发送消息给自己，自己没发信息给别人
-            for (int k = target_history_content.size() - 1; k >= 0; k--){
-                initChaList(target_history_content.get(k) , targetNick , target_history_time.get(k), false);
-                Log.i(TAG,"load2 - 1");
-            }
-            Log.i(TAG,"load2");
-        }
-        if(current_history_content.size() > 0 && target_history_content.size() > 0){//双方都有历史消息
-            Log.i(TAG,"load");
-            for(int i = current_history_content.size() - 1 ,j = target_history_content.size() - 1; i >= 0 || j >= 0;) {
-                Log.i(TAG,"for");
-                if(j == 0){
-                    initChaList(current_history_content.get(i), current_Nick, current_history_time.get(i), true);
-                    if(i > 0){
-                        i--;
-                        Log.i(TAG,"j==0 && i > 0");
-                        continue;
-                    }
-                }
-                if (i == 0){
-                    initChaList(target_history_content.get(j) , targetNick , target_history_time.get(j), false);
-                    if(j > 0){
-                        j--;
-                        Log.i(TAG,"i==0 && j > 0");
-                        continue;
-                    }
-                    if(j==0)break;
-                    Log.i(TAG, "i==0");
-                }
-                if( j > 0 && i > 0){
-                    if(current_history_time.get(i).compareTo(target_history_time.get(j)) < 0){ //历史时间小于它返回小于0
-                        initChaList(current_history_content.get(i) , current_Nick , current_history_time.get(i), true);
-                        i--;
-                        Log.i(TAG,"<0");
-                    }else if(current_history_time.get(i).compareTo(target_history_time.get(j)) == 0){ //历史时间相同返回0
-                        initChaList(current_history_content.get(i) , current_Nick , current_history_time.get(i), true);
-                        initChaList(target_history_content.get(j) , targetNick , target_history_time.get(j) , false);
-                        i--;
-                        j--;
-                        Log.i(TAG,"==0"+"i="+i+"j="+j);
-                    }else if(current_history_time.get(i).compareTo(target_history_time.get(j)) > 0){ //历史时间大于他返回大于0
-                        initChaList(target_history_content.get(j) , targetNick , target_history_time.get(j) , false);
-                        j--;
-                        Log.i(TAG,">0");
-                    }
-                }
-            }
-        }
-    }
-    /**
-     * 清空List数组里面的数据
-     */
-    private void clearList(){
-        Log.i(TAG , "清楚数组");
-        adapter.clear();
-        current_history_content.clear();
-        current_history_time.clear();
-        target_history_content.clear();
-        target_history_time.clear();
+    private void refreshMessage(BmobMsg msg) {
+        // 更新界面
+        mAdapter.add(msg);
+        listView_msg.setSelection(mAdapter.getCount() - 1);
+        et_msg.setText("");
     }
 
+    /**
+     * 界面刷新
+     * @Title: initOrRefresh
+     * @Description: TODO
+     * @param
+     * @return void
+     * @throws
+     */
+    private void initOrRefresh() {
+        if (mAdapter != null) {
+            if (MyNewMessageReceiver.mNewNum != 0) {// 用于更新当在聊天界面锁屏期间来了消息，这时再回到聊天页面的时候需要显示新来的消息
+                int news=  MyNewMessageReceiver.mNewNum;//有可能锁屏期间，来了N条消息,因此需要倒叙显示在界面上
+                int size = initMsgData().size();
+                for(int i=(news-1);i>=0;i--){
+                    mAdapter.add(initMsgData().get(size-(i+1)));// 添加最后一条消息到界面显示
+                }
+                listView_msg.setSelection(mAdapter.getCount() - 1);
+            } else {
+                mAdapter.notifyDataSetChanged();
+            }
+        } else {
+            mAdapter = new MessageChatAdapter(this, initMsgData());
+            listView_msg.setAdapter(mAdapter);
+        }
+    }
+    /**
+     * 加载消息历史，从数据库中读出
+     */
+    private List<BmobMsg> initMsgData() {
+        List<BmobMsg> list = BmobDB.create(this).queryMessages(targetId,MsgPagerNum);
+        return list;
+    }
+    private void initMyNewMessageBroadCast(){
+        // 注册接收消息广播
+        myreceiver = new NewBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter(BmobConfig.BROADCAST_NEW_MESSAGE);
+        //设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
+        intentFilter.setPriority(5);
+        registerReceiver(myreceiver, intentFilter);
+    }
+
+    /**
+     * 新消息广播接收者
+     *
+     */
+    private class NewBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String from = intent.getStringExtra("fromId");
+            String msgId = intent.getStringExtra("msgId");
+            String msgTime = intent.getStringExtra("msgTime");
+            // 收到这个广播的时候，message已经在消息表中，可直接获取
+            if(!TextUtils.isEmpty(from)&& !TextUtils.isEmpty(msgId)&& !TextUtils.isEmpty(msgTime)){
+                BmobMsg msg = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(msgId, msgTime);
+                if (!from.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
+                    return;
+                //添加到当前页面
+                mAdapter.add(msg);
+                // 定位
+                listView_msg.setSelection(mAdapter.getCount() - 1);
+                //取消当前聊天对象的未读标示
+                BmobDB.create(Activity_Chatting.this).resetUnread(targetId);
+            }
+            // 记得把广播给终结掉
+            abortBroadcast();
+        }
+    }
+    /**
+     * 显示重发按钮 showResendDialog
+     * @Title: showResendDialog
+     * @Description: TODO
+     * @param @param recent
+     * @return void
+     * @throws
+     */
+    public void showResendDialog(final View parentV, View v, final Object values) {
+        DialogTips dialog = new DialogTips(this, "确定重发该消息", "确定", "取消", "提示",
+                true);
+        // 设置成功事件
+        dialog.SetOnSuccessListener(new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int userId) {
+                if (((BmobMsg) values).getMsgType() == BmobConfig.TYPE_IMAGE
+                        || ((BmobMsg) values).getMsgType() == BmobConfig.TYPE_VOICE) {// 图片和语音类型的采用
+//                    resendFileMsg(parentV, values);
+                } else {
+                    resendTextMsg(parentV, values);
+                }
+                dialogInterface.dismiss();
+            }
+        });
+        // 显示确认对话框
+        dialog.show();
+        dialog = null;
+    }
+    /**
+     * 重发文本消息
+     */
+    private void resendTextMsg(final View parentV, final Object values) {
+        BmobChatManager.getInstance(Activity_Chatting.this).resendTextMessage(
+                targetUser, (BmobMsg) values, new PushListener() {
+
+                    @Override
+                    public void onSuccess() {
+                        // TODO Auto-generated method stub
+                        ShowLog("发送成功");
+                        ((BmobMsg) values)
+                                .setStatus(BmobConfig.STATUS_SEND_SUCCESS);
+                        parentV.findViewById(R.id.progress_load).setVisibility(
+                                View.INVISIBLE);
+                        parentV.findViewById(R.id.iv_fail_resend)
+                                .setVisibility(View.INVISIBLE);
+                        parentV.findViewById(R.id.tv_send_status)
+                                .setVisibility(View.VISIBLE);
+                        ((TextView) parentV.findViewById(R.id.tv_send_status))
+                                .setText("已发送");
+                    }
+
+                    @Override
+                    public void onFailure(int arg0, String arg1) {
+                        // TODO Auto-generated method stub
+                        ShowLog("发送失败:" + arg1);
+                        ((BmobMsg) values)
+                                .setStatus(BmobConfig.STATUS_SEND_FAIL);
+                        parentV.findViewById(R.id.progress_load).setVisibility(
+                                View.INVISIBLE);
+                        parentV.findViewById(R.id.iv_fail_resend)
+                                .setVisibility(View.VISIBLE);
+                        parentV.findViewById(R.id.tv_send_status)
+                                .setVisibility(View.INVISIBLE);
+                    }
+                });
+        mAdapter.notifyDataSetChanged();
+    }
+    @Override
+    public void onMessage(BmobMsg message) {
+        // TODO Auto-generated method stub
+        Message handlerMsg = handler.obtainMessage(NEW_MESSAGE);
+        handlerMsg.obj = message;
+        handler.sendMessage(handlerMsg);
+    }
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == NEW_MESSAGE) {
+                BmobMsg message = (BmobMsg) msg.obj;
+                String uid = message.getBelongId();
+                BmobMsg m = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(message.getConversationId(), message.getMsgTime());
+                if (!uid.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
+                    return;
+                mAdapter.add(m);
+                // 定位
+                listView_msg.setSelection(mAdapter.getCount() - 1);
+                //取消当前聊天对象的未读标示
+                BmobDB.create(Activity_Chatting.this).resetUnread(targetId);
+            }
+        }
+    };
+
+    @Override
+    public void onReaded(String s, String s1) {
+
+    }
+
+    @Override
+    public void onNetChange(boolean isNetConnected) {
+        if (!isNetConnected) {
+            Toast.makeText(this, "当前网络不可用,请检查您的网络!",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onAddUser(BmobInvitation bmobInvitation) {
+
+    }
+
+    @Override
+    public void onOffline() {
+        showOfflineDialog(this);
+    }
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        // 新消息到达，重新刷新界面
+        initOrRefresh();
+        MyNewMessageReceiver.ehList.add(this);// 监听推送的消息
+        // 有可能锁屏期间，在聊天界面出现通知栏，这时候需要清除通知和清空未读消息数
+        BmobNotifyManager.getInstance(this).cancelNotify();
+        BmobDB.create(this).resetUnread(targetId);
+        //清空消息未读数-这个要在刷新之后
+        MyNewMessageReceiver.mNewNum=0;
+    }
 }
