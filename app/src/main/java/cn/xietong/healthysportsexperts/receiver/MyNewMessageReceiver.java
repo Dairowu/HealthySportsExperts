@@ -27,7 +27,6 @@ import cn.bmob.im.util.BmobJsonUtil;
 import cn.bmob.v3.listener.FindListener;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.app.App;
-import cn.xietong.healthysportsexperts.ui.activity.Activity_Chatting;
 import cn.xietong.healthysportsexperts.ui.activity.Activity_NewFriend;
 import cn.xietong.healthysportsexperts.ui.activity.MainActivity;
 import cn.xietong.healthysportsexperts.ui.fragment.FragmentPageMessage_son2;
@@ -53,6 +52,7 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
         Msgjson = intent.getStringExtra("msg");
         userManager = BmobUserManager.getInstance(context);
         currentUser = userManager.getCurrentUser();
+        Log.i(TAG,"Msgjson="+Msgjson);
         boolean isNetConnected = CommonUtils.isNetworkAvailable(context);
         Log.i(TAG,"123");
         if(isNetConnected){
@@ -62,12 +62,6 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
             for (int i = 0; i < ehList.size(); i++)
                 ((EventListener) ehList.get(i)).onNetChange(isNetConnected);
         }
-//        Intent intentJson = new Intent(MainActivity.ACTION_INTENT_RECEIVER);
-//        intentJson.putExtra("Json", Msgjson);
-//        context.sendBroadcast(intentJson);
-        Log.i(TAG, Msgjson);
-
-        //2016.3.23
     }
 
     /**
@@ -76,7 +70,7 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
      * @param json
      */
 
-    private void parseMessage(final Context context, String json){
+    private void parseMessage(final Context context, final String json){
         try {
             jo = new JSONObject(json);
             String fromId = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TARGETID);
@@ -84,7 +78,7 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
             final String toId = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TOID);
             //4.6
             String tag = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TAG);
-            String targetId = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TARGETID);
+            final String targetId = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TARGETID);
             String username = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TARGETUSERNAME);
             String avatar = BmobJsonUtil.getString(jo,	BmobConstant.PUSH_KEY_TARGETAVATAR);
             String nick = BmobJsonUtil.getString(jo,	BmobConstant.PUSH_KEY_TARGETNICK);
@@ -100,11 +94,21 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
             targetUser.setAvatar(avatar==null?"":avatar);
             targetUser.setNick(nick==null?"":nick);
             targetUser.setUsername(username==null?"":username);
+            String msgTime = BmobJsonUtil.getString(jo,BmobConstant.PUSH_READED_MSGTIME);
             if(TextUtils.isEmpty(tag)){//不携带tag标签(聊天内容)
                 //16:09
                 BmobChatManager.getInstance(context).createReceiveMsg(json, new OnReceiveListener() {
                     @Override
                     public void onSuccess(BmobMsg bmobMsg) {
+                        Log.i(TAG,"onSuccess");
+//                        if(currentUser!=null && currentUser.getObjectId().equals(bmobMsg.getToId())){
+//                            Intent intentJson = new Intent(Activity_Chatting.ACTION_INTENT_RECEIVER);
+//                            intentJson.putExtra("fromId",bmobMsg.getBelongId());
+//                            intentJson.putExtra("msgId",bmobMsg.getConversationId());
+//                            intentJson.putExtra("msgTime",bmobMsg.getMsgTime());
+//                            context.sendBroadcast(intentJson);
+//                            Log.i(TAG,"发送给自己"+"  "+"fromId="+bmobMsg.getBelongId());
+//                        }
                         if (ehList.size() > 0) {// 有监听的时候，传递下去
                             for (int i = 0; i < ehList.size(); i++) {
                                 ((EventListener) ehList.get(i)).onMessage(bmobMsg);
@@ -119,33 +123,9 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
                     }
                     @Override
                     public void onFailure(int i, String s) {
-                        Log.i(TAG,"获取接收的消息失败："+s);
+                        Log.i(TAG,"获取接收的消息失败："+s );
                     }
                 });
-//                String message = BmobJsonUtil.getString(jo,	BmobConstant.PUSH_KEY_CONTENT);
-//                int msgtype = BmobJsonUtil.getInt(jo, BmobConstant.PUSH_KEY_MSGTYPE);
-                BmobMsg msg =BmobMsg.createTextSendMsg(context, targetId, json);
-                Log.i(TAG, "msg="+msg);
-                Intent intentJson = new Intent(Activity_Chatting.ACTION_INTENT_RECEIVER);
-                intentJson.putExtra("Json", Msgjson);
-                context.sendBroadcast(intentJson);
-//                // 普通消息，（修改）
-//                if (ehList.size() > 0) {// 有监听的时候，传递下去
-//                    for (int i = 0; i < ehList.size(); i++) {
-//                        ((EventListener) ehList.get(i)).onMessage(msg);
-//                    }
-//                } else {
-//                    // 存储接收到的消息
-////					BmobChatManager.getInstance(context).saveReceiveMessage(true, msg);
-//					  BmobDB.create(context, targetId).saveMessage(msg);//这样封装可以将信息发送到targetId用户中去
-////                  BmobDB.create(context,targetId).resetUnread(msg.getContent());
-//                    boolean isAllow = App.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
-//                    if(isAllow){
-//                        mNewNum++;
-////						showNotification(context, targetUser, msg.getContent());
-//                    }
-//                }
-//                //修改
             }else {
                 if(tag.equals(BmobConfig.TAG_ADD_CONTACT)){
                     BmobInvitation message_invitate =BmobInvitation.createReceiverInvitation(json);
@@ -211,7 +191,6 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
                     }
                 }else if(tag.equals(BmobConfig.TAG_READED)){//已读回执
                     String conversionId = BmobJsonUtil.getString(jo,BmobConstant.PUSH_READED_CONVERSIONID);
-                    String msgTime = BmobJsonUtil.getString(jo,BmobConstant.PUSH_READED_MSGTIME);
                     if(currentUser!=null){
                         //更改某条消息的状态
                         BmobChatManager.getInstance(context).updateMsgStatus(conversionId, msgTime);

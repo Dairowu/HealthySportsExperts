@@ -136,9 +136,9 @@ public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 	public View bindView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		final BmobMsg item = list.get(position);
+		Log.i(TAG,"size="+list.size());
 		if (convertView == null) {
 			convertView = createViewByType(item, position);
-			Log.i(TAG,"convertView="+convertView);
 		}
 		//文本类型
 		ImageView iv_avatar = ViewHolder.get(convertView, R.id.iv_avatar);
@@ -240,6 +240,7 @@ public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 					SpannableString spannableString = FaceTextUtils
 							.toSpannableString(mContext, text);
 					tv_message.setText(spannableString);
+					Log.i(TAG,"message="+spannableString);
 				} catch (Exception e) {
 				}
 				break;

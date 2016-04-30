@@ -2,11 +2,7 @@ package cn.xietong.healthysportsexperts.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -82,12 +78,12 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     BmobChatUser targetUser;
     BmobChatManager manager;
     private static int MsgPagerNum  = 0;//2016.4.15
-    public static String ACTION_INTENT_RECEIVER = "NewMessage";
 
     //2016.4.29
     private MessageChatAdapter mAdapter;
-    private NewBroadcastReceiver  myreceiver;
+//    private NewBroadcastReceiver  myreceiver;
     public static final int NEW_MESSAGE = 0x001;// 收到消息
+    public static String ACTION_INTENT_RECEIVER = "SELF_NEW_MESSAGE";
     @Override
     public int getLayoutId() {
         return R.layout.activity_chatting;
@@ -97,7 +93,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     public void initViews() {
         manager = BmobChatManager.getInstance(this);
         //注册广播接收器
-        initMyNewMessageBroadCast();
+//        initMyNewMessageBroadCast();
         myRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh_history_content);
         myRefreshLayout.setColorSchemeResources(R.color.main_bg_color, R.color.ring_color,
                 R.color.ring_text_color , R.color.sel_color);//2016.4.7(设置旋转刷新颜色)
@@ -258,7 +254,8 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 }
                 // 组装BmobMessage对象
                 BmobMsg message = BmobMsg.createTextSendMsg(this, targetId, msg);
-                message.setExtra("Bmob");
+                message.setBelongId(current_targetId);
+//                message.setExtra("Bmob");
                 // 默认发送完成，将数据保存到本地消息表和最近会话表中
                 manager.sendTextMessage(targetUser, message);
                 // 刷新界面
@@ -365,7 +362,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        unregisterReceiver(myreceiver);
+//        unregisterReceiver(myreceiver);
         finish();
     }
     /**
@@ -491,41 +488,53 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         List<BmobMsg> list = BmobDB.create(this).queryMessages(targetId,MsgPagerNum);
         return list;
     }
-    private void initMyNewMessageBroadCast(){
-        // 注册接收消息广播
-        myreceiver = new NewBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter(BmobConfig.BROADCAST_NEW_MESSAGE);
-        //设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
-        intentFilter.setPriority(5);
-        registerReceiver(myreceiver, intentFilter);
-    }
-
-    /**
-     * 新消息广播接收者
-     *
-     */
-    private class NewBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String from = intent.getStringExtra("fromId");
-            String msgId = intent.getStringExtra("msgId");
-            String msgTime = intent.getStringExtra("msgTime");
-            // 收到这个广播的时候，message已经在消息表中，可直接获取
-            if(!TextUtils.isEmpty(from)&& !TextUtils.isEmpty(msgId)&& !TextUtils.isEmpty(msgTime)){
-                BmobMsg msg = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(msgId, msgTime);
-                if (!from.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
-                    return;
-                //添加到当前页面
-                mAdapter.add(msg);
-                // 定位
-                listView_msg.setSelection(mAdapter.getCount() - 1);
-                //取消当前聊天对象的未读标示
-                BmobDB.create(Activity_Chatting.this).resetUnread(targetId);
-            }
-            // 记得把广播给终结掉
-            abortBroadcast();
-        }
-    }
+    //林思旭，2016.4.30功能一样，注释掉了
+//    private void initMyNewMessageBroadCast(){
+//        // 注册接收消息广播
+//        myreceiver = new NewBroadcastReceiver();
+//        IntentFilter intentFilter = new IntentFilter(BmobConfig.BROADCAST_NEW_MESSAGE);
+//        //设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
+//        intentFilter.setPriority(5);
+//        intentFilter.addAction(ACTION_INTENT_RECEIVER);
+//        registerReceiver(myreceiver, intentFilter);
+//    }
+//
+//    /**
+//     * 新消息广播接收者,作用相同，我注释掉
+//     *
+//     */
+//    private class NewBroadcastReceiver extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String from = intent.getStringExtra("fromId");
+//            String msgId = intent.getStringExtra("msgId");
+//            String msgTime = intent.getStringExtra("msgTime");
+//            String json = intent.getStringExtra("Json");
+////            BmobMsg msg = BmobMsg.createTextSendMsg(Activity_Chatting.this , current_targetId , json);
+//            Log.i(TAG,"fromId="+from+"   "+"msgId="+msgId+"    "+"msgTime="+msgTime +"  "+"json="+json);
+//            // 收到这个广播的时候，message已经在消息表中，可直接获取
+//            if(!TextUtils.isEmpty(from)&& !TextUtils.isEmpty(msgId)&& !TextUtils.isEmpty(msgTime)){ //进不去，不知道msgTime如何获取
+//                Log.i(TAG,"0 - 0");
+//                BmobMsg msg = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(msgId, msgTime);
+////                BmobMsg msg = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(from,msgTime);
+//                Log.i(TAG,"msg="+msg.getContent());
+//                if( msg.getBelongId().equals(msg.getToId()) ){
+//                    msg.setBelongId(msg.getBelongId()+"test");
+//                    Log.i(TAG,"重新设置值");
+//                }
+//                if (!from.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
+//                    return;
+//                //添加到当前页面
+//                mAdapter.add(msg);
+//                // 定位
+//                listView_msg.setSelection(mAdapter.getCount() - 1);
+//                //取消当前聊天对象的未读标示
+//                BmobDB.create(Activity_Chatting.this).resetUnread(targetId);
+//            }
+//            // 记得把广播给终结掉
+//            abortBroadcast();
+//        }
+//    }
     /**
      * 显示重发按钮 showResendDialog
      * @Title: showResendDialog
@@ -592,9 +601,15 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 });
         mAdapter.notifyDataSetChanged();
     }
+
+    /**
+     * 当有新消息来的时候，都会自动接受到message,与上面广播的作用是一样的，我注释掉
+     * @param message
+     */
     @Override
     public void onMessage(BmobMsg message) {
         // TODO Auto-generated method stub
+        Log.i(TAG,"onMessage="+message);
         Message handlerMsg = handler.obtainMessage(NEW_MESSAGE);
         handlerMsg.obj = message;
         handler.sendMessage(handlerMsg);
@@ -608,6 +623,10 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 BmobMsg m = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(message.getConversationId(), message.getMsgTime());
                 if (!uid.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
                     return;
+                if( m.getBelongId().equals(m.getToId()) ){
+                    m.setBelongId(m.getBelongId()+"test");
+                    Log.i(TAG,"重新设置值");
+                }
                 mAdapter.add(m);
                 // 定位
                 listView_msg.setSelection(mAdapter.getCount() - 1);
