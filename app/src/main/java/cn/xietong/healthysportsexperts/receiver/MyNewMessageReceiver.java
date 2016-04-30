@@ -29,6 +29,7 @@ import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.app.App;
 import cn.xietong.healthysportsexperts.ui.activity.Activity_NewFriend;
 import cn.xietong.healthysportsexperts.ui.activity.MainActivity;
+import cn.xietong.healthysportsexperts.ui.fragment.FragmentPageMessage_son1;
 import cn.xietong.healthysportsexperts.ui.fragment.FragmentPageMessage_son2;
 import cn.xietong.healthysportsexperts.utils.CollectionUtils;
 import cn.xietong.healthysportsexperts.utils.CommonUtils;
@@ -101,23 +102,20 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
                     @Override
                     public void onSuccess(BmobMsg bmobMsg) {
                         Log.i(TAG,"onSuccess");
-//                        if(currentUser!=null && currentUser.getObjectId().equals(bmobMsg.getToId())){
-//                            Intent intentJson = new Intent(Activity_Chatting.ACTION_INTENT_RECEIVER);
-//                            intentJson.putExtra("fromId",bmobMsg.getBelongId());
-//                            intentJson.putExtra("msgId",bmobMsg.getConversationId());
-//                            intentJson.putExtra("msgTime",bmobMsg.getMsgTime());
-//                            context.sendBroadcast(intentJson);
-//                            Log.i(TAG,"发送给自己"+"  "+"fromId="+bmobMsg.getBelongId());
-//                        }
                         if (ehList.size() > 0) {// 有监听的时候，传递下去
                             for (int i = 0; i < ehList.size(); i++) {
                                 ((EventListener) ehList.get(i)).onMessage(bmobMsg);
                             }
+                            Log.i(TAG,"size > 0");
                         } else {
                             boolean isAllow = App.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
+                            Log.i(TAG,"isAllow="+isAllow);
                             if(isAllow && currentUser!=null && currentUser.getObjectId().equals(toId)){//当前登陆用户存在并且也等于接收方id
                                 mNewNum++;
                                 showMsgNotify(context , bmobMsg);
+                                Intent intent_newMessage = new Intent(FragmentPageMessage_son1.ACTION_INTENT_RECEIVER);
+                                context.sendBroadcast(intent_newMessage);
+                                Log.i(TAG,"发送消息过来拉");
                             }
                         }
                     }

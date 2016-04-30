@@ -74,16 +74,13 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     String targetNick = "";
     String current_name;
     String current_targetId = "";
-    String  current_Nick = "我";
     BmobChatUser targetUser;
     BmobChatManager manager;
     private static int MsgPagerNum  = 0;//2016.4.15
 
     //2016.4.29
     private MessageChatAdapter mAdapter;
-//    private NewBroadcastReceiver  myreceiver;
     public static final int NEW_MESSAGE = 0x001;// 收到消息
-    public static String ACTION_INTENT_RECEIVER = "SELF_NEW_MESSAGE";
     @Override
     public int getLayoutId() {
         return R.layout.activity_chatting;
@@ -362,7 +359,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-//        unregisterReceiver(myreceiver);
         finish();
     }
     /**
@@ -469,16 +465,20 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             if (MyNewMessageReceiver.mNewNum != 0) {// 用于更新当在聊天界面锁屏期间来了消息，这时再回到聊天页面的时候需要显示新来的消息
                 int news=  MyNewMessageReceiver.mNewNum;//有可能锁屏期间，来了N条消息,因此需要倒叙显示在界面上
                 int size = initMsgData().size();
-                for(int i=(news-1);i>=0;i--){
-                    mAdapter.add(initMsgData().get(size-(i+1)));// 添加最后一条消息到界面显示
+                Log.i(TAG,"size="+size + "  "+"news="+news);
+                for(int i=(news-1);i >= 0;i--){ //改成i>0而不是i>=0，如果是i>=0就会导致接受时候会多显示一次接受的内容
+                    mAdapter.add(initMsgData().get(size-(i + 1)));// 添加最后一条消息到界面显示
+                    Log.i(TAG,"list_content="+initMsgData().get(size-(i + 1)).getContent());
                 }
                 listView_msg.setSelection(mAdapter.getCount() - 1);
             } else {
                 mAdapter.notifyDataSetChanged();
             }
+            Log.i(TAG,"添加内容了");
         } else {
             mAdapter = new MessageChatAdapter(this, initMsgData());
             listView_msg.setAdapter(mAdapter);
+            Log.i(TAG,"添加内容了2");
         }
     }
     /**
@@ -488,53 +488,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         List<BmobMsg> list = BmobDB.create(this).queryMessages(targetId,MsgPagerNum);
         return list;
     }
-    //林思旭，2016.4.30功能一样，注释掉了
-//    private void initMyNewMessageBroadCast(){
-//        // 注册接收消息广播
-//        myreceiver = new NewBroadcastReceiver();
-//        IntentFilter intentFilter = new IntentFilter(BmobConfig.BROADCAST_NEW_MESSAGE);
-//        //设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
-//        intentFilter.setPriority(5);
-//        intentFilter.addAction(ACTION_INTENT_RECEIVER);
-//        registerReceiver(myreceiver, intentFilter);
-//    }
-//
-//    /**
-//     * 新消息广播接收者,作用相同，我注释掉
-//     *
-//     */
-//    private class NewBroadcastReceiver extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String from = intent.getStringExtra("fromId");
-//            String msgId = intent.getStringExtra("msgId");
-//            String msgTime = intent.getStringExtra("msgTime");
-//            String json = intent.getStringExtra("Json");
-////            BmobMsg msg = BmobMsg.createTextSendMsg(Activity_Chatting.this , current_targetId , json);
-//            Log.i(TAG,"fromId="+from+"   "+"msgId="+msgId+"    "+"msgTime="+msgTime +"  "+"json="+json);
-//            // 收到这个广播的时候，message已经在消息表中，可直接获取
-//            if(!TextUtils.isEmpty(from)&& !TextUtils.isEmpty(msgId)&& !TextUtils.isEmpty(msgTime)){ //进不去，不知道msgTime如何获取
-//                Log.i(TAG,"0 - 0");
-//                BmobMsg msg = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(msgId, msgTime);
-////                BmobMsg msg = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(from,msgTime);
-//                Log.i(TAG,"msg="+msg.getContent());
-//                if( msg.getBelongId().equals(msg.getToId()) ){
-//                    msg.setBelongId(msg.getBelongId()+"test");
-//                    Log.i(TAG,"重新设置值");
-//                }
-//                if (!from.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
-//                    return;
-//                //添加到当前页面
-//                mAdapter.add(msg);
-//                // 定位
-//                listView_msg.setSelection(mAdapter.getCount() - 1);
-//                //取消当前聊天对象的未读标示
-//                BmobDB.create(Activity_Chatting.this).resetUnread(targetId);
-//            }
-//            // 记得把广播给终结掉
-//            abortBroadcast();
-//        }
-//    }
     /**
      * 显示重发按钮 showResendDialog
      * @Title: showResendDialog
@@ -661,13 +614,20 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
+        Log.i(TAG,"onResume");
         // 新消息到达，重新刷新界面
-        initOrRefresh();
+//        initOrRefresh();
         MyNewMessageReceiver.ehList.add(this);// 监听推送的消息
         // 有可能锁屏期间，在聊天界面出现通知栏，这时候需要清除通知和清空未读消息数
         BmobNotifyManager.getInstance(this).cancelNotify();
         BmobDB.create(this).resetUnread(targetId);
         //清空消息未读数-这个要在刷新之后
         MyNewMessageReceiver.mNewNum=0;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyNewMessageReceiver.ehList.remove(this);// 监听推送的消息
     }
 }

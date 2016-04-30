@@ -1,6 +1,9 @@
 package cn.xietong.healthysportsexperts.ui.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 
 import cn.bmob.im.bean.BmobChatUser;
 import cn.bmob.im.bean.BmobRecent;
+import cn.bmob.im.config.BmobConfig;
 import cn.bmob.im.db.BmobDB;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.adapter.MessageRecentAdapter;
@@ -29,7 +33,8 @@ public class FragmentPageMessage_son1 extends BaseFragment implements AdapterVie
     private boolean hidden;
     private ListView listview;
     private MessageRecentAdapter adapter;
-
+    public static String ACTION_INTENT_RECEIVER = "NewMessage";//2016.4.30
+    private NewMessageReceiver receiver;//2016.4.30
     @Override
     public int getLayoutId() {
         return R.layout.fragment2_son1;
@@ -51,7 +56,7 @@ public class FragmentPageMessage_son1 extends BaseFragment implements AdapterVie
         adapter = new MessageRecentAdapter(getActivity(), R.layout.item_conversation, BmobDB.create(getActivity()).queryRecents());
         Log.i(TAG,"fragment复活");
         listview.setAdapter(adapter);
-
+        initNewMessageBroadCast();//注册广播
     }
 
     @Override
@@ -148,6 +153,37 @@ public class FragmentPageMessage_son1 extends BaseFragment implements AdapterVie
         super.onResume();
         if(!hidden){
             refresh();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(receiver);
+    }
+
+    //2016.4.30林思旭增加刷新功能
+    private void initNewMessageBroadCast(){
+
+        // 注册接收消息广播
+        receiver = new NewMessageReceiver();
+        IntentFilter intentFilter = new IntentFilter(BmobConfig.BROADCAST_NEW_MESSAGE);
+        //设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
+        intentFilter.setPriority(3);
+        intentFilter.addAction(ACTION_INTENT_RECEIVER);
+        getActivity().registerReceiver(receiver, intentFilter);
+    }
+    class NewMessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            if(intent.getAction().equals(ACTION_INTENT_RECEIVER)){
+                adapter.clear();
+                adapter = new MessageRecentAdapter(getActivity(), R.layout.item_conversation, BmobDB.create(getActivity()).queryRecents());
+                listview.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 }
