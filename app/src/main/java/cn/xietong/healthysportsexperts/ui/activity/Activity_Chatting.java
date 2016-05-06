@@ -109,6 +109,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         targetId = targetUser.getObjectId();
         targetName = targetUser.getUsername();
         targetNick = targetUser.getNick();
+        initTopbarForLeft(targetNick,new OnTopbarButtonClickListener());
         //获取登录用户的信息
 //        current_Nick = BmobChatUser.getCurrentUser(this).get;
         current_name = BmobChatUser.getCurrentUser(this).getUsername();
@@ -486,6 +487,14 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
      */
     private List<BmobMsg> initMsgData() {
         List<BmobMsg> list = BmobDB.create(this).queryMessages(targetId,MsgPagerNum);
+        String avatar = list.get( list.size() - 1 ).getBelongAvatar();
+        for(int i = 0 ; i < list.size(); i++){
+            if(list.get(i).getBelongAvatar().equals(avatar)){
+                //如果头像相同就不需要重新设置过
+            }else{
+                list.get(i).setBelongAvatar(avatar);
+            }
+        }
         return list;
     }
     /**
@@ -563,6 +572,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     public void onMessage(BmobMsg message) {
         // TODO Auto-generated method stub
         Log.i(TAG,"onMessage="+message);
+        message.update(this);
         Message handlerMsg = handler.obtainMessage(NEW_MESSAGE);
         handlerMsg.obj = message;
         handler.sendMessage(handlerMsg);

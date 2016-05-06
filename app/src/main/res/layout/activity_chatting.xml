@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
             >
-      <include
+        <include
         layout="@layout/activity_chatting_buttom"
         android:id="@+id/include_button" 
         android:layout_width="match_parent"
@@ -30,15 +30,19 @@
         </android.support.v4.view.ViewPager> 
      </RelativeLayout>
    </RelativeLayout>
+    <include
+        layout="@layout/topbar"
+        android:id="@+id/topBar" />
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_history_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/RelativeLayout_magin">
+        android:layout_above="@id/RelativeLayout_magin"
+        android:layout_below="@id/topBar">
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:divider="@null" >
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>

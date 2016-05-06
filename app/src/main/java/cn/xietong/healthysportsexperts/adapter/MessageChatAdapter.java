@@ -230,9 +230,9 @@ public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 		//根据类型显示内容
 		final String text = item.getContent();
 		    if(item.getBelongId().equals(currentObjectId)){
-				tv_name.setText("我");
+				tv_name.setText(" ");//2016.5.6,改，这个是设置一个“我”
 			}else{
-				tv_name.setText(item.getBelongNick());
+				tv_name.setText(" ");//改，不需要每个item都设置名字了，这个是设置接收方名字
 			}
 		switch (item.getMsgType()) {
 			case BmobConfig.TYPE_TEXT:
