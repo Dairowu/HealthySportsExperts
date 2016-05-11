@@ -54,7 +54,6 @@ public class FragmentPageMessage_son1 extends BaseFragment implements AdapterVie
         listview.setOnItemClickListener(this);
         listview.setOnItemLongClickListener(this);
         adapter = new MessageRecentAdapter(getActivity(), R.layout.item_conversation, BmobDB.create(getActivity()).queryRecents());
-        Log.i(TAG,"fragment复活");
         listview.setAdapter(adapter);
         initNewMessageBroadCast();//注册广播
     }
@@ -128,7 +127,7 @@ public class FragmentPageMessage_son1 extends BaseFragment implements AdapterVie
         BmobDB.create(getActivity()).deleteMessages(recent.getTargetid());
     }
     public void refresh(){
-        Log.i(TAG,"refresh");
+
         try {
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {

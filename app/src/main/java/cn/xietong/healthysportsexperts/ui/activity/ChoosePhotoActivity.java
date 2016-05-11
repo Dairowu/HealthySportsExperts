@@ -1,5 +1,6 @@
 package cn.xietong.healthysportsexperts.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -10,9 +11,8 @@ import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.listener.UploadFileListener;
 import cn.xietong.healthysportsexperts.R;
+import cn.xietong.healthysportsexperts.config.BmobConstants;
 import cn.xietong.healthysportsexperts.ui.view.TopBar;
 import rx.Observable;
 import rx.functions.Action1;
@@ -68,21 +68,9 @@ public class ChoosePhotoActivity extends BaseActivity{
                 subscription.add(onSave.subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
-                        final BmobFile bmobFile = new BmobFile(croppedFile);
-                        bmobFile.upload(ChoosePhotoActivity.this, new UploadFileListener() {
-                            @Override
-                            public void onSuccess() {
-                                showToast("头像设置成功");
-                                String url = bmobFile.getFileUrl(ChoosePhotoActivity.this);
-                                mApplication.getSharedPreferencesUtil().setAvatarUrl(url);
-                            }
-
-                            @Override
-                            public void onFailure(int i, String s) {
-                                showToast("头像上传失败"+s);
-                                mApplication.getSharedPreferencesUtil().setAvatarUrl(null);
-                            }
-                        });
+                        Intent intent = getIntent();
+                        intent.setData(Uri.fromFile(croppedFile));
+                        ChoosePhotoActivity.this.setResult(BmobConstants.REQUESTCODE_CHOOSE_PHOTO,intent);
                         finish();
                     }
                 }));

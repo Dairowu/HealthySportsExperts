@@ -84,8 +84,11 @@
         <activity android:name=".ui.activity.Activity_NewFriend"/>
         <activity android:name=".ui.activity.Activity_SearchFriend"/>
         <activity android:name=".ui.activity.Activity_Chatting"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="stateUnchanged"/>
         <activity android:name=".ui.activity.MyInfoActivity"/>
+        <activity android:name=".ui.activity.ChangeInfoActivity"/>
+
+        <activity android:name=".ui.activity.DetailInfoActivity"/>
 
         <activity
             android:name="com.mob.tools.MobUIShell"

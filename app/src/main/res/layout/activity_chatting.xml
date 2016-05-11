@@ -1,9 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout_resizeLayout"
     android:background="#b3e5fc">
+
+    <include
+        layout="@layout/topbar"
+        android:id="@+id/topBar" />
+
     <RelativeLayout
             android:id="@+id/RelativeLayout_magin"
             android:layout_height="wrap_content"
@@ -14,25 +18,19 @@
         layout="@layout/activity_chatting_buttom"
         android:id="@+id/include_button" 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>  
-     <RelativeLayout
-            android:id="@+id/RelativeLayout_bmob_speak_face"
-            android:layout_height="260dp"
-            android:layout_width="match_parent"
-            android:layout_below="@id/include_button"
-            android:visibility="gone">      
+        android:layout_height="wrap_content"/>
          
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager_speak_face"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="260dp"
+            android:visibility="gone"
+            android:layout_below="@id/include_button"
             android:padding="20dp" >
         </android.support.v4.view.ViewPager> 
-     </RelativeLayout>
+
    </RelativeLayout>
-    <include
-        layout="@layout/topbar"
-        android:id="@+id/topBar" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_history_content"
         android:layout_width="match_parent"

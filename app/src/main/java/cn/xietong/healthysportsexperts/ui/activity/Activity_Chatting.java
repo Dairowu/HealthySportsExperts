@@ -11,7 +11,6 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,7 +21,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +53,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private static String TAG = "Activity_Chatting";
     //
     private ImageView imageView_face;
-    private RelativeLayout Layout_send_face;
     private boolean showLayout = false,KeyShow = false;
     private int lastX,lastY,offsetX,offsetY;//3.4
     private MyHandler myHandler = new MyHandler();
@@ -100,9 +97,8 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         listView_msg = (ListView)findViewById(R.id.listView);
 
         imageView_face = (ImageView)view.findViewById(R.id.imageView_sendImageView);//11.22
-        Layout_send_face = (RelativeLayout)findViewById(R.id.RelativeLayout_bmob_speak_face);//11.22
         viewpager = (ViewPager) findViewById(R.id.viewPager_speak_face);
-        //组装聊天对象
+        //组装聊天对象viewpager
         targetUser = (BmobChatUser) getIntent().getSerializableExtra("user");
         Log.i(TAG, "targetUser="+targetUser);
         Log.i(TAG, "targetUserName="+targetUser.getUsername()+"");
@@ -170,7 +166,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                     if(showLayout == true){
                         Log.i(TAG,"收起来");
                         imageView_face.setSelected(false);
-                        Layout_send_face.setVisibility(View.GONE);
+                        viewpager.setVisibility(View.GONE);
                         showLayout = false;
                         KeyShow = true;
                     }
@@ -206,12 +202,12 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                     Log.i(TAG, ">0" + " " + offsetY + " " + rawY + " " + lastY);
                 }
                 if(offsetY == 0){
-                    Layout_send_face.setVisibility(View.GONE);
+                    viewpager.setVisibility(View.GONE);
                     hideSoftInputView();
                 }
                 if(offsetY < 0){
                     showSoftInputView();
-                    Layout_send_face.setVisibility(View.GONE);
+                    viewpager.setVisibility(View.GONE);
                     showLayout = false;
                     Log.i(TAG, "<0"+offsetY+" "+rawY+" "+lastY);
                 }
@@ -272,14 +268,14 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                         KeyShow = false;
                     }else{
                         imageView_face.setSelected(true);//2016.4.22
-                        Layout_send_face.setVisibility(View.VISIBLE);
+                        viewpager.setVisibility(View.VISIBLE);
                         Log.i(TAG, "TRUE");
                     }
                     showLayout = true;
                     Log.i(TAG, "Visible");
                 } else {
                     imageView_face.setSelected(false);//2016.4.22
-                    Layout_send_face.setVisibility(View.GONE);
+                    viewpager.setVisibility(View.GONE);
                     showLayout = false;
                     KeyShow = true;
                     showSoftInputView();
@@ -391,8 +387,8 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     }
     @Override
     public void onBackPressed() {
-        if (Layout_send_face.getVisibility() == View.VISIBLE) {
-            Layout_send_face.setVisibility(View.GONE);
+        if (viewpager.getVisibility() == View.VISIBLE) {
+            viewpager.setVisibility(View.GONE);
             return;
         }else{
             finish();
@@ -406,7 +402,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             super.handleMessage(msg);
             if(msg.what == SHOW){
                 imageView_face.setSelected(true);
-                Layout_send_face.setVisibility(View.VISIBLE);
+                viewpager.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -426,17 +422,17 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             myHandler.sendMessage(message);
         }
     }
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
-        if(KeyShow == true){
-            hideSoftInputView();
-            KeyShow = false;
-        }else{
-            finish();
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//
+//        if(KeyShow == true){
+//            hideSoftInputView();
+//            KeyShow = false;
+//        }else{
+//            finish();
+//        }
+//        return true;
+//    }
     //2016.4.29
     /**
      * 刷新界面
@@ -487,12 +483,14 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
      */
     private List<BmobMsg> initMsgData() {
         List<BmobMsg> list = BmobDB.create(this).queryMessages(targetId,MsgPagerNum);
-        String avatar = list.get( list.size() - 1 ).getBelongAvatar();
-        for(int i = 0 ; i < list.size(); i++){
-            if(list.get(i).getBelongAvatar().equals(avatar)){
-                //如果头像相同就不需要重新设置过
-            }else{
-                list.get(i).setBelongAvatar(avatar);
+        if(list.size() > 0) {
+            String avatar = list.get(list.size() - 1).getBelongAvatar();
+            for(int i = 0 ; i < list.size(); i++){
+                if(list.get(i).getBelongAvatar().equals(avatar)){
+                    //如果头像相同就不需要重新设置过
+                }else{
+                    list.get(i).setBelongAvatar(avatar);
+                }
             }
         }
         return list;
@@ -534,7 +532,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                     @Override
                     public void onSuccess() {
                         // TODO Auto-generated method stub
-                        ShowLog("发送成功");
                         ((BmobMsg) values)
                                 .setStatus(BmobConfig.STATUS_SEND_SUCCESS);
                         parentV.findViewById(R.id.progress_load).setVisibility(
@@ -550,7 +547,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                     @Override
                     public void onFailure(int arg0, String arg1) {
                         // TODO Auto-generated method stub
-                        ShowLog("发送失败:" + arg1);
                         ((BmobMsg) values)
                                 .setStatus(BmobConfig.STATUS_SEND_FAIL);
                         parentV.findViewById(R.id.progress_load).setVisibility(

@@ -23,7 +23,9 @@
         android:layout_height="match_parent"
         android:layout_weight="6"
         android:layout_below="@id/view_lineOne"
+        android:paddingLeft="5dp"
         android:drawableLeft="@drawable/activity_add_search_friend_head"
+        android:drawablePadding="5dp"
         android:background="@drawable/search_friend_shape"
         android:hint="搜索好友">
     </EditText>

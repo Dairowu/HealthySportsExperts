@@ -11,7 +11,7 @@ import java.util.List;
 import cn.xietong.healthysportsexperts.utils.ViewHolder;
 
 /**
- * Created by mr.deng on 2016/4/16.
+ * Created by mr.deng on 2016/4/16
  */
 public abstract class CommonAdapter<T> extends BaseAdapter{
 

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import cn.xietong.healthysportsexperts.R;
 
 /**
- * Created by mr.deng on 2015/11/10.
+ * Created by mr.deng on 2015/11/10
  */
 public class TopBar extends RelativeLayout{
 
@@ -148,6 +148,27 @@ public class TopBar extends RelativeLayout{
                 mLeftButton.setVisibility(GONE);
             }else {
                 mRightButton.setVisibility(GONE);
+            }
+        }
+    }
+
+    /**
+     * 设置按钮的可用与否，id区分按钮，flag区分是否显示
+     * @param id 0表示左侧按钮 1表示右侧按钮
+     * @param flag 是否显示
+     */
+    public void setButtonEnable(int id,boolean flag){
+        if(flag){
+            if(id == 0){
+                mLeftButton.setEnabled(true);
+            }else {
+                mRightButton.setEnabled(true);;
+            }
+        }else {
+            if(id == 0){
+                mLeftButton.setEnabled(false);
+            }else {
+                mRightButton.setEnabled(false);
             }
         }
     }

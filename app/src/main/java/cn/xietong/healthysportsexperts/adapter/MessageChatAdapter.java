@@ -2,7 +2,6 @@ package cn.xietong.healthysportsexperts.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.SpannableString;
 import android.util.Log;
@@ -30,7 +29,7 @@ import cn.bmob.im.bean.BmobMsg;
 import cn.bmob.im.config.BmobConfig;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.adapter.base.ViewHolder;
-import cn.xietong.healthysportsexperts.ui.activity.MyInfoActivity;
+import cn.xietong.healthysportsexperts.ui.activity.DetailInfoActivity;
 import cn.xietong.healthysportsexperts.utils.FaceTextUtils;
 import cn.xietong.healthysportsexperts.utils.ImageLoadOptions;
 import cn.xietong.healthysportsexperts.utils.TimeUtil;
@@ -169,18 +168,14 @@ public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent intent =new Intent(mContext,MyInfoActivity.class);
 				if(getItemViewType(position) == TYPE_RECEIVER_TXT
 						||getItemViewType(position) == TYPE_RECEIVER_IMAGE
 						||getItemViewType(position)==TYPE_RECEIVER_LOCATION
 						||getItemViewType(position)==TYPE_RECEIVER_VOICE){
-					intent.putExtra("from", "other");
-					intent.putExtra("username", item.getBelongUsername());
+					DetailInfoActivity.actionStart(mContext,"other",item.getBelongUsername());
 				}else{
-					intent.putExtra("from", "me");
+					DetailInfoActivity.actionStart(mContext,"me",item.getBelongUsername());
 				}
-				mContext.startActivity(intent);
 			}
 		});
 

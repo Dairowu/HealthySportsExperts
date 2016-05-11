@@ -17,7 +17,7 @@ import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.ui.view.DropPop;
 
 /**计步和发帖界面
- * Created by Administrator on 2015/10/14.
+ * Created by mr.deng on 2015/10/14.
  */
 public class FragmentPagePosition extends BaseFragment implements View.OnClickListener{
 

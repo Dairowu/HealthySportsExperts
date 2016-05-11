@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +18,9 @@ import android.widget.TextView;
 
 import java.io.File;
 
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.config.BmobConstants;
 import cn.xietong.healthysportsexperts.model.MyUser;
@@ -31,7 +32,7 @@ import cn.xietong.healthysportsexperts.utils.CommonUtils;
  */
 public class Activity_SetInfo extends BaseActivity{
 
-    private static final int MAX_LENGTH = 70;
+    private static final int MAX_LENGTH = 30;
     EditText et_nickname,et_signature;
     TextView tv_signatureNumber;
     RadioGroup rg;
@@ -41,15 +42,6 @@ public class Activity_SetInfo extends BaseActivity{
     @Override
     public int getLayoutId() {
         return R.layout.activity_setinfo;
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        final File croppedFile = new File(getCacheDir(), "cropped.jpg");
-        if(croppedFile.exists()) {
-            iv_headphoto.setImageURI(Uri.fromFile(croppedFile));
-        }
     }
 
     @Override
@@ -116,12 +108,36 @@ public class Activity_SetInfo extends BaseActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        Uri uri = null;
+        if(data != null){
+            uri = data.getData();
+        }
         if(requestCode == BmobConstants.REQUESTCODE_TAKE_CAMERA
         &&resultCode == Activity.RESULT_OK){
             Intent intent = new Intent(Activity_SetInfo.this,ChoosePhotoActivity.class);
-            intent.setData(data.getData());
-            startActivity(intent);
+            intent.setData(uri);
+            startActivityForResult(intent,BmobConstants.REQUESTCODE_CHOOSE_PHOTO);
+        }else if(requestCode == BmobConstants.REQUESTCODE_CHOOSE_PHOTO && resultCode == requestCode){
+            if(uri != null){
+                iv_headphoto.setImageURI(uri);
+                final BmobFile bmobFile = new BmobFile(new File(uri.getPath()));
+                bmobFile.upload(Activity_SetInfo.this, new UploadFileListener() {
+                    @Override
+                    public void onSuccess() {
+                        showToast("头像设置成功");
+                        String url = bmobFile.getFileUrl(Activity_SetInfo.this);
+                        mApplication.getSharedPreferencesUtil().setAvatarUrl(url);
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        showToast("头像上传失败"+s);
+                        mApplication.getSharedPreferencesUtil().setAvatarUrl(null);
+                    }
+                });
+            }else {
+                showToast("头像设置失败");
+            }
         }
     }
 

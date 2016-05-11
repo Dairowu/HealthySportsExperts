@@ -86,7 +86,7 @@ public class MessageRecentAdapter extends ArrayAdapter<BmobRecent> implements Fi
 			tv_recent_msg.setText("[语音]");
 		}
 		int num = BmobDB.create(mContext).getUnreadCount(item.getTargetid());//获取不了未读取的消息2016.4.28
-		Log.i(TAG,"item.getTargetid="+item.getTargetid()+"   "+"num="+num);
+		Log.i("info","item.getTargetid="+item.getTargetid()+"   "+"num="+num);
 		if (num > 0) {
 			tv_recent_unread.setVisibility(View.VISIBLE);
 			tv_recent_unread.setText(num + "");

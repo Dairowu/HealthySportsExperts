@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp">
+
+        <Button
+            android:id="@+id/id_listItem_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/sel_color"
+            android:textSize="17sp"
+            android:textColor="@color/base_color_text_white"
+            android:text="@string/send_message"/>
+
+</LinearLayout>

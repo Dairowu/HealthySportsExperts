@@ -5,11 +5,11 @@ package cn.xietong.healthysportsexperts.model;
  */
 public class ItemListViewBean {
 
-    private final int type;
-    private final String title;
-    private final String content_text;
-    private final String content_photoUrl;
-    private final int content_photoRes;
+    private  int type;
+    private  String title;
+    private  String content_text;
+    private  String content_photoUrl;
+    private  int content_photoRes;
 
     public ItemListViewBean(int type, String title, String content_text, int content_photoRes) {
         this.type = type;
@@ -45,5 +45,13 @@ public class ItemListViewBean {
 
     public int getContent_photoRes() {
         return content_photoRes;
+    }
+
+    public void setContent_text(String content_text) {
+        this.content_text = content_text;
+    }
+
+    public void setContent_photoUrl(String content_photoUrl) {
+        this.content_photoUrl = content_photoUrl;
     }
 }

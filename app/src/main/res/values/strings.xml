@@ -6,4 +6,6 @@
     <string name="login_username_hint">请输入用户名…</string>
     <string name="login_password_hint">请输入密码…</string>
     <string name="text_complete">完成</string>
+    <string name="send_message">发消息</string>
+    <string name="add_friends">添加联系人</string>
 </resources>
