@@ -26,7 +26,6 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="@dimen/margin_chat_top"
-            android:background="@drawable/fragment_userfriend_head"
             android:scaleType="fitXY" />
         <TextView
             android:id="@+id/tv_chatting_name"
