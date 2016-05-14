@@ -53,12 +53,9 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
         Msgjson = intent.getStringExtra("msg");
         userManager = BmobUserManager.getInstance(context);
         currentUser = userManager.getCurrentUser();
-        Log.i(TAG,"Msgjson="+Msgjson);
         boolean isNetConnected = CommonUtils.isNetworkAvailable(context);
-        Log.i(TAG,"123");
         if(isNetConnected){
             parseMessage(context, Msgjson);
-            Log.i(TAG, "isNetConnected");
         }else{
             for (int i = 0; i < ehList.size(); i++)
                 ((EventListener) ehList.get(i)).onNetChange(isNetConnected);
@@ -83,12 +80,6 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
             String username = BmobJsonUtil.getString(jo, BmobConstant.PUSH_KEY_TARGETUSERNAME);
             String avatar = BmobJsonUtil.getString(jo,	BmobConstant.PUSH_KEY_TARGETAVATAR);
             String nick = BmobJsonUtil.getString(jo,	BmobConstant.PUSH_KEY_TARGETNICK);
-
-            Log.i(TAG,"targetId = " + targetId);
-            Log.i(TAG,"username = "+username);
-            Log.i(TAG,"nick = "+nick);
-            Log.i(TAG,"tag = "+tag);
-            Log.i(TAG,"avatar = "+avatar);
             //聊天用户
             BmobChatUser targetUser = new BmobChatUser();
             targetUser.setObjectId(targetId==null?"":targetId);
@@ -106,16 +97,13 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
                             for (int i = 0; i < ehList.size(); i++) {
                                 ((EventListener) ehList.get(i)).onMessage(bmobMsg);
                             }
-                            Log.i(TAG,"size > 0");
                         } else {
                             boolean isAllow = App.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
-                            Log.i(TAG,"isAllow="+isAllow);
                             if(isAllow && currentUser!=null && currentUser.getObjectId().equals(toId)){//当前登陆用户存在并且也等于接收方id
                                 mNewNum++;
                                 showMsgNotify(context , bmobMsg);
                                 Intent intent_newMessage = new Intent(FragmentPageMessage_son1.ACTION_INTENT_RECEIVER);
                                 context.sendBroadcast(intent_newMessage);
-                                Log.i(TAG,"发送消息过来拉");
                             }
                         }
                     }
@@ -131,11 +119,9 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
                     BmobDB.create(context, toId).saveInviteMessage(message_invitate);//可以用的
 //					if (targetId.equals(userManager.getCurrentUserObjectId()))//不能添加自己为好友
 //						return;//2016.4.6    23:22
-                    Log.i(TAG, "保存邀请信息");
                     if (ehList.size() > 0) {// 有监听的时候，传递下去
                         for (EventListener handler : ehList)
                             handler.onAddUser(message_invitate);
-                        Log.i(TAG, "3-2");
                     }else{
                         boolean isAllow = App.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
                         if(currentUser!=null && currentUser.getObjectId().equals(toId)){

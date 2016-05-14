@@ -78,6 +78,8 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     //2016.4.29
     private MessageChatAdapter mAdapter;
     public static final int NEW_MESSAGE = 0x001;// 收到消息
+    //2016.5.13
+    private String avatar;
     @Override
     public int getLayoutId() {
         return R.layout.activity_chatting;
@@ -100,8 +102,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         viewpager = (ViewPager) findViewById(R.id.viewPager_speak_face);
         //组装聊天对象viewpager
         targetUser = (BmobChatUser) getIntent().getSerializableExtra("user");
-        Log.i(TAG, "targetUser="+targetUser);
-        Log.i(TAG, "targetUserName="+targetUser.getUsername()+"");
+        Log.i(TAG, "targetUser_avart="+targetUser.getAvatar());
         targetId = targetUser.getObjectId();
         targetName = targetUser.getUsername();
         targetNick = targetUser.getNick();
@@ -109,9 +110,8 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         //获取登录用户的信息
 //        current_Nick = BmobChatUser.getCurrentUser(this).get;
         current_name = BmobChatUser.getCurrentUser(this).getUsername();
-        Log.i(TAG, "current_name="+current_name);
         current_targetId = BmobChatUser.getCurrentUser(this).getObjectId();
-        Log.i(TAG, "targetId="+targetId+"");
+        avatar = mApplication.getContactList().get(targetUser.getUsername()).getAvatar();//2016.5.13
         initFace();//11.23+
         //2016.4.29
         initOrRefresh();
@@ -482,17 +482,19 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
      * 加载消息历史，从数据库中读出
      */
     private List<BmobMsg> initMsgData() {
+//        String avatar = targetUser.getAvatar();
         List<BmobMsg> list = BmobDB.create(this).queryMessages(targetId,MsgPagerNum);
-        if(list.size() > 0) {
-            String avatar = list.get(list.size() - 1).getBelongAvatar();
-            for(int i = 0 ; i < list.size(); i++){
-                if(list.get(i).getBelongAvatar().equals(avatar)){
-                    //如果头像相同就不需要重新设置过
-                }else{
-                    list.get(i).setBelongAvatar(avatar);
+            for(int i = 0 ; i < list.size(); i++) {
+                if (list.get(i).getBelongId().equals(targetId)) {
+                    if (list.get(i).getBelongAvatar().equals(avatar)) {
+                        //如果头像相同就不需要重新设置过
+                    } else {
+                        list.get(i).setBelongAvatar(avatar);
+                    }
+                }else if(list.get(i).getBelongId().equals(current_targetId)){
+                    list.get(i).setBelongAvatar(mApplication.getSharedPreferencesUtil().getAvatarUrl());
                 }
             }
-        }
         return list;
     }
     /**
@@ -580,12 +582,14 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 BmobMsg message = (BmobMsg) msg.obj;
                 String uid = message.getBelongId();
                 BmobMsg m = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(message.getConversationId(), message.getMsgTime());
+                Log.i(TAG,"m="+m.getContent()+"Id="+m.getBelongId());
                 if (!uid.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
                     return;
                 if( m.getBelongId().equals(m.getToId()) ){
                     m.setBelongId(m.getBelongId()+"test");
                     Log.i(TAG,"重新设置值");
                 }
+                m.setBelongAvatar(avatar);
                 mAdapter.add(m);
                 // 定位
                 listView_msg.setSelection(mAdapter.getCount() - 1);

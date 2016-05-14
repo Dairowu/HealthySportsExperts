@@ -108,8 +108,8 @@ public class DetailInfoActivity extends BaseActivity{
         }else {
             sex = "女";
         }
-        ItemListViewBean item4 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,sex,"",R.drawable.icon_sex);
-        mDatas.add(item4);
+//        ItemListViewBean item4 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,sex,"",R.drawable.icon_sex);
+//        mDatas.add(item4);
 
         ItemListViewBean item5 = new ItemListViewBean(BmobConstants.LAYOUT_ONE_TV,"","",null);
         mDatas.add(item5);

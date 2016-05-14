@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/white"
             android:layout_toRightOf="@id/iv_avatar"
+            android:maxEms="15"
             android:textSize="16sp">
         </cn.xietong.healthysportsexperts.ui.view.BmobTextView>
 

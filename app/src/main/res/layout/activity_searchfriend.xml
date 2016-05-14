@@ -26,6 +26,7 @@
         android:paddingLeft="5dp"
         android:drawableLeft="@drawable/activity_add_search_friend_head"
         android:drawablePadding="5dp"
+         android:layout_marginTop="2dp"
         android:background="@drawable/search_friend_shape"
         android:hint="搜索好友">
     </EditText>
@@ -41,6 +42,8 @@
         android:background="@drawable/btn_login_selector"
         android:text="搜索"
         android:textSize="16sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="2dp"
         android:textColor="@color/base_color_text_white"/>
     <View 
         android:layout_width="0dp"

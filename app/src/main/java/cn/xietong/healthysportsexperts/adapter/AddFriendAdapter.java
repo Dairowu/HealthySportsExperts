@@ -2,7 +2,6 @@ package cn.xietong.healthysportsexperts.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -11,12 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.bmob.im.BmobChatManager;
 import cn.bmob.im.bean.BmobChatUser;
 import cn.bmob.im.inteface.MsgTag;
 import cn.bmob.v3.listener.PushListener;
 import cn.xietong.healthysportsexperts.R;
+import cn.xietong.healthysportsexperts.app.App;
 import cn.xietong.healthysportsexperts.utils.FriendViewHolder;
 
 /**查找好友
@@ -49,13 +50,22 @@ public class AddFriendAdapter extends BaseListAdapter<BmobChatUser> {
 
 		if (avatar != null && !avatar.equals("")) {
 //			ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoadOptions.getOptions());
-			Log.i(TAG, "AddFriendAdapter缺少一个东西");
 		} else {
 			iv_avatar.setImageResource(R.drawable.activity_add_user_head);
 		}
 
 		name.setText(contract.getUsername());
-		btn_add.setText("添加");
+		Map<String,BmobChatUser> users = App.getInstance().getContactList();//2016.5.12
+		if(users != null){
+			if( users.containsKey(contract.getUsername()) ){
+				btn_add.setText("已添加");
+				btn_add.setTextColor(mContext.getResources().getColor(R.color.base_color_text_black));
+				btn_add.setBackgroundDrawable(null);
+				btn_add.setEnabled(false);
+			}else {
+				btn_add.setText("添加");
+			}
+		}
 		btn_add.setOnClickListener(new OnClickListener() {
 			
 			@Override

@@ -79,7 +79,6 @@ public class App extends Application {
         if(contactList == null || contactList.size()==0)return null;
         return contactList;
     }
-
     /**
      * 设置好友user list到内存中
      *

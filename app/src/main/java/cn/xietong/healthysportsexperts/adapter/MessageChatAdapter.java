@@ -135,7 +135,6 @@ public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 	public View bindView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		final BmobMsg item = list.get(position);
-		Log.i(TAG,"size="+list.size());
 		if (convertView == null) {
 			convertView = createViewByType(item, position);
 		}
@@ -155,7 +154,6 @@ public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 //		final ImageView iv_voice = ViewHolder.get(convertView, R.id.iv_voice);
 //		//语音长度
 //		final TextView tv_voice_length = ViewHolder.get(convertView, R.id.tv_voice_length);
-
 		//点击头像进入个人资料
 		String avatar = item.getBelongAvatar();
 		if(avatar!=null && !avatar.equals("")){//加载头像-为了不每次都加载头像
@@ -235,7 +233,6 @@ public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 					SpannableString spannableString = FaceTextUtils
 							.toSpannableString(mContext, text);
 					tv_message.setText(spannableString);
-					Log.i(TAG,"message="+spannableString);
 				} catch (Exception e) {
 				}
 				break;
