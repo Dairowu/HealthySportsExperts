@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 /**
- * Created by Administrator on 2015/10/31.
+ * Created by deng on 2015/10/31.
  */
 public class CircleProgressBar extends TextView {
 

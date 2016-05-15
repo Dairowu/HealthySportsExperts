@@ -21,6 +21,7 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.model.DatabaseHelper;
 import cn.xietong.healthysportsexperts.model.UserInfo;
+import cn.xietong.healthysportsexperts.ui.view.ClockView;
 import cn.xietong.healthysportsexperts.utils.SQLiteUtils;
 import cn.xietong.healthysportsexperts.utils.Service_Calculate_Step;
 import cn.xietong.healthysportsexperts.utils.StepListener;
@@ -37,11 +38,16 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     private View view;
     //步数显示
     private TextView tv_stepNumber;
+    //目标步数显示
+    private TextView tv_goalStep;
     //日期显示
     private TextView tv_date;
     private Intent intent;
     //同一天内退出应用之前的数据
     private int oldCount;
+    //目标步数
+    private int goalCount = 5200;
+    private ClockView mClockView;
     Service_Calculate_Step.MyBinder binder;
     //数据库操作对象
     DatabaseHelper dbHelper = mApplication.getDBHelper();
@@ -78,10 +84,21 @@ public class FragmentPagePosition_son1 extends BaseFragment {
         public void handleMessage(Message msg){
             if(msg.what == UPDATE_TEXT){
                 tv_stepNumber.setText(Integer.toString(msg.arg1));
+                startAnimator(msg.arg1);
             }
         }
 
     };
+
+    //使用属性动画实现动态更新步数进度
+    private void startAnimator(int progress) {
+        mClockView.setProgress(progress);
+//        int num = (progress/goalCount)*360;
+//        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(mClockView, "progress", 0,num);
+//        objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+//        objectAnimator.setDuration(800);
+//        objectAnimator.start();
+    }
 
     /**
      * 绑定Service
@@ -130,7 +147,12 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     @Override
     protected void initViews(View mContentView) {
         tv_stepNumber = (TextView) mContentView.findViewById(R.id.tv_stepNumber);
+        tv_goalStep = (TextView) mContentView.findViewById(R.id.tv_goalStep);
         tv_date = (TextView) mContentView.findViewById(R.id.tv_date);
+        mClockView = (ClockView) findViewById(R.id.clock_view);
+
+        tv_goalStep.setText(String.valueOf(goalCount));
+        mClockView.setMax(goalCount);
     }
 
     @Override

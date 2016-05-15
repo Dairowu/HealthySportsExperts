@@ -3,7 +3,7 @@
 
     <color name="base_color_text_black">#3e3e39</color>
     <color name="base_color_text_gray">#9fa0a0</color>
-    <color name="base_color_text_white">#ffffff</color>
+    <color name="base_color_text_white">#ffffffff</color>
     <color name="bottom_nor_color">#a9b7b7</color>
 
     <color name="divider_color">#a3c8c8c8</color>
@@ -26,5 +26,6 @@
     <color name="dialog_color_title">#f82c22</color>
     <color name="dimgrey">#696969</color>
     <color name="gray">#808080</color>
+    <color name="gray_border_color">#FFD2D1C4</color>
 
 </resources>

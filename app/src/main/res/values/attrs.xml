@@ -14,5 +14,16 @@
         <attr name="topRightText" format="string"/>
 
     </declare-styleable>
+    
+    <declare-styleable name="CircleProgressBarCutout">
+        <attr name="radius" format="dimension"/>
+        <attr name="pathWidth" format="dimension" />
+        <attr name="max" format="float"/>
+        <attr name="progress" format="float"/>
+        <attr name="outerPathColor" format="color"/>
+        <attr name="outerPaddingColor" format="color"/>
+        <attr name="contentCircleColor" format="color"/>
+        <attr name="borderColor" format="color"/>
+    </declare-styleable>
 
 </resources>
