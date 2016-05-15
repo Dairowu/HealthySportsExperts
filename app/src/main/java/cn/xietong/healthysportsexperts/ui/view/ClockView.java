@@ -146,12 +146,10 @@ public class ClockView extends View {
         //绘制进度
         rectF.set(mWidth/2 - radius,mHeight/2 - radius,mWidth/2 + radius,mHeight/2 + radius);
         float scale = mMax > 0 ? (float) mProgress / (float) mMax : 0;
-        Log.i("info","mMax="+mMax+" mProgress="+mProgress);
         if(outerPaddingColor != 0){
             paddingPaint.setColor(outerPaddingColor);
             canvas.drawArc(rectF,-90,scale*360,false,paddingPaint);
         }else{
-            Log.i("info","shi");
             paddingPaint.setShader(sweepGradient);
             canvas.drawArc(rectF,-90,scale*360,false,paddingPaint);
         }
