@@ -21,7 +21,7 @@ import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.adapter.base.ViewHolder;
 import cn.xietong.healthysportsexperts.app.App;
 import cn.xietong.healthysportsexperts.utils.FaceTextUtils;
-import cn.xietong.healthysportsexperts.utils.ImageLoadOptions;
+import cn.xietong.healthysportsexperts.utils.ImageLoaderOptions;
 import cn.xietong.healthysportsexperts.utils.TimeUtil;
 
 /** 会话适配器
@@ -59,7 +59,7 @@ public class MessageRecentAdapter extends ArrayAdapter<BmobRecent> implements Fi
 //		String avatar = item.getAvatar();
 		String avatar = App.getInstance().getContactList().get(item.getUserName()).getAvatar();
 		if(avatar!=null&& !avatar.equals("")){
-			ImageLoader.getInstance().displayImage(avatar, iv_recent_avatar, ImageLoadOptions.getOptions());
+			ImageLoader.getInstance().displayImage(avatar, iv_recent_avatar, ImageLoaderOptions.getOptions());
 		}else{
 			iv_recent_avatar.setImageResource(R.drawable.fragment_userfriend_head);//先暂时设置头像
 		}

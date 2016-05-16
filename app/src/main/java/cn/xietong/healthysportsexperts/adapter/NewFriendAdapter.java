@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bmob.utils.BmobLog;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.app.App;
 import cn.xietong.healthysportsexperts.utils.CollectionUtils;
 import cn.xietong.healthysportsexperts.utils.FriendViewHolder;
+import cn.xietong.healthysportsexperts.utils.ImageLoaderOptions;
 
 /**
  * Created by 林思旭 on 2016/4/8.
@@ -64,7 +66,7 @@ public class NewFriendAdapter extends BaseListAdapter<BmobInvitation> {
         String avatar = msg.getAvatar();
 
         if (avatar != null && !avatar.equals("")) {
-//			ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoadOptions.getOptions());
+			ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoaderOptions.getOptions());
             BmobLog.i("缺失一个");
         } else {
             iv_avatar.setImageResource(R.drawable.activity_add_user_head);

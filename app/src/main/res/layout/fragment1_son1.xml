@@ -21,8 +21,6 @@
             android:layout_height="240dp"
             android:layout_centerInParent="true"
             custom:pathWidth="21dp"
-            custom:max="100"
-            custom:progress="80"
             custom:outerPathColor="@color/base_color_text_white"
             custom:contentCircleColor="@color/base_color_text_white"
             custom:borderColor="@color/gray_border_color"

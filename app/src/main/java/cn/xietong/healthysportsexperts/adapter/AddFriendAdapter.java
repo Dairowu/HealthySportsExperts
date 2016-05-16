@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ import cn.bmob.v3.listener.PushListener;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.app.App;
 import cn.xietong.healthysportsexperts.utils.FriendViewHolder;
+import cn.xietong.healthysportsexperts.utils.ImageLoaderOptions;
 
 /**查找好友
   * @ClassName: AddFriendAdapter
@@ -49,7 +52,7 @@ public class AddFriendAdapter extends BaseListAdapter<BmobChatUser> {
 		String avatar = contract.getAvatar();
 
 		if (avatar != null && !avatar.equals("")) {
-//			ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoadOptions.getOptions());
+			ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoaderOptions.getOptions());
 		} else {
 			iv_avatar.setImageResource(R.drawable.activity_add_user_head);
 		}

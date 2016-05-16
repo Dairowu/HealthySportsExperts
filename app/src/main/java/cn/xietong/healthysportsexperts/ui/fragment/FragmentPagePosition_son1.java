@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ import cn.xietong.healthysportsexperts.utils.UserUtils;
  */
 public class FragmentPagePosition_son1 extends BaseFragment {
 
-    public static final int UPDATE_TEXT = 1;
+    public static final int UPDATE_TEXT = 0x1;
     //一整天的毫秒数
     public static final long DAYTIME_MILL = 86400000;
     private View view;
@@ -82,6 +83,7 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     private Handler handler = new Handler() {
 
         public void handleMessage(Message msg){
+            Log.i("info","msg.what"+msg.what);
             if(msg.what == UPDATE_TEXT){
                 tv_stepNumber.setText(Integer.toString(msg.arg1));
                 startAnimator(msg.arg1);
@@ -91,7 +93,8 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     };
 
     //使用属性动画实现动态更新步数进度
-    private void startAnimator(int progress) {
+    private synchronized void startAnimator(int progress) {
+        Log.i("info","调用");
         mClockView.setProgress(progress);
 //        int num = (progress/goalCount)*360;
 //        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(mClockView, "progress", 0,num);

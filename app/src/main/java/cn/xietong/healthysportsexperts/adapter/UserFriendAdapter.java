@@ -17,7 +17,7 @@ import java.util.List;
 
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.model.MyUser;
-import cn.xietong.healthysportsexperts.utils.ImageLoadOptions;
+import cn.xietong.healthysportsexperts.utils.ImageLoaderOptions;
 
 /** 好友列表
   * @ClassName: UserFriendAdapter
@@ -90,7 +90,7 @@ public class UserFriendAdapter extends BaseAdapter implements SectionIndexer {
 		final String avatar = friend.getAvatar();
 
 		if (!TextUtils.isEmpty(avatar)) {
-			ImageLoader.getInstance().displayImage(avatar, viewHolder.avatar, ImageLoadOptions.getOptions());
+			ImageLoader.getInstance().displayImage(avatar, viewHolder.avatar, ImageLoaderOptions.getOptions());
 		} else {
 			viewHolder.avatar.setImageDrawable(ct.getResources().getDrawable(R.drawable.fragment_userfriend_head));
 		}

@@ -37,6 +37,7 @@ public abstract  class BaseFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         if (mContentView == null) {
             mContentView = inflater.inflate(getLayoutId(), container, false);
             initViews(mContentView);
@@ -50,6 +51,11 @@ public abstract  class BaseFragment extends Fragment{
         }
         TAG = this.getClass().getSimpleName();
         return mContentView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     /**复写本方法返回一个Fragment需要加载的Layout 布局

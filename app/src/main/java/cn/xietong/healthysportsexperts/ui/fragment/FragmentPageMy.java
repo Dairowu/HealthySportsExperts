@@ -25,6 +25,7 @@ public class FragmentPageMy extends BaseFragment{
 
     private ListView mList;
     private List<ItemListViewBean> mDatas;
+    private UserInfoAdapter adapter;
     private int[] layouts;
     private MyUser user;
 
@@ -43,9 +44,19 @@ public class FragmentPageMy extends BaseFragment{
         mDatas = new ArrayList<>();
         layouts = new int[]{R.layout.listitem_1tv,R.layout.listitem_iv_tv,R.layout.listitem_2tv_iv};
         initData();
-        UserInfoAdapter adapter = new UserInfoAdapter(getActivity(),mDatas,layouts);
+        adapter = new UserInfoAdapter(getActivity(),mDatas,layouts);
         mList.setAdapter(adapter);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!mDatas.get(1).getContent_photoUrl().
+                equals(mApplication.getSharedPreferencesUtil().getAvatarUrl())){
+            mDatas.get(1).setContent_photoUrl(mApplication.getSharedPreferencesUtil().getAvatarUrl());
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -84,7 +95,7 @@ public class FragmentPageMy extends BaseFragment{
         ItemListViewBean item1 = new ItemListViewBean(BmobConstants.LAYOUT_ONE_TV,"","",null);
         mDatas.add(item1);
 
-        ItemListViewBean item2 = new ItemListViewBean(BmobConstants.LAYOUT_TWOTV_IV,user.getNick(),user.getSignature(),user.getAvatar());
+        ItemListViewBean item2 = new ItemListViewBean(BmobConstants.LAYOUT_TWOTV_IV,user.getNick(),user.getSignature(),mApplication.getSharedPreferencesUtil().getAvatarUrl());
         mDatas.add(item2);
 
         ItemListViewBean item3 = new ItemListViewBean(BmobConstants.LAYOUT_IV_TV,user.getUsername(),"",R.drawable.icon_id_btn);

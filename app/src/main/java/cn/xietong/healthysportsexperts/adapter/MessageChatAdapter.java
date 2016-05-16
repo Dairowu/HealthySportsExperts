@@ -31,7 +31,7 @@ import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.adapter.base.ViewHolder;
 import cn.xietong.healthysportsexperts.ui.activity.DetailInfoActivity;
 import cn.xietong.healthysportsexperts.utils.FaceTextUtils;
-import cn.xietong.healthysportsexperts.utils.ImageLoadOptions;
+import cn.xietong.healthysportsexperts.utils.ImageLoaderOptions;
 import cn.xietong.healthysportsexperts.utils.TimeUtil;
 
 
@@ -157,7 +157,7 @@ public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 		//点击头像进入个人资料
 		String avatar = item.getBelongAvatar();
 		if(avatar!=null && !avatar.equals("")){//加载头像-为了不每次都加载头像
-			ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoadOptions.getOptions(),animateFirstListener);
+			ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoaderOptions.getOptions(),animateFirstListener);
 		}else{
 			iv_avatar.setImageResource(R.drawable.fragment_userfriend_head);
 		}
