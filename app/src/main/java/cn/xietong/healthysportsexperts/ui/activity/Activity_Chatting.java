@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,7 +64,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private Button btn_send;
     private ListView listView_msg;
     private ViewPager viewpager;
-    private View view;
+    private View view_button;
     //4.17
     private SwipeRefreshLayout myRefreshLayout;
     String targetId = "";
@@ -93,12 +94,12 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         myRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh_history_content);
         myRefreshLayout.setColorSchemeResources(R.color.main_bg_color, R.color.ring_color,
                 R.color.ring_text_color , R.color.sel_color);//2016.4.7(设置旋转刷新颜色)
-        view = (View)findViewById(R.id.include_button);
-        et_msg = (EditText)view.findViewById(R.id.et_input_context);
-        btn_send = (Button)view.findViewById(R.id.btn_send);
+        view_button = (LinearLayout) findViewById(R.id.include_button);
+        et_msg = (EditText)view_button.findViewById(R.id.et_input_context);
+        btn_send = (Button)view_button.findViewById(R.id.btn_send);
         listView_msg = (ListView)findViewById(R.id.listView);
 
-        imageView_face = (ImageView)view.findViewById(R.id.imageView_sendImageView);//11.22
+        imageView_face = (ImageView)view_button.findViewById(R.id.imageView_sendImageView);//11.22
         viewpager = (ViewPager) findViewById(R.id.viewPager_speak_face);
         //组装聊天对象viewpager
         targetUser = (BmobChatUser) getIntent().getSerializableExtra("user");
@@ -124,15 +125,11 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         myRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                clearList();//清空数组
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-//                        refreshNumber += 5;
                         MsgPagerNum ++;
-//                        loadHistoryContent();
                         int total = BmobDB.create(Activity_Chatting.this).queryChatTotalCount(targetId);
-                        Log.i(TAG,"记录总数：" + total);
                         int currents = mAdapter.getCount();
                         if (total <= currents) {
                             Toast.makeText(Activity_Chatting.this,"消息已全部加载完成!",Toast.LENGTH_SHORT).show();
@@ -142,7 +139,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                             mAdapter.notifyDataSetChanged();
                             listView_msg.setSelection(mAdapter.getCount() - currents - 1);
                         }
-                        Log.i(TAG,"刷新");
                         myRefreshLayout.setRefreshing(false);
                     }
                 },4000);//刷新4秒
@@ -150,7 +146,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         });
 
         imageView_face.setOnClickListener(this);
-
         et_msg.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -159,19 +154,16 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 if(event.getAction() == MotionEvent.ACTION_OUTSIDE){
                     //其他要实现的功能。
                     et_msg.setFocusable(false);
-                    Log.i(TAG, "收起键盘");
                 }else if(event.getAction() == MotionEvent.ACTION_DOWN){
                     KeyShow = true;
                 }else{
                     if(showLayout == true){
-                        Log.i(TAG,"收起来");
                         imageView_face.setSelected(false);
                         viewpager.setVisibility(View.GONE);
                         showLayout = false;
                         KeyShow = true;
                     }
                 }
-
                 return false;
             }
         });
@@ -199,21 +191,19 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 }
                 if(offsetY > 0){
                     hideSoftInputView();
-                    Log.i(TAG, ">0" + " " + offsetY + " " + rawY + " " + lastY);
                 }
                 if(offsetY == 0){
-                    viewpager.setVisibility(View.GONE);
                     hideSoftInputView();
                 }
                 if(offsetY < 0){
                     showSoftInputView();
                     viewpager.setVisibility(View.GONE);
+                    viewpager.setVisibility(View.GONE);
                     showLayout = false;
-                    Log.i(TAG, "<0"+offsetY+" "+rawY+" "+lastY);
                 }
                 return onTouchEvent(event);
             }
-        });
+    });
         //2016.4.29
         // 重发按钮的点击事件
         mAdapter.setOnInViewClickListener(R.id.iv_fail_resend,
@@ -226,12 +216,10 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                     }
                 });
     }
-
     @Override
     public void setupViews() {
 
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -258,28 +246,23 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             }
             //11.23(点击表情事件)
             case R.id.imageView_sendImageView :{
-                Log.i(TAG, "点击表情");
                 if (showLayout == false) {
                     //2016.3.19(成功)
                     if(KeyShow == true){
                         hideSoftInputView();
                         new MyThread().start();
-                        Log.i(TAG, "KeyShow=="+KeyShow+"");
                         KeyShow = false;
                     }else{
                         imageView_face.setSelected(true);//2016.4.22
                         viewpager.setVisibility(View.VISIBLE);
-                        Log.i(TAG, "TRUE");
                     }
                     showLayout = true;
-                    Log.i(TAG, "Visible");
                 } else {
                     imageView_face.setSelected(false);//2016.4.22
                     viewpager.setVisibility(View.GONE);
                     showLayout = false;
                     KeyShow = true;
                     showSoftInputView();
-                    Log.i(TAG, "Gone");
                 }
                 break;
             }
@@ -287,6 +270,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 break;
         }
     }
+
     //11.23
     /**
      * 初始化表情界面
@@ -294,14 +278,12 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private void initFace() {
         faceList = FaceTextUtils.faceTexts;
         List<View> views = new ArrayList<View>();
-        Log.i(TAG, "initFace");
         // 添加每个View的内容
         for (int i = 0; i < 2; i++) {
             views.add(getGridView(i));
         }
         ViewPagerAdapter Viewadapter = new ViewPagerAdapter(
                 Activity_Chatting.this, views);
-        Log.i(TAG, Viewadapter+"");
         viewpager.setAdapter(Viewadapter);
     }
     /**
@@ -312,7 +294,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private View getGridView(int index){
         View faceView = View.inflate(this, R.layout.include_emo_gridview, null);
         GridView gridview = (GridView)faceView.findViewById(R.id.gridview);
-        Log.i(TAG, "getGridView");
         List<FaceText> list = new ArrayList<FaceText>();
         //区分两个版
         if(index == 0){
@@ -320,7 +301,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         }else{
             list.addAll(faceList.subList(21 , faceList.size()));
         }
-        Log.i(TAG, "list:" + list.size());
         final GridViewAdapter gridAdapter = new GridViewAdapter(this, list);
         gridview.setAdapter(gridAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -362,7 +342,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
      * 隐藏软键盘
      */
     public void hideSoftInputView() {
-        imageView_face.setSelected(false);
+//        imageView_face.setSelected(false);
         InputMethodManager manager = ((InputMethodManager) this
                 .getSystemService(Activity.INPUT_METHOD_SERVICE));
         if (Activity_Chatting.this.getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
@@ -422,17 +402,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             myHandler.sendMessage(message);
         }
     }
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//
-//        if(KeyShow == true){
-//            hideSoftInputView();
-//            KeyShow = false;
-//        }else{
-//            finish();
-//        }
-//        return true;
-//    }
     //2016.4.29
     /**
      * 刷新界面
@@ -462,20 +431,16 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
             if (MyNewMessageReceiver.mNewNum != 0) {// 用于更新当在聊天界面锁屏期间来了消息，这时再回到聊天页面的时候需要显示新来的消息
                 int news=  MyNewMessageReceiver.mNewNum;//有可能锁屏期间，来了N条消息,因此需要倒叙显示在界面上
                 int size = initMsgData().size();
-                Log.i(TAG,"size="+size + "  "+"news="+news);
                 for(int i=(news-1);i >= 0;i--){ //改成i>0而不是i>=0，如果是i>=0就会导致接受时候会多显示一次接受的内容
                     mAdapter.add(initMsgData().get(size-(i + 1)));// 添加最后一条消息到界面显示
-                    Log.i(TAG,"list_content="+initMsgData().get(size-(i + 1)).getContent());
                 }
                 listView_msg.setSelection(mAdapter.getCount() - 1);
             } else {
                 mAdapter.notifyDataSetChanged();
             }
-            Log.i(TAG,"添加内容了");
         } else {
             mAdapter = new MessageChatAdapter(this, initMsgData());
             listView_msg.setAdapter(mAdapter);
-            Log.i(TAG,"添加内容了2");
         }
     }
     /**
@@ -569,7 +534,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     @Override
     public void onMessage(BmobMsg message) {
         // TODO Auto-generated method stub
-        Log.i(TAG,"onMessage="+message);
         message.update(this);
         Message handlerMsg = handler.obtainMessage(NEW_MESSAGE);
         handlerMsg.obj = message;
@@ -582,12 +546,10 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 BmobMsg message = (BmobMsg) msg.obj;
                 String uid = message.getBelongId();
                 BmobMsg m = BmobChatManager.getInstance(Activity_Chatting.this).getMessage(message.getConversationId(), message.getMsgTime());
-                Log.i(TAG,"m="+m.getContent()+"Id="+m.getBelongId());
                 if (!uid.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
                     return;
                 if( m.getBelongId().equals(m.getToId()) ){
                     m.setBelongId(m.getBelongId()+"test");
-                    Log.i(TAG,"重新设置值");
                 }
                 m.setBelongAvatar(avatar);
                 mAdapter.add(m);
@@ -624,7 +586,6 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-        Log.i(TAG,"onResume");
         // 新消息到达，重新刷新界面
 //        initOrRefresh();
         MyNewMessageReceiver.ehList.add(this);// 监听推送的消息

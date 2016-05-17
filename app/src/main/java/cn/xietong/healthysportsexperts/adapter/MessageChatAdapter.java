@@ -46,7 +46,7 @@ import cn.xietong.healthysportsexperts.utils.TimeUtil;
 @SuppressLint("InflateParams")
 public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 
-	private String TAG = "MessageChatAdapter";
+	private static String TAG = "MessageChatAdapter";
 	//8种Item的类型
 	//文本
 	private final int TYPE_RECEIVER_TXT = 0;

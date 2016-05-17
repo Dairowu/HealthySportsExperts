@@ -18,7 +18,7 @@
         layout="@layout/activity_chatting_buttom"
         android:id="@+id/include_button" 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="60dp"/>
          
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager_speak_face"
