@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comment_top"
+    android:background="@color/tabhost_bg_color"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="31dp"
+        android:layout_height="31dp"
+        android:src="@drawable/ic_navigation_back_normal"
+        android:layout_centerVertical="true"
+        android:paddingLeft="5dp"
+        android:clickable="true"/>
+    <TextView
+        android:text="正文"
+        style="@style/top_tv"
+        />
+    <TextView
+       style="@style/top_tv"
+        android:id="@+id/tv_send"
+        android:text="发送"
+        android:layout_alignParentRight="true"
+        android:paddingRight="5dp"
+        android:textColor="@color/top_tv_color"
+        android:clickable="true"/>
+
+</RelativeLayout>

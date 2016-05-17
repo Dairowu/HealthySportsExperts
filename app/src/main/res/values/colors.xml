@@ -28,4 +28,6 @@
     <color name="gray">#808080</color>
     <color name="gray_border_color">#FFD2D1C4</color>
 
+    <!--帖子相关-->
+    <color name="top_tv_color">#4fc3f7</color>
 </resources>

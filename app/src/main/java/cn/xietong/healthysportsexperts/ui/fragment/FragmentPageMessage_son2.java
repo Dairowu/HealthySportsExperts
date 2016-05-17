@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -124,6 +125,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
                 MyUser user_select = (MyUser) userAdapter.getItem(position);
                 Intent intent_select = new Intent(getActivity(), Activity_Chatting.class);
                 intent_select.putExtra("user", user_select);
+                Log.i(TAG, "user_select=" + user_select);
                 startActivity(intent_select);
             }
         });
@@ -132,6 +134,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
     private void filledData(List<BmobChatUser> datas) {
         friends.clear();
         int total = datas.size();
+		Log.i(TAG, "filledData - 1");
         for (int i = 0; i < total; i++) {
             BmobChatUser user = datas.get(i);
             MyUser sortModel = new MyUser();
@@ -142,9 +145,13 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             sortModel.setContacts(user.getContacts());
             // 汉字转换成拼音
             String username = sortModel.getNick();//改变了(获取Nick来排序)
+            // 若没有username
+			Log.i(TAG, "filledData - 2");
             if (username != null) {
+//				Log.i(TAG, "filledData - 3");
+                Log.i(TAG, "Username="+sortModel.getUsername() + "");
                 String pinyin = characterParser.getSelling(sortModel.getNick());//出现空指针(忘记New了)改变了(获取Nick来排序)
-                String sortString = pinyin.substring(0, 1).toUpperCase();//获取第一个字母的拼音
+                String sortString = pinyin.substring(0, 1).toUpperCase();
                 // 正则表达式，判断首字母是否是英文字母
                 if (sortString.matches("[A-Z]")) {
                     sortModel.setSortLetters(sortString.toUpperCase());
@@ -154,6 +161,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             } else {
                 sortModel.setSortLetters("#");
             }
+			Log.i(TAG, "sortModel="+sortModel+"");
             friends.add(sortModel);
         }
         // 根据a-z进行排序(排序成功)
@@ -161,17 +169,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             @Override
             public int compare(MyUser lhs, MyUser rhs) {
                 // TODO Auto-generated method stub
-                if (lhs.getSortLetters().equals("@")
-                        || rhs.getSortLetters().equals("#")) {
-                    return -1;
-                } else if (lhs.getSortLetters().equals("#")|| rhs.getSortLetters().equals("@")) {
-                    return 1;
-                } else {
-                    return lhs.getSortLetters().compareToIgnoreCase(rhs.getSortLetters());
-                }
-//                if(lhs.getNick()==null)return 1;
-//                if(rhs.getNick()==null)return -1;
-//                return lhs.getNick().compareToIgnoreCase(rhs.getNick());//compareToIgnoreCase不区分大小写，compareTo区分大小写
+                return lhs.getUsername().compareTo(rhs.getUsername());
             }
         });
     }
@@ -190,6 +188,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             Message msg_delay = Message.obtain();
             msg_delay.what = SHOW_LISTVIEW;
             myhandler.sendMessage(msg_delay);
+            Log.i(TAG, "MyThread");
         }
 
     }
@@ -202,11 +201,15 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             super.handleMessage(msg);
             if(msg.what == SHOW_LISTVIEW){
                 users = App.getInstance().getContactList();
-                if(users != null){
+                Log.i(TAG,"users="+users);
+                Log.i(TAG,"App.getInstance().getContactList()"+ App.getInstance().getContactList());
+                if(users!=null){
                     filledData(CollectionUtils.map2list(users));//(强转换问题出现在这里)
+                    Log.i(TAG, "friends="+friends);
                     listview_user_friend.setAdapter(userAdapter);
                     listview_user_friend.setSelection(listview_user_friend.getCount() + 1);
                     userAdapter.notifyDataSetChanged();
+                    Log.i(TAG, "Myhandler");
                 }
             }
         }
@@ -244,6 +247,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             Message msg = Message.obtain();
             msg.what = new_message;
             logo_handler.sendMessage(msg);
+            Log.i(TAG, "NewThread");
             super.run();
         }
     }
@@ -256,6 +260,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
                 image_new_message.setVisibility(View.VISIBLE);
                 exit_message_new_friend = true;
             }
+            Log.i(TAG, "出现吧，哥玛兽");
         }
     }
 

@@ -209,4 +209,15 @@
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:textSize">20sp</item>
     </style>
+
+    <!-- 帖子的footer -->
+    <style name="tv_footer">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#888888</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:layout_centerInParent">true</item>
+    </style>
 </resources>

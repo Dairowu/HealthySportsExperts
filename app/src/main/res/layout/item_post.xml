@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_comment_button"
+    android:clickable="true"
+
+    >
+
+    <ImageView
+        android:id="@+id/item_user_logo"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="5dp"
+        android:src="@drawable/icon_my_nor" />
+
+    <ImageView
+        android:id="@+id/item_action_fav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_user_logo"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/item_user_logo"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_action_fav_normal" />
+
+    <TextView
+        android:id="@+id/item_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/item_user_logo"
+        android:layout_toRightOf="@+id/item_user_logo"
+        android:text="username"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/item_main_article"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_user_logo"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/selector_comment_button"
+        android:clickable="true"
+        android:text="hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:id="@+id/content_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_main_article"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="4dip"
+        android:layout_marginRight="4dip"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:scaleType="centerInside"
+        android:visibility="visible" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_main_article"
+        android:orientation="horizontal">
+
+        <cn.xietong.healthysportsexperts.ui.view.DrawableCenterTextView
+
+            android:id="@+id/item_action_share"
+            style="@style/post_tv"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_comment_button"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_action_share"
+            android:text="分享" />
+
+        <cn.xietong.healthysportsexperts.ui.view.DrawableCenterTextView
+
+            android:id="@+id/item_action_comment"
+            style="@style/post_tv"
+            android:background="@drawable/selector_comment_button"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_action_comment"
+            android:text="评论" />
+
+        <cn.xietong.healthysportsexperts.ui.view.DrawableCenterTextView
+            android:id="@+id/item_action_love"
+            style="@style/post_tv"
+            android:background="@drawable/selector_comment_button"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_action_love"
+            android:text="赞" />
+    </LinearLayout>
+</RelativeLayout>

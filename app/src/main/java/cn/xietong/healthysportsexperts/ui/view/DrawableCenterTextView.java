@@ -6,7 +6,10 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-
+/*
+ *自定义类使TextView的图片居中
+ * Created by wxj on 2015/10/18.
+ */
 public class DrawableCenterTextView extends TextView{
     public DrawableCenterTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
