@@ -42,6 +42,7 @@ public class FragmentPagePosition_son2 extends BaseFragment implements View.OnCl
     private static final int REFESH_FAILED = 0;
     private boolean isLoading = false;
     private  int updateCounts =1;
+    private boolean NO_MORE = false;
     /**
      * 获得子线程发出的message刷新。
      */
@@ -203,20 +204,23 @@ public class FragmentPagePosition_son2 extends BaseFragment implements View.OnCl
             @Override
             public void onSuccess(List<Post> object) {
                 // TODO Auto-generated method stub
-                for (Post post : object) {//从服务端得到数据
+                int i = 0;
+                for (Post post :object) {//从服务端得到数据
                     posts.add(post);
-                    Message message = new Message();
-                    if(counts==0){
-                        message.what = REFESH;
-                    }
-                    else message.what = LOAD_NEXT;
-                    refeshHandler.sendMessage(message);
+                    i++;
                 }
+                if (i!=8) NO_MORE = true;
+                Message message = new Message();
+                if(counts==0){
+                    message.what = REFESH;
+                }
+                else message.what = LOAD_NEXT;
+                refeshHandler.sendMessage(message);
             }
 
             @Override
             public void onError(int code, String msg) {
-                // TODO Auto-generated method stub
+                Log.e(TAG,"error:"+msg);
                 Message message = new Message();
                 message.what = REFESH_FAILED;
                 refeshHandler.sendMessage(message);
@@ -236,14 +240,17 @@ public class FragmentPagePosition_son2 extends BaseFragment implements View.OnCl
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-            if (lastVisibleItemPosition + 1 == postRecylerViewAdapter.getItemCount()) {
-                Log.d("test", "loading executed");
+            if (lastVisibleItemPosition +1 == postRecylerViewAdapter.getItemCount()) {
+                Log.e(TAG, "loading executed");
                 boolean isRefreshing = swipeRefreshLayout.isRefreshing();
                 if (isRefreshing) {
                     postRecylerViewAdapter.notifyItemRemoved(postRecylerViewAdapter.getItemCount());
                     return;
                 }
-                if (!isLoading) {
+                if(NO_MORE){
+                    showToast("没有更多了");
+                }
+                else if (!isLoading) {
                     isLoading = true;
                     getDate(updateCounts);
                 }
