@@ -25,14 +25,15 @@
            android:layout_height="match_parent"
            android:layout_weight="0.1"/>
 
-        <EditText
+        <cn.xietong.healthysportsexperts.ui.view.EmoticonsEditText
             android:id="@+id/et_input_context"    
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="4"
             android:maxLines="6"
             android:background="@drawable/activity_chatting_edit_shape"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center">
+        </cn.xietong.healthysportsexperts.ui.view.EmoticonsEditText>
 
         <Button 
             android:id="@+id/btn_send"

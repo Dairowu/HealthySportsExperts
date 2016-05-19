@@ -8,7 +8,6 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.util.regex.Matcher;
@@ -75,7 +74,6 @@ public class BmobTextView extends TextView{
 					spannableString.setSpan(imageSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				start = (endIndex - 1);
 			}
-			Log.i("EmoticonsEditText", "spannableString:"+spannableString);
 			return spannableString;
 		} catch (Exception e) {
 			return text;

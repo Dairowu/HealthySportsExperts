@@ -16,10 +16,10 @@
             >
         <include
         layout="@layout/activity_chatting_buttom"
-        android:id="@+id/include_button" 
+        android:id="@+id/include_button"
         android:layout_width="match_parent"
-        android:layout_height="60dp"/>
-         
+        android:layout_height="wrap_content"/>
+
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager_speak_face"
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:visibility="gone"
             android:layout_below="@id/include_button"
             android:padding="20dp" >
-        </android.support.v4.view.ViewPager> 
+        </android.support.v4.view.ViewPager>
 
    </RelativeLayout>
 
@@ -46,5 +46,5 @@
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-      
+
 </RelativeLayout>

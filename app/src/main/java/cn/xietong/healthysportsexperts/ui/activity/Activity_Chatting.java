@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,8 +41,10 @@ import cn.xietong.healthysportsexperts.adapter.GridViewAdapter;
 import cn.xietong.healthysportsexperts.adapter.MessageChatAdapter;
 import cn.xietong.healthysportsexperts.adapter.ViewPagerAdapter;
 import cn.xietong.healthysportsexperts.receiver.MyNewMessageReceiver;
+import cn.xietong.healthysportsexperts.ui.view.EmoticonsEditText;
 import cn.xietong.healthysportsexperts.ui.view.dialog.DialogTips;
 import cn.xietong.healthysportsexperts.utils.CommonUtils;
+import cn.xietong.healthysportsexperts.utils.FaceReplace;
 import cn.xietong.healthysportsexperts.utils.FaceText;
 import cn.xietong.healthysportsexperts.utils.FaceTextUtils;
 
@@ -60,7 +61,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private int SHOW = 1;
     //11.22
     private List<FaceText> faceList;
-    private EditText et_msg;
+    private EmoticonsEditText et_msg;
     private Button btn_send;
     private ListView listView_msg;
     private ViewPager viewpager;
@@ -81,6 +82,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     public static final int NEW_MESSAGE = 0x001;// 收到消息
     //2016.5.13
     private String avatar;
+    private FaceReplace myReplace = new FaceReplace();
     @Override
     public int getLayoutId() {
         return R.layout.activity_chatting;
@@ -95,7 +97,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
         myRefreshLayout.setColorSchemeResources(R.color.main_bg_color, R.color.ring_color,
                 R.color.ring_text_color , R.color.sel_color);//2016.4.7(设置旋转刷新颜色)
         view_button = (LinearLayout) findViewById(R.id.include_button);
-        et_msg = (EditText)view_button.findViewById(R.id.et_input_context);
+        et_msg = (EmoticonsEditText)view_button.findViewById(R.id.et_input_context);
         btn_send = (Button)view_button.findViewById(R.id.btn_send);
         listView_msg = (ListView)findViewById(R.id.listView);
 
@@ -195,7 +197,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
                 if(offsetY == 0){
                     hideSoftInputView();
                 }
-                if(offsetY < 0){
+                if(offsetY < 0 && listView_msg.getLastVisiblePosition() == mAdapter.getCount() - 1){
                     showSoftInputView();
                     viewpager.setVisibility(View.GONE);
                     viewpager.setVisibility(View.GONE);
