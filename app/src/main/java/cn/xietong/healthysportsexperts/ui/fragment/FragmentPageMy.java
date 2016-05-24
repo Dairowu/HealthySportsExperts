@@ -52,9 +52,10 @@ public class FragmentPageMy extends BaseFragment{
     @Override
     public void onResume() {
         super.onResume();
-        if(!mDatas.get(1).getContent_photoUrl().
-                equals(mApplication.getSharedPreferencesUtil().getAvatarUrl())){
-            mDatas.get(1).setContent_photoUrl(mApplication.getSharedPreferencesUtil().getAvatarUrl());
+        user = mUserManager.getCurrentUser(MyUser.class);
+        if(mDatas.get(1).getContent_photoUrl() != null &&
+                (!mDatas.get(1).getContent_photoUrl().equals(user.getAvatar()))) {
+            mDatas.get(1).setContent_photoUrl(user.getAvatar());
             adapter.notifyDataSetChanged();
         }
     }
@@ -95,7 +96,7 @@ public class FragmentPageMy extends BaseFragment{
         ItemListViewBean item1 = new ItemListViewBean(BmobConstants.LAYOUT_ONE_TV,"","",null);
         mDatas.add(item1);
 
-        ItemListViewBean item2 = new ItemListViewBean(BmobConstants.LAYOUT_TWOTV_IV,user.getNick(),user.getSignature(),mApplication.getSharedPreferencesUtil().getAvatarUrl());
+        ItemListViewBean item2 = new ItemListViewBean(BmobConstants.LAYOUT_TWOTV_IV,user.getNick(),user.getSignature(),user.getAvatar());
         mDatas.add(item2);
 
         ItemListViewBean item3 = new ItemListViewBean(BmobConstants.LAYOUT_IV_TV,user.getUsername(),"",R.drawable.icon_id_btn);

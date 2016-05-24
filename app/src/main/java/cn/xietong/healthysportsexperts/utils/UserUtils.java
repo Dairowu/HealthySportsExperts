@@ -16,7 +16,7 @@ import cn.xietong.healthysportsexperts.model.UserInfo;
 public class UserUtils{
 
     //保存用户从开始使用程序到现在的每一天的记录
-    private static ArrayList<UserInfo> arrayList = new ArrayList<UserInfo>();
+    private static ArrayList<UserInfo> arrayList;
     //保存用户联系人相关的信息
     private static ArrayList<HashMap<String,Object>>  contactList = new ArrayList<HashMap<String,Object>>();
 
@@ -38,14 +38,13 @@ public class UserUtils{
         Cursor cursor_step = db.query("step",new String[]{"datetime","count"},null,null,null,null,"datetime desc");
 //        Cursor cursor_contact = db.query("contact",new String[]{"id","head_photo","name","number","sex","sign"},null,null,null,null,
 //                "order by name,id");
-
+        arrayList = new ArrayList<UserInfo>();
         for (int i = 0; i < cursor_step.getCount(); i++) {
             cursor_step.moveToPosition(i);//将游标移动一个固定的行
             String datetime = cursor_step.getString(0);
             int count = cursor_step.getInt(1);
-
             UserInfo userInfo = new UserInfo();
-            userInfo.setDatatime(datetime);
+            userInfo.setDatetime(datetime);
             userInfo.setCount(count);
             arrayList.add(userInfo);
         }

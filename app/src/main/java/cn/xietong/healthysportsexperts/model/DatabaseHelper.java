@@ -13,7 +13,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final int VERSION = 1;
 
     //建表语句，为计步数和日期建立一张表，主键为日期
-    public static final String CREATE_STEPDATA = "create table step(datetime verchar(30),count integer)";
+    public static final String CREATE_STEPDATA = "create table step(_id integer primary key autoincrement," +
+            "datetime verchar(30),count integer,calorie float)";
     //建表语句，为每一个联系人建表，主键为自增的ID
 //    public static final String CREATE_CONTACT = "create table contact(id integer primary key autoincrement," +
 //            "head_photo blob,name text," +

@@ -5,10 +5,10 @@
             android:right="-6dp"
             android:top="-6dp">
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
-            <solid android:color="@color/tabhost_bg_color"></solid>
+            <solid android:color="@color/tabhost_bg_color"/>
 
             <stroke android:color="@color/tabhost_stroke_color"
-                android:width="0.3dp"></stroke>
+                android:width="0.3dp"/>
 
         </shape>
 

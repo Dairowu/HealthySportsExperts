@@ -8,4 +8,5 @@
     <string name="text_complete">完成</string>
     <string name="send_message">发消息</string>
     <string name="add_friends">添加联系人</string>
+    <string name="complete_register">完成注册</string>
 </resources>

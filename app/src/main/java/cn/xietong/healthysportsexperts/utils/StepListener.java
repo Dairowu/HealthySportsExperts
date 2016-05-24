@@ -17,7 +17,7 @@ public class StepListener implements SensorEventListener {
     //当前步数
     private int count = 0;
     //对步数进行部分计数
-    private int i = 0;
+    private int tempStep = 0;
 
     //存放三轴数据
     float[] oriValues = new float[3];
@@ -54,19 +54,29 @@ public class StepListener implements SensorEventListener {
     //初始阈值
     float ThreadValue = (float) 2.0;
 
+    // 用于计算步子时间的差值
+    float[] tempTimeStep = new float[valueNum];
+    int tempTime = 0;
+    int tempTimeNow = 0;
+
+    // 刚开始时只有达到了十步才计算
+    public static final int continueStep = 10;
+
     /** 注册了G-Sensor后一直会调用这个函数
     *对三轴数据进行平方和开根号的处理
-    *调用DetectorNewStep检测步子
+    *调用detectorNewStep检测步子
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        for (int i = 0; i < 3; i++) {
-            oriValues[i] = event.values[i];
+        if(Math.abs(oriValues[0] - event.values[0]) > 0.3 && Math.abs(oriValues[1] - event.values[1]) > 0.5 && Math.abs(oriValues[2] - event.values[2]) > 0.5) {
+            oriValues[0] = event.values[0];
+            oriValues[1] = event.values[1];
+            oriValues[2] = event.values[2];
+            gravityNew = (float) Math.sqrt(oriValues[0] * oriValues[0]
+                    + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]);
+            detectorNewStep(gravityNew);
         }
-        gravityNew = (float) Math.sqrt(oriValues[0] * oriValues[0]
-                + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]);
-        DetectorNewStep(gravityNew);
 
     }
 
@@ -81,14 +91,14 @@ public class StepListener implements SensorEventListener {
    * 2.如果检测到了波峰，并且符合时间差以及阈值的条件，则判定为1步
    * 3.符合时间差条件，波峰波谷差值大于initialValue，则将该差值纳入阈值的计算中
    * */
-    public void DetectorNewStep(float values) {
+    public void detectorNewStep(float values) {
         if (gravityOld == 0) {
             gravityOld = values;
         } else {
             if (DetectorPeak(values, gravityOld)) {
                 timeOfLastPeak = timeOfThisPeak;
                 timeOfNow = System.currentTimeMillis();
-                if (timeOfNow - timeOfLastPeak >= 250
+                if (timeOfNow - timeOfLastPeak >= correctTime(timeOfNow - timeOfLastPeak)
                         && (peakOfWave - valleyOfWave >= ThreadValue)) {
                     timeOfThisPeak = timeOfNow;
                     /*
@@ -98,23 +108,10 @@ public class StepListener implements SensorEventListener {
                      * 3.连续记录了9步用户还在运动据，之前的数据才有效
                      * */
 
-                    if(timeOfNow - timeOfLastPeak > 3000){
-                        isStart = true;
-                        i = 0;
-                    }
-                    if(isStart){
-                        i++;
-                    }else {
-                        count++;
-                    }
-                    if(i == 10){
-                        count += i;
-                        i = 0;
-                        isStart = false;
-                    }
+                    onStep();
 
                 }
-                if (timeOfNow - timeOfLastPeak >= 250
+                if (timeOfNow - timeOfLastPeak >= correctTime(timeOfNow - timeOfLastPeak)
                         && (peakOfWave - valleyOfWave >= initialValue)) {
                     timeOfThisPeak = timeOfNow;
                     ThreadValue = Peak_Valley_Thread(peakOfWave - valleyOfWave);
@@ -125,9 +122,46 @@ public class StepListener implements SensorEventListener {
     }
 
     private void onStep() {
+        if(timeOfNow - timeOfLastPeak > 60000){
+            tempStep = 0;
+        }
+        if(tempStep < continueStep){
+            tempStep++;
+        }else if(tempStep == continueStep){
+            count += tempStep;
+            tempStep++;
+        }else{
+            count += 1;
+        }
+    }
 
-            count++;
 
+    /**
+     * 矫正时间差，用于矫正多个步数之间的时间差值 通过计算多个时间差值的平均数 使得当一次采集时间大于前一次时间的2/3的时候，才算正常行走
+     *
+     * @param times
+     * @return
+     */
+    private float correctTime(float times) {
+
+        // 第一次步子时间差设置为250毫秒
+        if (tempTime == 0) {
+            tempTimeStep[tempTime++] = times;
+            tempTimeNow++;
+            return (times + 250) / 3;
+        } else if (tempTime < valueNum - 1) {
+            tempTimeNow++;
+            tempTimeStep[tempTime++] = times;
+            return averageValue(tempTimeStep, tempTime);
+        } else {
+            tempTimeStep[tempTimeNow] = times;
+            if (tempTimeNow == valueNum - 1) {
+                tempTimeNow = 0;
+            } else {
+                tempTimeNow++;
+            }
+            return averageValue(tempTimeStep, tempTime);
+        }
     }
 
     /*

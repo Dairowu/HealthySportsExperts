@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.ui.fragment.FragmentPageMessage;
@@ -35,6 +36,9 @@ public class MainActivity extends FragmentActivity {
 
     //每个子项对应的文字数组
     private String[] mTextArray = {"悦动","嗨聊","跑步","我"};
+
+    //之前按下返回键的时间
+    private long mPressedTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +94,29 @@ public class MainActivity extends FragmentActivity {
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            moveTaskToBack(false);//true对任何Activity都适用
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            moveTaskToBack(false);//true对任何Activity都适用
+//            return true;
+//        }
+// 获取第一次按键时间
+        long mNowTime = System.currentTimeMillis();
+        // 比较两次按键时间差
+        if((mNowTime - mPressedTime) > 2000){
+            mPressedTime = mNowTime;
             return true;
-        }
+            }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        long mNowTime = System.currentTimeMillis();
+        // 比较两次按键时间差
+        if((mNowTime - mPressedTime) > 2000){
+            Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            mPressedTime = mNowTime;
+        }else {
+            super.onBackPressed();
+        }
     }
 }

@@ -2,7 +2,6 @@ package cn.xietong.healthysportsexperts.ui.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.EmbossMaskFilter;
@@ -10,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import cn.xietong.healthysportsexperts.R;
@@ -20,11 +18,10 @@ import cn.xietong.healthysportsexperts.R;
  */
 public class ClockView extends View {
 
-    private Paint pathPaint;
-    private Paint paddingPaint;
-    private Paint centerPaint;
-    private Bitmap backBitmap;
-    private RectF rectF;
+    private Paint pathPaint;//外圈路径的画笔
+    private Paint paddingPaint;//外圈填充画笔
+    private Paint centerPaint;//内部实心圆的画笔
+    private RectF rectF;//填充轨迹的外接矩形
 
     private int mWidth;
     private int mHeight;
@@ -33,17 +30,17 @@ public class ClockView extends View {
 
     private float pathWidth;
 
-    private float mMax;
-    private float mProgress;
+    private float mMax;//最大进度
+    private float mProgress;//当前进度
 
     //接收16进制的颜色
-    private final int outerPathColor;
+    private  int outerPathColor;
     //进度填充颜色
-    private final int outerPaddingColor;
+    private  int outerPaddingColor;
     //内部实心圆的颜色
-    private final int contentCircleColor;
+    private  int contentCircleColor;
     //分界部分的细线的颜色
-    private final int borderColor;
+    private  int borderColor;
 
     // 梯度渐变的填充颜色
     private int[] arcColors = new int[] {0xFF599cd1,0xFF7d70b8,0xFFc8417b,0xFFe35a61,0xFFe98d42,0xFFdabf4a,0xFFdabf4a
@@ -64,17 +61,31 @@ public class ClockView extends View {
     // 指定了一个模糊的样式和半径来处理 Paint 的边缘
     private BlurMaskFilter mBlur = null;
 
-    private Context mContext;
+    public ClockView(Context context){
+        this(context,null);
+    }
+
+    public ClockView(Context context, AttributeSet attrs){
+        this(context,attrs,0);
+    }
 
     public ClockView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
-        emboss = new EmbossMaskFilter(direction, light, specular, blur);
-        mBlur = new BlurMaskFilter(20, BlurMaskFilter.Blur.NORMAL);
-        sweepGradient = new SweepGradient(getMeasuredWidth()/2,getMeasuredWidth()/2,arcColors,null);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressBarCutout);
 
+        initDefineAttribute(a);
+
+        initPaint();
+
+        a.recycle();
+    }
+
+    /**
+     * 初始化布局文件中设置的View的属性
+     * @param a
+     */
+    private void initDefineAttribute(TypedArray a) {
         //获得内圆半径和外环的画笔宽度
         pathWidth = a.getDimension(R.styleable.CircleProgressBarCutout_pathWidth,45);
 
@@ -87,6 +98,15 @@ public class ClockView extends View {
         outerPaddingColor = a.getColor(R.styleable.CircleProgressBarCutout_outerPaddingColor,0);
         contentCircleColor = a.getColor(R.styleable.CircleProgressBarCutout_contentCircleColor,0);
         borderColor = a.getColor(R.styleable.CircleProgressBarCutout_borderColor,0);
+    }
+
+    /**
+     * 初始化画笔的一些属性
+     */
+    private void initPaint() {
+        emboss = new EmbossMaskFilter(direction, light, specular, blur);
+        mBlur = new BlurMaskFilter(20, BlurMaskFilter.Blur.NORMAL);
+        sweepGradient = new SweepGradient(getMeasuredWidth()/2,getMeasuredWidth()/2,arcColors,null);
 
         pathPaint = new Paint();
         pathPaint.setAntiAlias(true);
@@ -111,16 +131,13 @@ public class ClockView extends View {
         centerPaint.setStyle(Paint.Style.FILL);
         centerPaint.setColor(contentCircleColor);
         centerPaint.setMaskFilter(emboss);
-
-        a.recycle();
     }
 
-    public ClockView(Context context, AttributeSet attrs){
-        this(context,attrs,0);
-    }
-
-    public ClockView(Context context){
-        this(context,null);
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        setMeasuredDimension(width,height);
     }
 
     @Override
@@ -146,7 +163,6 @@ public class ClockView extends View {
         //绘制进度
         rectF.set(mWidth/2 - radius,mHeight/2 - radius,mWidth/2 + radius,mHeight/2 + radius);
         float scale = mMax > 0 ? (float) mProgress / (float) mMax : 0;
-        Log.i("info",scale+"scale");
         if(outerPaddingColor != 0){
             paddingPaint.setColor(outerPaddingColor);
             canvas.drawArc(rectF,-90,scale*360,false,paddingPaint);
@@ -160,12 +176,7 @@ public class ClockView extends View {
         canvas.drawCircle(mWidth/2,mHeight/2, radius - pathWidth + 0.5f, pathPaint);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        setMeasuredDimension(width,height);
-    }
+
 
     public void setMax(float max) {
         if (max < 0) {
@@ -193,7 +204,7 @@ public class ClockView extends View {
         }
 
         //判断如果需要更新的进度与当前的进度相差超过了总进度的100分之一，则更新进度，减少invalidate的使用
-        if(Math.abs(progress - mProgress) > mMax/100) {
+        if(Math.abs(progress - mProgress) > mMax/100 || mProgress < mMax/100) {
             this.mProgress = progress;
             refreshProgress(mProgress);
         }

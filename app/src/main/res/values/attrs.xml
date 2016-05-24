@@ -26,4 +26,14 @@
         <attr name="borderColor" format="color"/>
     </declare-styleable>
 
+    <declare-styleable name="ScaleRulerView">
+        <attr name="normalLineColor" format="color"/>
+        <attr name="selectLineColor" format="color"/>
+        <attr name="currentValue" format="float"/>
+        <attr name="maxValue" format="float"/>
+        <attr name="minValue" format="float"/>
+        <attr name="normalLineWidth" format="dimension"/>
+        <attr name="selectLineWidth" format="dimension"/>
+    </declare-styleable>
+
 </resources>

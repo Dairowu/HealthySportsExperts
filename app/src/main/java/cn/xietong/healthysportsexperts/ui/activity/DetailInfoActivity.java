@@ -2,7 +2,6 @@ package cn.xietong.healthysportsexperts.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -32,6 +31,12 @@ public class DetailInfoActivity extends BaseActivity{
     String from;
     String userName;
 
+    /**
+     * 启动本Activity的方法
+     * @param context
+     * @param from 传入me表示是显示自己的信息
+     * @param userName 用户名
+     */
     public static void actionStart(Context context, String from, String userName){
         Intent intent = new Intent(context,DetailInfoActivity.class);
         intent.putExtra("from",from);
@@ -57,11 +62,9 @@ public class DetailInfoActivity extends BaseActivity{
         layouts = new int[]{R.layout.listitem_1tv,R.layout.listitem_iv_tv,R.layout.listitem_2tv_iv,R.layout.listitem_1button};
 
         if(from != null && from.equals("me")){
-            Log.i(TAG,"zhixing");
             user = mUserManager.getCurrentUser(MyUser.class);
             initData();
         }else{
-            Log.i(TAG,userName);
 
             /**
              * TODO 使用RxJava解决异步问题
@@ -70,12 +73,10 @@ public class DetailInfoActivity extends BaseActivity{
 
                 @Override
                 public void onError(int i, String s) {
-                    Log.i(TAG,s+"error");
                 }
 
                 @Override
                 public void onSuccess(List<MyUser> list) {
-                    Log.i(TAG,list.toString()+"null");
                     if(list != null & list.size() > 0) {
                         user = list.get(0);
                     }

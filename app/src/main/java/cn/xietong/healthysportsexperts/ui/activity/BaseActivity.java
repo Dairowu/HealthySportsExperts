@@ -17,6 +17,7 @@ import cn.bmob.im.config.BmobConfig;
 import cn.bmob.v3.listener.FindListener;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.app.App;
+import cn.xietong.healthysportsexperts.model.MyUser;
 import cn.xietong.healthysportsexperts.ui.view.TopBar;
 import cn.xietong.healthysportsexperts.ui.view.dialog.DialogTips;
 import cn.xietong.healthysportsexperts.utils.ActivityCollector;
@@ -29,7 +30,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected TopBar topBar;
     public App mApplication;
-    BmobUserManager mUserManager;
+    protected BmobUserManager mUserManager;
+    protected MyUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public abstract class BaseActivity extends FragmentActivity {
         setContentView(getLayoutId());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mApplication = App.getInstance();
-        mUserManager = BmobUserManager.getInstance(this);
+        mUserManager = mApplication.getUserManager();
         initViews();
         setupViews();
     }

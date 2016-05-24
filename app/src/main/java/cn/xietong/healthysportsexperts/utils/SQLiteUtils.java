@@ -2,6 +2,7 @@ package cn.xietong.healthysportsexperts.utils;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import cn.xietong.healthysportsexperts.model.DatabaseHelper;
 import cn.xietong.healthysportsexperts.model.UserInfo;
@@ -22,11 +23,13 @@ public class SQLiteUtils {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         if(name.equals("step")){
-            values.put("datetime",user.getDatatime());
+            Log.i("info",user.getCount()+"存储"+user.getDatetime()+"");
+            values.put("datetime",user.getDatetime());
             values.put("count",user.getCount());
             db.insert("step",null,values);
-            db.close();
             values.clear();
+            db.close();
+
         }
 
     }
@@ -42,13 +45,17 @@ public class SQLiteUtils {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         if(name.equals("step")){
-            values.put("datetime",user.getDatatime());
+            values.put("datetime",user.getDatetime());
             values.put("count",user.getCount());
-            db.update(name,values,"datetime=?",new String[]{user.getDatatime()});
+            Log.i("info",user.getCount()+"存储"+user.getDatetime()+"");
+            int i = db.update(name,values,"datetime=?",new String[]{user.getDatetime()});
+            values.clear();
+            if(i == 0){
+                insert(dbHelper,user,name);
+            }
             db.close();
         }
 
-        values.clear();
     }
 
 }

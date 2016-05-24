@@ -100,6 +100,11 @@ public class MyInfoActivity extends BaseActivity{
                                 .show();
                         break;
                     case 6:
+
+                        break;
+                    case 7:
+                        break;
+                    case 8:
                         Intent intent2 = new Intent(MyInfoActivity.this,ChangeInfoActivity.class);
                         intent2.putExtra("layout",R.layout.activity_change_info);
                         startActivityForResult(intent2,BmobConstants.REQUESTCODE_CHANGE_INFO_SIGNATURE);
@@ -217,11 +222,17 @@ public class MyInfoActivity extends BaseActivity{
         ItemListViewBean item6 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"性别",sex,null);
         mDatas.add(item6);
 
-        ItemListViewBean item7 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"个性签名",user.getSignature(),null);
+        ItemListViewBean item7 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"身高",user.getHeight()+"cm",null);
         mDatas.add(item7);
 
-        ItemListViewBean item8 = new ItemListViewBean(BmobConstants.LAYOUT_ONE_TV,"","",null);
+        ItemListViewBean item8 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"体重",user.getWeight()+"kg",null);
         mDatas.add(item8);
+
+        ItemListViewBean item9 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"个性签名",user.getSignature(),null);
+        mDatas.add(item9);
+
+        ItemListViewBean item10 = new ItemListViewBean(BmobConstants.LAYOUT_ONE_TV,"","",null);
+        mDatas.add(item10);
     }
 
 }

@@ -5,8 +5,10 @@ package cn.xietong.healthysportsexperts.model;
  */
 public class UserInfo {
 
-    private String Datatime;
-    private int count;
+    private String Datetime;// 日期 格式： yyyy-MM-dd
+    private int count;//走的步数
+    private float distance; // 跑步距离 单位：m
+    private float caloria; // 消耗 单位：千卡
 
     public int getCount() {
         return count;
@@ -16,11 +18,27 @@ public class UserInfo {
         this.count = count;
     }
 
-    public String getDatatime() {
-        return Datatime;
+    public String getDatetime() {
+        return Datetime;
     }
 
-    public void setDatatime(String datatime) {
-        Datatime = datatime;
+    public void setDatetime(String datatime) {
+        Datetime = datatime;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public float getCaloria() {
+        return caloria;
+    }
+
+    public void setCaloria(float caloria) {
+        this.caloria = caloria;
     }
 }

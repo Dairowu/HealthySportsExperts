@@ -20,7 +20,7 @@ import cn.xietong.healthysportsexperts.adapter.AddFriendAdapter;
 import cn.xietong.healthysportsexperts.model.MyUser;
 
 /**
- * Created by 林思旭 on 2016/4/9.
+ * Created by 林思旭 on 2016/4/9
  */
 public class Activity_SearchFriend extends BaseActivity implements View.OnClickListener {
     private String TAG = "SeachNewFriendActivity";

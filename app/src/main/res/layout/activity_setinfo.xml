@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <include layout="@layout/topbar"
     android:id="@+id/topBar"/>
@@ -20,6 +22,7 @@ android:layout_width="match_parent" android:layout_height="match_parent">
         android:id="@+id/et_nickname"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:textSize="14sp"
         android:paddingLeft="8dp"
         android:background="@drawable/input_bg"
         android:layout_marginTop="@dimen/hightest_margintop"
@@ -32,13 +35,14 @@ android:layout_width="match_parent" android:layout_height="match_parent">
         android:id="@+id/et_setSignature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="14sp"
         android:layout_below="@id/iv_setPicture"
         android:padding="8dp"
         android:background="@drawable/input_bg"
         android:layout_marginTop="@dimen/hightest_margintop"
         android:maxLength="30"
         android:hint="个性签名"
-        android:singleLine="false"
+        android:maxLines="1"
         android:lines="2"
         android:textColorHint="@color/text_color_hint"
        />
@@ -102,14 +106,132 @@ android:layout_width="match_parent" android:layout_height="match_parent">
 
     </RadioGroup>
 
+    <cn.xietong.healthysportsexperts.ui.view.ScaleRulerView
+        android:id="@+id/id_height_scale"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_below="@id/rg_gender"
+        custom:selectLineColor="@color/sel_color"
+        custom:normalLineColor="@color/base_color_text_gray"
+        custom:maxValue="220"
+        custom:minValue="100"
+        custom:currentValue="170"
+        custom:normalLineWidth="1dp"
+        custom:selectLineWidth="2dp"
+        />
+
+
+    <RelativeLayout
+        android:id="@+id/rv_height"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/id_height_scale"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_user_height_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom"
+            android:text="170"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_user_height_value"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/tv_user_height_value"
+            android:text="cm"
+            android:textColor="#999999"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_user_height_value"
+            android:layout_alignParentLeft="true"
+            android:text="身高"
+            android:textColor="#999999"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <cn.xietong.healthysportsexperts.ui.view.ScaleRulerView
+        android:id="@+id/id_weight_scale"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_below="@id/rv_height"
+        custom:selectLineColor="@color/sel_color"
+        custom:normalLineColor="@color/base_color_text_gray"
+        custom:maxValue="150"
+        custom:minValue="25"
+        custom:currentValue="65"
+        custom:normalLineWidth="1dp"
+        custom:selectLineWidth="2dp"
+        />
+
+
+    <RelativeLayout
+        android:id="@+id/rv_weight"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/id_weight_scale"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_user_weight_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom"
+            android:text="65"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_user_weight_value"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/tv_user_weight_value"
+            android:text="kg"
+            android:textColor="#999999"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_user_weight_value"
+            android:layout_alignParentLeft="true"
+            android:text="体重"
+            android:textColor="#999999"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
     <Button
         android:id="@+id/btn_complete"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
         android:background="@drawable/btn_login_selector"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/rg_gender"
-        android:text="完成注册"
+        android:layout_below="@id/rv_weight"
+        android:text="@string/complete_register"
         android:textColor="@color/base_color_text_white"
         android:textSize="@dimen/text_size_large"/>
 

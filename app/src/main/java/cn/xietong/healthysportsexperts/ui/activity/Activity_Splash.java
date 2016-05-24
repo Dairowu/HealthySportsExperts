@@ -7,7 +7,7 @@ import cn.bmob.im.BmobChat;
 import cn.xietong.healthysportsexperts.R;
 
 /**
- * Created by Administrator on 2015/11/16.
+ * Created by Administrator on 2015/11/16
  */
 public class Activity_Splash extends BaseActivity {
 

@@ -24,6 +24,7 @@ import cn.bmob.v3.listener.UploadFileListener;
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.config.BmobConstants;
 import cn.xietong.healthysportsexperts.model.MyUser;
+import cn.xietong.healthysportsexperts.ui.view.ScaleRulerView;
 import cn.xietong.healthysportsexperts.utils.ActivityCollector;
 import cn.xietong.healthysportsexperts.utils.CommonUtils;
 
@@ -33,11 +34,15 @@ import cn.xietong.healthysportsexperts.utils.CommonUtils;
 public class Activity_SetInfo extends BaseActivity{
 
     private static final int MAX_LENGTH = 30;
-    EditText et_nickname,et_signature;
-    TextView tv_signatureNumber;
-    RadioGroup rg;
-    Button btn_complete;
-    ImageView iv_headphoto;
+    private EditText et_nickname,et_signature;
+    private TextView tv_signatureNumber;
+    private RadioGroup rg;
+    private Button btn_complete;
+    private ImageView iv_headphoto;
+    private ScaleRulerView mHeightRuler,mWeightRuler;
+    private TextView mTextHeight,mTextWeight;
+
+    private float height = 170,weight = 65;
 
     @Override
     public int getLayoutId() {
@@ -54,6 +59,10 @@ public class Activity_SetInfo extends BaseActivity{
         rg = (RadioGroup) findViewById(R.id.rg_gender);
         btn_complete = (Button) findViewById(R.id.btn_complete);
         iv_headphoto = (ImageView) findViewById(R.id.iv_setPicture);
+        mHeightRuler = (ScaleRulerView) findViewById(R.id.id_height_scale);
+        mTextHeight = (TextView) findViewById(R.id.tv_user_height_value);
+        mWeightRuler = (ScaleRulerView) findViewById(R.id.id_weight_scale);
+        mTextWeight = (TextView) findViewById(R.id.tv_user_weight_value);
     }
 
     @Override
@@ -92,6 +101,22 @@ public class Activity_SetInfo extends BaseActivity{
                 intent.setDataAndType(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent,BmobConstants.REQUESTCODE_TAKE_CAMERA);//2016.4.8注释掉
+            }
+        });
+
+        mHeightRuler.setOnValueChangedListener(new ScaleRulerView.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(float value) {
+                height = value;
+                mTextHeight.setText(String.valueOf(value));
+            }
+        });
+
+        mWeightRuler.setOnValueChangedListener(new ScaleRulerView.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(float value) {
+                weight = value;
+                mTextWeight.setText(String.valueOf(value));
             }
         });
 
@@ -180,6 +205,8 @@ public class Activity_SetInfo extends BaseActivity{
         mUser.setNick(nick);
         mUser.setSignature(signature);
         mUser.setSex(isMan);
+        mUser.setHeight(height);
+        mUser.setWeight(weight);
         mUser.setAvatar(mApplication.getSharedPreferencesUtil().getAvatarUrl());
 
         mUser.signUp(Activity_SetInfo.this, new SaveListener() {

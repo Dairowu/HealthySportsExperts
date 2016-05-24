@@ -31,7 +31,7 @@ public abstract  class BaseFragment extends Fragment{
         super.onCreate(savedInstanceState);
         mApplication = App.getInstance();
         mInflater = LayoutInflater.from(getActivity());
-        mUserManager = BmobUserManager.getInstance(getActivity());
+        mUserManager = mApplication.getUserManager();
     }
 
     @Nullable

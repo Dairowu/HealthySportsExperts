@@ -9,7 +9,7 @@ import cn.bmob.im.bean.BmobChatUser;
 import cn.bmob.v3.datatype.BmobFile;
 
 /**
- * Created by Administrator on 2015/11/9.
+ * Created by mr.deng on 2015/11/9
  */
 public class MyUser extends BmobChatUser {
 
@@ -30,6 +30,9 @@ public class MyUser extends BmobChatUser {
      * 性别-true-男
      */
     private boolean sex;
+
+    private float height;
+    private float weight;
 
     /**
      * 头像
@@ -72,6 +75,22 @@ public class MyUser extends BmobChatUser {
         this.signature = signature;
     }
 
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public boolean equals(Object otherObject) {
@@ -98,7 +117,7 @@ public class MyUser extends BmobChatUser {
     @Override
     public String toString() {
         return getClass().getName() + "[name=" + getUsername() + ",mobilePhoneNumber=" + getMobilePhoneNumber()
-                +",sex=" + sex + "signature=" + signature + "]";
+                +",sex=" + sex + ",signature=" + signature + ",avatar="+ getAvatar()+"]";
     }
 
 }

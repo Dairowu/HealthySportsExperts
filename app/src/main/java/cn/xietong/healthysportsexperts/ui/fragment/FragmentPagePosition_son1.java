@@ -61,6 +61,7 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     //定义日期格式
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM月dd日EEEE", Locale.CHINA);
 
+
     /**
      * 通过此步操作获得binder对象，再通过其获得Service中记录的步数
      */
@@ -83,10 +84,10 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     private Handler handler = new Handler() {
 
         public void handleMessage(Message msg){
-            Log.i("info","msg.what"+msg.what);
             if(msg.what == UPDATE_TEXT){
-                tv_stepNumber.setText(Integer.toString(msg.arg1));
-                startAnimator(msg.arg1);
+                int stepNum = msg.arg1;
+                tv_stepNumber.setText(Integer.toString(stepNum));
+                startAnimator(stepNum);
             }
         }
 
@@ -94,7 +95,6 @@ public class FragmentPagePosition_son1 extends BaseFragment {
 
     //使用属性动画实现动态更新步数进度
     private synchronized void startAnimator(int progress) {
-        Log.i("info","调用");
         mClockView.setProgress(progress);
 //        int num = (progress/goalCount)*360;
 //        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(mClockView, "progress", 0,num);
@@ -115,26 +115,27 @@ public class FragmentPagePosition_son1 extends BaseFragment {
 
         if(userLists!=null&&userLists.size()>0) {
             //存储的最近一天的时间
-            Long recentTime = Long.parseLong(userLists.get(0).getDatatime());
+//            Long recentTime = Long.parseLong(userLists.get(0).getDatetime());
             //当前时间
             Long nowTime = new Date().getTime();
-            String old = simpleDateFormat.format(new Date(recentTime));
+            String old = userLists.get(0).getDatetime();
             String now = simpleDateFormat.format(new Date());
+            Log.i("info","old"+ old+"now"+now);
             //通过比较最近一次的时间和今天时间是否相同，判断是否将数据库中记录的步数设置为今天已经计的步数，
             // 如果不是则将今天与记录之间的天数里的记录添加上并且值为0
             if ((old.equals(now))) {
                 oldCount = userLists.get(0).getCount();
                 mStepListener.setCount(oldCount);
             } else {
-                //记录的最近一天与当前时间间的天数
-                int among_days_number = (int) ((nowTime - recentTime)/DAYTIME_MILL - 1);
-                if(among_days_number > 0){
-                    for(int i = 0;i < among_days_number;i++){
-                        user.setCount(0);
-                        user.setDatatime((recentTime+DAYTIME_MILL*i)+"");
-                        SQLiteUtils.insert(dbHelper,user,"step");
-                    }
-                }
+//                //记录的最近一天与当前时间间的天数
+//                int among_days_number = (int) ((nowTime - recentTime)/DAYTIME_MILL - 1);
+//                if(among_days_number > 0){
+//                    for(int i = 0;i < among_days_number;i++){
+//                        user.setCount(0);
+//                        user.setDatetime((recentTime+DAYTIME_MILL*i)+"");
+//                        SQLiteUtils.insert(dbHelper,user,"step");
+//                    }
+//                }
             }
         }
 
@@ -211,11 +212,21 @@ public class FragmentPagePosition_son1 extends BaseFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        user.setCount(binder.getCount());
+        user.setDatetime(simpleDateFormat.format(new Date()));
+//        SQLiteUtils.insert(dbHelper,user,"step");
+        SQLiteUtils.update(dbHelper,user,"step");
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         user.setCount(binder.getCount());
-        user.setDatatime(new Date().getTime()+"");
-        SQLiteUtils.insert(dbHelper,user,"step");
+        user.setDatetime(simpleDateFormat.format(new Date()));
+//        SQLiteUtils.insert(dbHelper,user,"step");
+        SQLiteUtils.update(dbHelper,user,"step");
     }
 
 }

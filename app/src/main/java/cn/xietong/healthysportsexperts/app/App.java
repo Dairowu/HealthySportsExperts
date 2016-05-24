@@ -37,12 +37,15 @@ public class App extends Application {
     public static final String DATABASE_NAME = "healthysportsexperts_db";
     public static final String PREFERENCE_NAME = "_sharedinfo";
 
+    private BmobUserManager mUserManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         dbHelper = new DatabaseHelper(this,DATABASE_NAME);
         stepListener = new StepListener();
+        mUserManager = BmobUserManager.getInstance(this);
         init();//Magic,2016.4.8
         initImageLoader();
 
@@ -74,6 +77,10 @@ public class App extends Application {
     public static StepListener getStepListener(){return stepListener;}
 
     private Map<String,BmobChatUser> contactList = new HashMap<String,BmobChatUser>();
+
+    public synchronized  BmobUserManager getUserManager() {
+        return mUserManager;
+    }
 
     public Map<String, BmobChatUser> getContactList() {
         if(contactList == null || contactList.size()==0)return null;

@@ -15,12 +15,15 @@ import android.widget.RemoteViews;
 
 import cn.xietong.healthysportsexperts.R;
 import cn.xietong.healthysportsexperts.app.App;
+import cn.xietong.healthysportsexperts.model.MyUser;
 import cn.xietong.healthysportsexperts.ui.activity.MainActivity;
 
 /**计步的Serice
  * Created by Administrator on 2015/10/22.
  */
 public class Service_Calculate_Step extends Service {
+
+    private static final double CALORIE_ARGUMENT = 0.36/100000*1.036;
 
     public static PowerManager.WakeLock wakeLock;
     //步数监听
@@ -36,14 +39,19 @@ public class Service_Calculate_Step extends Service {
     //目标步数
     private int goalCount = 1000;
 
+    private MyUser mUser;
+
+    private double calorie;
+
     public class MyBinder extends Binder {
 
         public int getCount() {
             count = mStepListeners.getCount();
+            calorie = count *mUser.getHeight()*mUser.getWeight()*CALORIE_ARGUMENT;
             RemoteViews  mRemoteViews = new RemoteViews(getPackageName(), R.layout.notification_step);
             mRemoteViews.setProgressBar(R.id.progress_step,goalCount,count,false);
-            mRemoteViews.setTextViewText(R.id.tv_ntf_step,count + "步");
-            mRemoteViews.setTextViewText(R.id.tv_kal, 0 + "kal");
+            mRemoteViews.setTextViewText(R.id.tv_ntf_step,count+ "步" );
+            mRemoteViews.setTextViewText(R.id.tv_kal, String.format("%.2f",calorie) + "kal");
             notify.contentView = mRemoteViews;
             //一定要有这句才会刷新
             startForeground(1, notify);
@@ -55,6 +63,9 @@ public class Service_Calculate_Step extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mUser =  App.getInstance().getUserManager().getCurrentUser(MyUser.class);
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorManager.registerListener(mStepListeners,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),

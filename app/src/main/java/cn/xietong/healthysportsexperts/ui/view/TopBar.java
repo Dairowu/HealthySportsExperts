@@ -42,7 +42,11 @@ public class TopBar extends RelativeLayout{
     private topbarClickListener mListener;
 
     public TopBar(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
+    }
+
+    public TopBar(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TopBar);
 
@@ -76,8 +80,6 @@ public class TopBar extends RelativeLayout{
                 mListener.leftClick();
             }
         });
-
-
     }
 
     /**
