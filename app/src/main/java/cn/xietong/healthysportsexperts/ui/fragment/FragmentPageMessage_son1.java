@@ -24,7 +24,7 @@ import cn.xietong.healthysportsexperts.adapter.MessageRecentAdapter;
 import cn.xietong.healthysportsexperts.ui.activity.Activity_Chatting;
 import cn.xietong.healthysportsexperts.ui.view.dialog.DeleteDialog;
 
-/**发帖界面
+/**聊天界面
  * Created by 林思旭 on 2015/10/18.。。
  */
 public class FragmentPageMessage_son1 extends BaseFragment implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener {
@@ -98,7 +98,6 @@ public class FragmentPageMessage_son1 extends BaseFragment implements AdapterVie
                         break;
                     case R.id.txt_set_unread_message:
                         TextView txt_unread = (TextView)itemview.findViewById(R.id.tv_recent_unread);
-                        Log.i(TAG,"txt_unread="+txt_unread);
                         txt_unread.setVisibility(View.VISIBLE);
                         dialog.dismiss();
                         Toast.makeText(getActivity(),"设置未读",Toast.LENGTH_SHORT).show();

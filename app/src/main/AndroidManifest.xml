@@ -104,7 +104,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.Activity_Post"/>
+        <activity android:name=".ui.activity.Activity_Post"
+            android:theme="@style/AnimActivity"/>
         <activity android:name=".ui.activity.Activity_PostDetail"/>
         <service android:name=".utils.Service_Calculate_Step"
            />

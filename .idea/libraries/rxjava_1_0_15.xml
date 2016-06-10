@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/io.reactivex/rxjava/1.0.15/568d1b68c61aa1d2020f6273318634ab8e35b0/rxjava-1.0.15-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.reactivex/rxjava/1.0.15/568d1b68c61aa1d2020f6273318634ab8e35b0/rxjava-1.0.15-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -44,7 +44,6 @@ import cn.xietong.healthysportsexperts.receiver.MyNewMessageReceiver;
 import cn.xietong.healthysportsexperts.ui.view.EmoticonsEditText;
 import cn.xietong.healthysportsexperts.ui.view.dialog.DialogTips;
 import cn.xietong.healthysportsexperts.utils.CommonUtils;
-import cn.xietong.healthysportsexperts.utils.FaceReplace;
 import cn.xietong.healthysportsexperts.utils.FaceText;
 import cn.xietong.healthysportsexperts.utils.FaceTextUtils;
 
@@ -82,7 +81,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     public static final int NEW_MESSAGE = 0x001;// 收到消息
     //2016.5.13
     private String avatar;
-    private FaceReplace myReplace = new FaceReplace();
+//    private FaceReplace myReplace = new FaceReplace();
     @Override
     public int getLayoutId() {
         return R.layout.activity_chatting;

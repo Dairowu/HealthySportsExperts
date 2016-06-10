@@ -2,9 +2,11 @@ package cn.xietong.healthysportsexperts.utils;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import cn.xietong.healthysportsexperts.app.App;
 import cn.xietong.healthysportsexperts.model.DatabaseHelper;
@@ -17,6 +19,7 @@ public class UserUtils{
 
     //保存用户从开始使用程序到现在的每一天的记录
     private static ArrayList<UserInfo> arrayList;
+    public static TreeMap<String ,Integer> map;
     //保存用户联系人相关的信息
     private static ArrayList<HashMap<String,Object>>  contactList = new ArrayList<HashMap<String,Object>>();
 
@@ -39,6 +42,7 @@ public class UserUtils{
 //        Cursor cursor_contact = db.query("contact",new String[]{"id","head_photo","name","number","sex","sign"},null,null,null,null,
 //                "order by name,id");
         arrayList = new ArrayList<UserInfo>();
+        map  = new TreeMap<>();
         for (int i = 0; i < cursor_step.getCount(); i++) {
             cursor_step.moveToPosition(i);//将游标移动一个固定的行
             String datetime = cursor_step.getString(0);
@@ -47,6 +51,8 @@ public class UserUtils{
             userInfo.setDatetime(datetime);
             userInfo.setCount(count);
             arrayList.add(userInfo);
+            Log.i("info","datetime = " + datetime + " count = " + count);
+            map.put(datetime,count);
         }
 
 //        for (int i = 0; i < cursor_contact.getCount(); i++) {
@@ -67,6 +73,7 @@ public class UserUtils{
 //            contactList.add(map);
 //        }
 
+        cursor_step.close();
     }
 
 }

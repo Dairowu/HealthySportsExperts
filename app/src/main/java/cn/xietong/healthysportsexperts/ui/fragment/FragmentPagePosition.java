@@ -117,8 +117,8 @@ public class FragmentPagePosition extends BaseFragment implements View.OnClickLi
             case R.id.btn_discuss:
                 btn_discuss.setBackgroundResource(R.drawable.icon_discuss_sel);
                 if(dropPop==null){
-                    OnClickListener paramOnClickListenter = new OnClickListener();
-                    dropPop = new DropPop(getActivity(),paramOnClickListenter);
+                    OnClickListener paramOnClickListener = new OnClickListener();
+                    dropPop = new DropPop(getActivity(),paramOnClickListener);
 
                     //监听窗口消失事件，当窗口消失时更换评论按钮的背景
                     dropPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -132,7 +132,7 @@ public class FragmentPagePosition extends BaseFragment implements View.OnClickLi
                     //设置默认获取焦点
                     dropPop.setFocusable(true);
                     //以某个控件的偏移量显示窗口
-                    dropPop.showAsDropDown(btn_discuss, 0, 0);
+                    dropPop.showAsDropDown(btn_discuss, 0, 1);
                     //如果存在则更新
                     dropPop.update();
                 break;
