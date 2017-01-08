@@ -90,6 +90,8 @@
 
         <activity android:name=".ui.activity.DetailInfoActivity"/>
 
+        <activity android:name=".ui.activity.AboutUsActivity"/>
+
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"

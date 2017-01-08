@@ -43,10 +43,12 @@ public class ChangeInfoActivity extends BaseActivity{
         mEditText.setHint(intent.getStringExtra("et_hint"));
         mEditText.setText(intent.getStringExtra("et_content"));
 
+        topBar.setButtonEnable(1,false);
+
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                topBar.setButtonEnable(1,false);
+
             }
 
             @Override
@@ -68,10 +70,10 @@ public class ChangeInfoActivity extends BaseActivity{
 
     }
 
-    public static void actionStart(Context context,String title,String et_hint,String et_content){
+    public static void actionStart(Context context,int layoutId,String title,String et_content){
         Intent intent = new Intent(context,ChangeInfoActivity.class);
         intent.putExtra("title",title);
-        intent.putExtra("et_hint",et_hint);
+        intent.putExtra("layout",layoutId);
         intent.putExtra("et_content",et_content);
         context.startActivity(intent);
     }

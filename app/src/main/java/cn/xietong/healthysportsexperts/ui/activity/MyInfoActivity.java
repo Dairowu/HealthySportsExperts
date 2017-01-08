@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import cn.xietong.healthysportsexperts.adapter.UserInfoAdapter;
 import cn.xietong.healthysportsexperts.config.BmobConstants;
 import cn.xietong.healthysportsexperts.model.ItemListViewBean;
 import cn.xietong.healthysportsexperts.model.MyUser;
+import cn.xietong.healthysportsexperts.ui.view.ScaleRulerView;
 import cn.xietong.healthysportsexperts.utils.CommonUtils;
 
 /**
@@ -36,6 +40,8 @@ public class MyInfoActivity extends BaseActivity{
     private UserInfoAdapter adapter;
     private int[] layouts;
     private MyUser user;
+    private float height;
+    private float weight;
 
     @Override
     public int getLayoutId() {
@@ -62,6 +68,8 @@ public class MyInfoActivity extends BaseActivity{
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LayoutInflater inflater = LayoutInflater.from(MyInfoActivity.this);
+                LinearLayout linearLayout = new LinearLayout(MyInfoActivity.this,null);
                 switch (position){
                     case 1:
                         Intent intent = new Intent(Intent.ACTION_PICK, null);
@@ -70,9 +78,9 @@ public class MyInfoActivity extends BaseActivity{
                         startActivityForResult(intent,BmobConstants.REQUESTCODE_TAKE_CAMERA);
                         break;
                     case 2:
-                        Intent intent1 = new Intent(MyInfoActivity.this,ChangeInfoActivity.class);
-                        intent1.putExtra("layout",R.layout.activity_change_info);
-                        startActivityForResult(intent1,BmobConstants.REQUESTCODE_CHANGE_INFO_NICK);
+                        ChangeInfoActivity.actionStart(MyInfoActivity.this,
+                                R.layout.activity_change_info,
+                                "更改昵称",mDatas.get(2).getContent_text());
                         break;
                     case 3:
                         break;
@@ -87,11 +95,13 @@ public class MyInfoActivity extends BaseActivity{
                                                 user.setSex(true);
                                                 mDatas.get(5).setContent_text("男");
                                                 adapter.notifyDataSetChanged();
+                                                dialog.dismiss();
                                                 break;
                                             case 1:
                                                 user.setSex(false);
                                                 mDatas.get(5).setContent_text("女");
                                                 adapter.notifyDataSetChanged();
+                                                dialog.dismiss();
                                                 break;
                                         }
                                     }
@@ -100,14 +110,69 @@ public class MyInfoActivity extends BaseActivity{
                                 .show();
                         break;
                     case 6:
+                        height = user.getHeight();
+                        linearLayout.setOrientation(LinearLayout.VERTICAL);
+                        View choose_height = inflater.inflate(R.layout.choose_height,linearLayout);
+                        ScaleRulerView scaleRulerView_height = (ScaleRulerView) choose_height.findViewById(R.id.id_height_scale);
+                        scaleRulerView_height.setmCurrentValue(height);
+                        final TextView mTextHeight = (TextView) choose_height.findViewById(R.id.tv_user_height_value);
+                        mTextHeight.setText(String.valueOf(height));
+                        scaleRulerView_height.setOnValueChangedListener(new ScaleRulerView.OnValueChangedListener() {
+                            @Override
+                            public void onValueChanged(float value) {
+                                height = value;
+                                mTextHeight.setText(String.valueOf(value));
+                            }
+                        });
 
+                        new AlertDialog.Builder(MyInfoActivity.this)
+                                .setView(linearLayout)
+                                .setPositiveButton("确定", new OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mDatas.get(6).setContent_text(height + "cm");
+                                        user.setHeight(height);
+                                        user.update(MyInfoActivity.this);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .create()
+                                .show();
                         break;
                     case 7:
+                        weight = user.getWeight();
+                        linearLayout.setOrientation(LinearLayout.VERTICAL);
+                        View choose_weight = inflater.inflate(R.layout.choose_weight,linearLayout);
+                        ScaleRulerView scaleRulerView_weight = (ScaleRulerView) choose_weight.findViewById(R.id.id_weight_scale);
+                        scaleRulerView_weight.setmCurrentValue(weight);
+                        final TextView mTextWeight = (TextView) choose_weight.findViewById(R.id.tv_user_weight_value);
+                        mTextWeight.setText(String.valueOf(weight));
+                        scaleRulerView_weight.setOnValueChangedListener(new ScaleRulerView.OnValueChangedListener() {
+                            @Override
+                            public void onValueChanged(float value) {
+                                weight = value;
+                                mTextWeight.setText(String.valueOf(value));
+                            }
+                        });
+
+                        new AlertDialog.Builder(MyInfoActivity.this)
+                                .setView(linearLayout)
+                                .setPositiveButton("确定", new OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mDatas.get(7).setContent_text(weight + "kg");
+                                        user.setWeight(weight);
+                                        user.update(MyInfoActivity.this);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .create()
+                                .show();
                         break;
                     case 8:
-                        Intent intent2 = new Intent(MyInfoActivity.this,ChangeInfoActivity.class);
-                        intent2.putExtra("layout",R.layout.activity_change_info);
-                        startActivityForResult(intent2,BmobConstants.REQUESTCODE_CHANGE_INFO_SIGNATURE);
+                        ChangeInfoActivity.actionStart(MyInfoActivity.this,
+                                R.layout.activity_change_info,
+                                "个性签名",mDatas.get(8).getContent_text());
                         break;
                     default:
                         break;
@@ -180,7 +245,7 @@ public class MyInfoActivity extends BaseActivity{
             mDatas.get(2).setContent_text(text);
             adapter.notifyDataSetChanged();
         }else if(requestCode == BmobConstants.REQUESTCODE_CHANGE_INFO_SIGNATURE &&
-                resultCode == BmobConstants.REQUESTCODE_CHANGE_INFO_SIGNATURE){
+                resultCode == BmobConstants.REQUESTCODE_CHANGE_INFO){
 
             if(!CommonUtils.isNetworkAvailable(MyInfoActivity.this)){
                 showToast("网络连接不可用");
@@ -189,7 +254,7 @@ public class MyInfoActivity extends BaseActivity{
 
             user.setSignature(text);
             user.update(MyInfoActivity.this);
-            mDatas.get(2).setContent_text(text);
+            mDatas.get(8).setContent_text(text);
             adapter.notifyDataSetChanged();
         }
     }
@@ -222,10 +287,10 @@ public class MyInfoActivity extends BaseActivity{
         ItemListViewBean item6 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"性别",sex,null);
         mDatas.add(item6);
 
-        ItemListViewBean item7 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"身高",user.getHeight()+"cm",null);
+        ItemListViewBean item7 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"身高",user.getHeight() + "cm",null);
         mDatas.add(item7);
 
-        ItemListViewBean item8 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"体重",user.getWeight()+"kg",null);
+        ItemListViewBean item8 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"体重",user.getWeight() + "kg",null);
         mDatas.add(item8);
 
         ItemListViewBean item9 = new ItemListViewBean(BmobConstants.LAYOUT_TWO_TV,"个性签名",user.getSignature(),null);

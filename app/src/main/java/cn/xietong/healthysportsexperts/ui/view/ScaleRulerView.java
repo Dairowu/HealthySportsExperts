@@ -67,7 +67,6 @@ public class ScaleRulerView extends View {
         mSelectLinePaint = new Paint();
         mSelectLinePaint.setStrokeWidth(mSelectLineWidth);
         mSelectLinePaint.setColor(mSelectColor);
-
     }
 
     public interface OnValueChangedListener{
@@ -95,7 +94,6 @@ public class ScaleRulerView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawScaleLines(canvas);
-
         drawMiddleLine(canvas);
     }
 
@@ -222,6 +220,12 @@ public class ScaleRulerView extends View {
         mLastX = 0;
         mMove = 0;
 
+        notifyValueChange();
+        postInvalidate();
+    }
+
+    public void setmCurrentValue(float mCurrentValue) {
+        this.mCurrentValue = mCurrentValue;
         notifyValueChange();
         postInvalidate();
     }

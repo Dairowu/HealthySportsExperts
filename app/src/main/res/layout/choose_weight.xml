@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    tools:showIn="@layout/activity_setinfo">
+
+
+    <cn.xietong.healthysportsexperts.ui.view.ScaleRulerView
+        android:id="@+id/id_weight_scale"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_below="@id/rv_height"
+        custom:selectLineColor="@color/sel_color"
+        custom:normalLineColor="@color/base_color_text_gray"
+        custom:maxValue="150"
+        custom:minValue="25"
+        custom:currentValue="65"
+        custom:normalLineWidth="1dp"
+        custom:selectLineWidth="2dp" />
+
+
+    <RelativeLayout
+        android:id="@+id/rv_weight"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/id_weight_scale"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_user_weight_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom"
+            android:text="65"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_user_weight_value"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/tv_user_weight_value"
+            android:text="kg"
+            android:textColor="#999999"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_user_weight_value"
+            android:layout_alignParentLeft="true"
+            android:text="体重"
+            android:textColor="#999999"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</merge>

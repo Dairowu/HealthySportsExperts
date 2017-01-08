@@ -7,7 +7,9 @@
         android:id="@+id/realtabcontent"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></FrameLayout>
+        android:layout_weight="1">
+
+    </FrameLayout>
 
     <android.support.v4.app.FragmentTabHost
         android:id="@android:id/tabhost"

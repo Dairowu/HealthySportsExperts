@@ -14,6 +14,7 @@ import cn.xietong.healthysportsexperts.adapter.UserInfoAdapter;
 import cn.xietong.healthysportsexperts.config.BmobConstants;
 import cn.xietong.healthysportsexperts.model.ItemListViewBean;
 import cn.xietong.healthysportsexperts.model.MyUser;
+import cn.xietong.healthysportsexperts.ui.activity.AboutUsActivity;
 import cn.xietong.healthysportsexperts.ui.activity.Activity_Login;
 import cn.xietong.healthysportsexperts.ui.activity.Activity_Remind;
 import cn.xietong.healthysportsexperts.ui.activity.MyInfoActivity;
@@ -75,6 +76,7 @@ public class FragmentPageMy extends BaseFragment{
                         startActivity(intent);
                         break;
                     case 6:
+                        startActivity(new Intent(getActivity(), AboutUsActivity.class));
                         break;
                     case 8:
                         mApplication.logout();

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    tools:showIn="@layout/activity_setinfo">
+
+
+    <cn.xietong.healthysportsexperts.ui.view.ScaleRulerView
+        android:id="@+id/id_height_scale"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_below="@id/rg_gender"
+        custom:selectLineColor="@color/sel_color"
+        custom:normalLineColor="@color/base_color_text_gray"
+        custom:maxValue="220"
+        custom:minValue="100"
+        custom:currentValue="170"
+        custom:normalLineWidth="1dp"
+        custom:selectLineWidth="2dp" />
+
+
+    <RelativeLayout
+        android:id="@+id/rv_height"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/id_height_scale"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_user_height_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom"
+            android:text="170"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_user_height_value"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/tv_user_height_value"
+            android:text="cm"
+            android:textColor="#999999"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_user_height_value"
+            android:layout_alignParentLeft="true"
+            android:text="身高"
+            android:textColor="#999999"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</merge>

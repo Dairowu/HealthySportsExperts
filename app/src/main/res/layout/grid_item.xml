@@ -3,18 +3,22 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:focusable="false"
+    android:background="@android:color/transparent"
     xmlns:tools="http://schemas.android.com/tools">
 
     <cn.xietong.healthysportsexperts.ui.view.ClockView
         android:id="@+id/clockViewRecorder"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_gravity="center"
-        custom:pathWidth="5dp"
+        android:background="@android:color/transparent"
+        custom:pathWidth="3dp"
         custom:outerPaddingColor="@color/sel_color"
         custom:outerPathColor="@color/base_color_text_white"
         custom:contentCircleColor="@color/base_color_text_white"
         custom:borderColor="@color/gray_border_color"
+
         />
 
     <TextView
