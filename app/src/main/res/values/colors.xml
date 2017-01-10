@@ -27,9 +27,13 @@
     <color name="dimgrey">#696969</color>
     <color name="gray">#808080</color>
     <color name="gray_border_color">#FFD2D1C4</color>
+    <!-- 绘制轨迹-->
+    <color name="color_grey_focus">#ccc</color>
+    <color name="color_blue_polyline">#ff56abe4</color>
     <color name="nor_gray">#e0e0e0</color>
 
     <!--帖子相关-->
     <color name="top_tv_color">#4fc3f7</color>
+    <color name="color_green">#009900</color>
 
 </resources>

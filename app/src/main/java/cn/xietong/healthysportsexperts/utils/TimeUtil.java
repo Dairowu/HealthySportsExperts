@@ -1,6 +1,7 @@
 package cn.xietong.healthysportsexperts.utils;
 
 import android.annotation.SuppressLint;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -31,6 +32,21 @@ public class TimeUtil {
 	private static final int HOUR = 60 * 60;// 小时
 	private static final int MINUTE = 60;// 分钟
 
+	private final int reduceTime = 8*60*60*1000;//这个是需要减去的时间差 2017.1.3
+	public static TimeUtil myTimeUtil = null;//2017.1.3
+	private final double EARTH_RADIUS = 6378137.0;//2017.1.3
+
+
+	public static TimeUtil getMyTimeUtils(){
+		if(myTimeUtil == null){
+			synchronized (DateUtils.class){
+				if (myTimeUtil == null){
+					myTimeUtil = new TimeUtil();
+				}
+			}
+		}
+		return myTimeUtil;
+	}
 	/**
 	 * 根据时间戳获取描述性时间，如3分钟前，1天前
 	 * 
@@ -182,6 +198,79 @@ public class TimeUtil {
 			break;
 		}
 
+		return result;
+	}
+	//2017.1.3
+	public  String getHMS(long timestamp) {
+		timestamp = timestamp - reduceTime;
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		String time = null;
+		try {
+			return sdf.format(new Date(timestamp));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return time;
+	}
+	/**
+	 * 2017.1.3
+	 * @param longitude1 第一个点的经度
+	 * @param latitude1  第一个点的纬度
+	 * @param longitude2 第二个点的经度
+	 * @param latitude2  第二个点的纬度
+	 * @param sum  所有点距离的总合
+	 * @return 返回千米
+	 */
+	public double getDistance(double longitude1, double latitude1,
+							  double longitude2, double latitude2,double sum) {
+		double Lat1 = rad(latitude1);
+		double Lat2 = rad(latitude2);
+		double a = Lat1 - Lat2;
+		double b = rad(longitude1) - rad(longitude2);
+		double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+				+ Math.cos(Lat1) * Math.cos(Lat2)
+				* Math.pow(Math.sin(b / 2), 2)));
+		s = s * EARTH_RADIUS;
+		s = Math.round(s * 10000) / 10000;
+		sum += s;
+		return sum;
+	}
+	private double rad(double d) {
+		return d * Math.PI / 180.0;
+	}
+	/**
+	 * 2017.1.3
+	 * @param sum 跑步的总路程
+	 * @return 返回一个km为单位的字符串，小数点保留后两位
+	 */
+	public String dateToString(double sum){
+		String result = null;
+		String sum_test = String.valueOf(sum);
+		int ind = sum_test.indexOf('.');
+		if(ind > 3){
+//            LogUtils.i(TAG,">3");
+			String start = sum_test.substring(0,ind - 3);//1000距离所以减3
+			String end = sum_test.substring(ind-3,ind -1);//只保留两位小数
+			result = start+"."+end;
+		}else{
+			if(ind == 1){
+//                LogUtils.i(TAG,"1");
+				return "0:00";
+			}
+			if(ind == 2){
+//                LogUtils.i(TAG,"2");
+				String start = "0";
+				String end = "0"+sum_test.substring(0,1);
+				result = start+"."+end;
+			}
+			if(ind == 3){
+//                LogUtils.i(TAG,"3");
+				String start = "0";
+				String end = sum_test.substring(0,2);
+				result = start+"."+end;
+			}
+		}
 		return result;
 	}
 }

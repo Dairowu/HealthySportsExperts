@@ -2,6 +2,7 @@ package cn.xietong.healthysportsexperts.app;
 
 import android.app.Application;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -43,6 +44,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        // 初始化ShareSDK(2017.1.8)
+        SDKInitializer.initialize(getApplicationContext());
         dbHelper = new DatabaseHelper(this,DATABASE_NAME);
         stepListener = new StepListener();
         mUserManager = BmobUserManager.getInstance(this);
