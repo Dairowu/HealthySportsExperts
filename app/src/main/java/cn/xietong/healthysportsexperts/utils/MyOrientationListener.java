@@ -8,7 +8,7 @@ import android.hardware.SensorManager;
 
 /**
  * 需要提交的
- * Created by 林思旭 on 2016/7/27.
+ * Created by 林思旭1 on 2016/7/27.
  */
 public class MyOrientationListener implements SensorEventListener
 {
