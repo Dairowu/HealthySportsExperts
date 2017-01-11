@@ -48,7 +48,7 @@ import static android.content.Context.SENSOR_SERVICE;
 
 
 /**跑步绘图界面
- * Created by 林思旭1 on 2015/10/14.
+ * Created by 林思旭2 on 2015/10/14.
  */
 public class FragmentPageRun extends BaseFragment {
     private String TAG = "FragmentPageRun";
