@@ -80,7 +80,7 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
     private MessageChatAdapter mAdapter;
     public static final int NEW_MESSAGE = 0x001;// 收到消息
     //2016.5.13
-    private String avatar;
+    private String avatar = null;
 //    private FaceReplace myReplace = new FaceReplace();
     @Override
     public int getLayoutId() {
@@ -113,7 +113,9 @@ public class Activity_Chatting extends BaseActivity implements View.OnClickListe
 //        current_Nick = BmobChatUser.getCurrentUser(this).get;
         current_name = BmobChatUser.getCurrentUser(this).getUsername();
         current_targetId = BmobChatUser.getCurrentUser(this).getObjectId();
-        avatar = mApplication.getContactList().get(targetUser.getUsername()).getAvatar();//2016.5.13
+        if(mApplication.getContactList()!=null){
+            avatar = mApplication.getContactList().get(targetUser.getUsername()).getAvatar();//2016.5.13
+        }
         initFace();//11.23+
         //2016.4.29
         initOrRefresh();

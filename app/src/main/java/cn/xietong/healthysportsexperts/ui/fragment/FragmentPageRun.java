@@ -1,5 +1,6 @@
 package cn.xietong.healthysportsexperts.ui.fragment;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -61,7 +62,7 @@ public class FragmentPageRun extends BaseFragment {
     private IntentFilter intentFilter;
     public static OnStopTraceListener stopBackListener = null;
     public static OnStartTraceListener startTraceListener = null;//开启轨迹服务监听器
-//    private ProgressDialog myProgressDialog;
+    private ProgressDialog myProgressDialog;
     private MyOrientationListener myOrientationListener;//林思旭 2016.7.27
     private float mXDirection = 0;
     private double longitude_service,latitude_service;
@@ -133,12 +134,11 @@ public class FragmentPageRun extends BaseFragment {
         //注册传感器,林思旭，2017.7.27
         initOritationListener();
 
+        mypopup = new SlideFromBottomPopup(getActivity());//林思旭
+        //fragment
         //动态注册广播
         initBoardcastReceiver();
 
-        //fragment
-
-        mypopup = new SlideFromBottomPopup(getActivity());//林思旭
         // 初始化监听器
         initListener();
     }
@@ -169,11 +169,22 @@ public class FragmentPageRun extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+
         // 初始化组件
         initComponent();
 
+
         // 初始化
         init();
+    }
+
+    /**
+     * 假期回来再弄数据保存 2017.1.12
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -191,10 +202,20 @@ public class FragmentPageRun extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         LogUtils.i(TAG,"onDestroy");
+        getActivity().unregisterReceiver(myreceiver);
+        Intent intent_destroy = new Intent(BasePopupWindow.SETDATA);
+        intent_destroy.putExtra("onDestroy","onDestroy");
+        mContext.sendBroadcast(intent_destroy);
         initProgressDialog("正在退出后台程序，请稍等……");
 //        myProgressDialog.show();
         HealthyService.client.stopTrace(HealthyService.trace, stopBackListener);
         stopService();
+        clearDate();
+    }
+    /**
+     * 清楚地图痕迹
+     */
+    private void clearDate(){
         mBaiduMap.clear();
         if(startTraceListener != null){
             startTraceListener = null;
@@ -486,8 +507,10 @@ public class FragmentPageRun extends BaseFragment {
             mBaiduMap.animateMapStatus(msUpdate);
 //            MainActivity.mBaiduMap.animateMapStatus(msUpdate); 2016.7.22
         }
+        Log.i(TAG,"myPath="+myPath);
         if(myPath != null){
             myPath.remove();
+            Log.i(TAG,"myPath="+"清楚");
         }
         // 路线覆盖物
         if (null != polyline) {

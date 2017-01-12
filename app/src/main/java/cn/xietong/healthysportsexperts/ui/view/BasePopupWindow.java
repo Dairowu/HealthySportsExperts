@@ -555,6 +555,7 @@ public abstract class BasePopupWindow implements BasePopup {
             distance = intent.getStringExtra("distance");
             LogUtils.i(TAG,"distance="+distance);
             destroy = intent.getStringExtra("onDestroy");
+            LogUtils.i(TAG,"onDestroy="+destroy);
             if(time!=null){
                 Message message = Message.obtain();
                 message.what = DATE_TIME;
@@ -566,9 +567,11 @@ public abstract class BasePopupWindow implements BasePopup {
                 timeHandler.sendMessage(message);
             }
             if(destroy!=null){
-                Message message = Message.obtain();
-                message.what = DTAE_DESTROY;
-                timeHandler.sendMessage(message);
+                mContext.unregisterReceiver(myreceiver);
+                LogUtils.i(TAG,"unregisterReceiver");
+//                Message message = Message.obtain();
+//                message.what = DTAE_DESTROY;
+//                timeHandler.sendMessage(message);
             }
         }
     }
@@ -591,6 +594,7 @@ public abstract class BasePopupWindow implements BasePopup {
                     break;
                 case DTAE_DESTROY:
                     mContext.unregisterReceiver(myreceiver);
+                    LogUtils.i(TAG,"unregisterReceiver");
                     break;
             }
 

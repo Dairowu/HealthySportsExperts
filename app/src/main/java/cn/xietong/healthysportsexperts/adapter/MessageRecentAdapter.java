@@ -22,6 +22,7 @@ import cn.xietong.healthysportsexperts.adapter.base.ViewHolder;
 import cn.xietong.healthysportsexperts.app.App;
 import cn.xietong.healthysportsexperts.utils.FaceTextUtils;
 import cn.xietong.healthysportsexperts.utils.ImageLoaderOptions;
+import cn.xietong.healthysportsexperts.utils.LogUtils;
 import cn.xietong.healthysportsexperts.utils.TimeUtil;
 
 /** 会话适配器
@@ -56,8 +57,12 @@ public class MessageRecentAdapter extends ArrayAdapter<BmobRecent> implements Fi
 		TextView tv_recent_time = ViewHolder.get(convertView, R.id.tv_recent_time);
 		TextView tv_recent_unread = ViewHolder.get(convertView, R.id.tv_recent_unread);
 		//填充数据
-//		String avatar = item.getAvatar();
-		String avatar = App.getInstance().getContactList().get(item.getUserName()).getAvatar();
+		String avatar = null;
+		LogUtils.i(TAG,"ContactList="+App.getInstance().getContactList());
+		LogUtils.i(TAG,"Name()="+item.getUserName());
+		if(App.getInstance().getContactList()!=null){
+			avatar = App.getInstance().getContactList().get(item.getUserName()).getAvatar();
+		}
 		if(avatar!=null&& !avatar.equals("")){
 			ImageLoader.getInstance().displayImage(avatar, iv_recent_avatar, ImageLoaderOptions.getOptions());
 		}else{
