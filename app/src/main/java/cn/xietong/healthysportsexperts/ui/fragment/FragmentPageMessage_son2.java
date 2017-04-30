@@ -134,7 +134,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
     private void filledData(List<BmobChatUser> datas) {
         friends.clear();
         int total = datas.size();
-		Log.i(TAG, "filledData - 1");
+//		Log.i(TAG, "filledData - 1");
         for (int i = 0; i < total; i++) {
             BmobChatUser user = datas.get(i);
             MyUser sortModel = new MyUser();
@@ -146,14 +146,15 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             // 汉字转换成拼音
             String username = sortModel.getNick();//改变了(获取Nick来排序)
             // 若没有username
-			Log.i(TAG, "filledData - 2");
+//			Log.i(TAG, "filledData - 2");
             if (username != null) {
 //				Log.i(TAG, "filledData - 3");
-                Log.i(TAG, "Username="+sortModel.getUsername() + "");
+//                Log.i(TAG, "Username="+sortModel.getUsername() + "");
                 String pinyin = characterParser.getSelling(sortModel.getNick());//出现空指针(忘记New了)改变了(获取Nick来排序)
                 String sortString = pinyin.substring(0, 1).toUpperCase();
                 // 正则表达式，判断首字母是否是英文字母
                 if (sortString.matches("[A-Z]")) {
+                    Log.i(TAG, "UpperCase="+sortString.toUpperCase()+" ");
                     sortModel.setSortLetters(sortString.toUpperCase());
                 } else {
                     sortModel.setSortLetters("#");
@@ -161,7 +162,6 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             } else {
                 sortModel.setSortLetters("#");
             }
-			Log.i(TAG, "sortModel="+sortModel+"");
             friends.add(sortModel);
         }
         // 根据a-z进行排序(排序成功)
@@ -169,7 +169,7 @@ public class FragmentPageMessage_son2 extends BaseFragment {
             @Override
             public int compare(MyUser lhs, MyUser rhs) {
                 // TODO Auto-generated method stub
-                return lhs.getUsername().compareTo(rhs.getUsername());
+                return lhs.getSortLetters().compareToIgnoreCase(rhs.getSortLetters());
             }
         });
     }
