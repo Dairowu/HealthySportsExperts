@@ -10,11 +10,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -97,8 +95,6 @@ public class FragmentPageRun extends BaseFragment {
 
     private MapStatusUpdate msUpdate = null;
 
-    private View view = null;
-
     public boolean isInUploadFragment = true;
 
     private PowerManager.WakeLock wakeLock = null;
@@ -108,8 +104,8 @@ public class FragmentPageRun extends BaseFragment {
      */
     public static OnTrackListener trackListener = null;
 
-    protected static MapView bmapView = null;
-    protected static BaiduMap mBaiduMap = null;
+    private MapView bmapView = null;
+    private BaiduMap mBaiduMap = null;
 
 //    private TrackUploadFragment mTrackUploadFragment;//轨迹追踪器
 
@@ -119,17 +115,36 @@ public class FragmentPageRun extends BaseFragment {
     private BitmapDescriptor realtimeBitmap;//改;
 
     private MyLocationData.Builder builder;
+
     @Override
     public int getLayoutId() {
         return R.layout.activty_slide_map;
     }
 
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        pointList = new ArrayList<LatLng>();
+//        SDKInitializer.initialize(mContext);
+//
+//        //注册传感器,林思旭，2017.7.27
+//        initOritationListener();
+//
+//        mypopup = new SlideFromBottomPopup(getActivity());//林思旭
+//        //fragment
+//        //动态注册广播
+//        initBoardcastReceiver();
+//
+//        // 初始化监听器
+//        initListener();
+//    }
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initViews(View mContentView) {
+
         mContext = getActivity();
+//        SDKInitializer.initialize(mContext);
         pointList = new ArrayList<LatLng>();
-        SDKInitializer.initialize(mContext);
 
         //注册传感器,林思旭，2017.7.27
         initOritationListener();
@@ -141,10 +156,6 @@ public class FragmentPageRun extends BaseFragment {
 
         // 初始化监听器
         initListener();
-    }
-
-    @Override
-    protected void initViews(View mContentView) {
 
         startService();//开启服务
         //初始化Progress
@@ -170,21 +181,28 @@ public class FragmentPageRun extends BaseFragment {
     public void onStart() {
         super.onStart();
 
+        //成功，但是虚线问题还没有解决，2017.2.26
+        if(mBaiduMap != null){
+//            mBaiduMap.clear();2017.5.6可能用了更好
+            mBaiduMap.setMapStatus(msUpdate);
+            mBaiduMap.animateMapStatus(msUpdate);
+            if(pointList.size() >= 2){
+                polyline = new PolylineOptions().width(10)
+                        .color(getActivity().getResources().getColor(R.color.color_blue_polyline))
+                        .dottedLine(false).points(pointList);//虚线添加成功，dotteLine就是虚线添加
+            }
+            myPath = mBaiduMap.addOverlay(polyline);
+            myCircle = mBaiduMap.addOverlay(fenceOverlay);
+        }
+
         // 初始化组件
         initComponent();
 
-
         // 初始化
         init();
-    }
 
-    /**
-     * 假期回来再弄数据保存 2017.1.12
-     * @param outState
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+
+
     }
 
     @Override
@@ -195,6 +213,9 @@ public class FragmentPageRun extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(mBaiduMap != null){
+            mBaiduMap.clear();
+        }
         LogUtils.i(TAG,"onDestroyView");
     }
 
@@ -245,10 +266,15 @@ public class FragmentPageRun extends BaseFragment {
     private void initComponent() {
         // 初始化控件
         myOrientationListener.start();
-        bmapView = (MapView) findViewById(R.id.bmapView);
-        mBaiduMap = bmapView.getMap();//获取地图控制器
+//        if(bmapView == null){
+            bmapView = (MapView) findViewById(R.id.bmapView);
+//        }
+//        if(mBaiduMap ==null){
+            mBaiduMap = bmapView.getMap();//获取地图控制器
+//        }
         mBaiduMap.setMaxAndMinZoomLevel(19.0f,9.0f);
         bmapView.showZoomControls(false);
+        //隔开
         SensorManager sm = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
         Sensor mSensor = sm.getDefaultSensor(Sensor.TYPE_ORIENTATION);//没有方向传感器的手机打印mSensor为空(我的手机为空，舍友手机不为空)
         if(mSensor == null){//2016.10.11：成功的为有没有传感器的手机配不同的图标
@@ -258,9 +284,7 @@ public class FragmentPageRun extends BaseFragment {
             realtimeBitmap = BitmapDescriptorFactory
                     .fromResource(R.drawable.location_myplace);
         }
-//        LogUtils.i(TAG,"mSensor="+mSensor);
-//        Bitmap bmp=BitmapFactory.decodeResource(getResources(), R.drawable.location_myplace);
-//        mBaiduMap.setCompassIcon(bmp);
+        //隔开
         mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(new MapStatus.Builder().zoom(5000).build()));//添加比例尺成功
         MyLocationConfiguration.LocationMode current_mode = MyLocationConfiguration.LocationMode.FOLLOWING;
         mBaiduMap.setMyLocationEnabled(true);
@@ -358,9 +382,9 @@ public class FragmentPageRun extends BaseFragment {
             longitude_service = intent.getDoubleExtra("Longitude", fault_message);//2016.9.4
             latitude_service = intent.getDoubleExtra("latitude",fault_message);//2016.9.4
             double Request = intent.getDoubleExtra("RequsetFail",fault_message);
-            LogUtils.i(TAG,"="+longitude_service+",se="+latitude_service);
+//            LogUtils.i(TAG,"="+longitude_service+",se="+latitude_service);
             if(longitude_service != fault_message && latitude_service != fault_message){
-                LogUtils.i(TAG,"执行绘制");
+//                LogUtils.i(TAG,"执行绘制");
                 builder.latitude(latitude_service).longitude(longitude_service).direction(mXDirection);
                 mBaiduMap.setMyLocationData(builder.build());
                 LatLng myLatLng = new LatLng(latitude_service , longitude_service);
@@ -438,7 +462,7 @@ public class FragmentPageRun extends BaseFragment {
 //        }
         double latitude = location.latitude;
         double longitude = location.longitude;
-        Log.i(getClass().getName(),"latitude="+latitude+"   longitude="+longitude);
+//        Log.i(getClass().getName(),"latitude="+latitude+"   longitude="+longitude);
         if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
             showMessage("当前查询无轨迹点", null);
 
@@ -449,8 +473,7 @@ public class FragmentPageRun extends BaseFragment {
 //            }
             LatLng latLng = new LatLng(latitude, longitude);
             pointList.add(latLng);//将所有的点添加进数组里面
-
-
+            LogUtils.i(TAG,"length="+pointList.size());
             if (isInUploadFragment) {
                 // 绘制实时点
                 drawRealtimePoint(latLng);
@@ -466,7 +489,7 @@ public class FragmentPageRun extends BaseFragment {
     private void drawRealtimePoint(LatLng point) {
 
 //        MainActivity.mBaiduMap.clear();//清除
-        LogUtils.i(TAG,"drawRealtimePoint");
+//        LogUtils.i(TAG,"drawRealtimePoint");
         MapStatus mMapStatus = new MapStatus.Builder().target(point).zoom(18).build();
 
         msUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
@@ -487,9 +510,9 @@ public class FragmentPageRun extends BaseFragment {
             // 添加路线（轨迹）
 //            polyline = new PolylineOptions().width(10)
 //                    .color(Color.RED).points(pointList);
-            LogUtils.i(TAG,"pointList="+pointList);
+//            LogUtils.i(TAG,"pointList="+pointList);
             polyline = new PolylineOptions().width(10)
-                    .color(getActivity().getResources().getColor(R.color.color_blue_polyline)).dottedLine(true).points(pointList);//虚线添加成功，dotteLine就是虚线添加
+                    .color(getActivity().getResources().getColor(R.color.color_blue_polyline)).dottedLine(false).points(pointList);//虚线添加成功，dotteLine就是虚线添加
         }
 
         addMarker();
@@ -507,15 +530,15 @@ public class FragmentPageRun extends BaseFragment {
             mBaiduMap.animateMapStatus(msUpdate);
 //            MainActivity.mBaiduMap.animateMapStatus(msUpdate); 2016.7.22
         }
-        Log.i(TAG,"myPath="+myPath);
+//        Log.i(TAG,"myPath="+myPath);
         if(myPath != null){
             myPath.remove();
-            Log.i(TAG,"myPath="+"清楚");
+//            Log.i(TAG,"myPath="+"清楚");
         }
         // 路线覆盖物
         if (null != polyline) {
-            Log.i(TAG,"路线覆盖物poly"+polyline);
-            Log.i(TAG,"路线覆盖物"+pointList);
+//            Log.i(TAG,"路线覆盖物poly"+polyline);
+//            Log.i(TAG,"路线覆盖物"+pointList);
 //            myPath = MainActivity.mBaiduMap.addOverlay(polyline);2016.7.22
             myPath = mBaiduMap.addOverlay(polyline);
         }
@@ -535,7 +558,7 @@ public class FragmentPageRun extends BaseFragment {
             myCircle.remove();
         }
         if(fenceOverlay != null){
-            Log.i(TAG,"半径覆盖物");
+//            Log.i(TAG,"半径覆盖物");
 //            myCircle = MainActivity.mBaiduMap.addOverlay(fenceOverlay);
             myCircle = mBaiduMap.addOverlay(fenceOverlay);
         }

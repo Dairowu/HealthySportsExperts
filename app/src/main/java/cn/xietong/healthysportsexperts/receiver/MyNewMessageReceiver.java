@@ -166,7 +166,7 @@ public class MyNewMessageReceiver extends BroadcastReceiver {
                     //创建一个临时验证会话--用于在会话界面形成初始会话
                     BmobMsg.createAndSaveRecentAfterAgree(context, json);
                 }else if(tag.equals(BmobConfig.TAG_OFFLINE)){//����֪ͨ
-                    if (ehList.size() > 0) {// �м�����ʱ�򣬴�����ȥ
+                    if (ehList.size() > 0) {
                         for (EventListener handler : ehList)
                             handler.onOffline();
                     }else{

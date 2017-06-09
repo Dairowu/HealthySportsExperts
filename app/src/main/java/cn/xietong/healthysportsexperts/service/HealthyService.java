@@ -179,8 +179,6 @@ public class HealthyService extends Service {
                     if(isFirst == true){
                         isSend = false;//设置第一次进来定位后就停止
                         isFirst = false;//第一次进来后就设置成false
-                    }
-                    if(number == 0) {
                         Intent intent_location = new Intent(FragmentPageRun.REFREH_MESSAGE);
                         intent_location.putExtra("Longitude",location.getLongitude());
                         intent_location.putExtra("latitude",location.getLatitude());
@@ -188,24 +186,19 @@ public class HealthyService extends Service {
                         lastLatitude = location.getLatitude();
                         lastLongitude = location.getLongitude();
                     }else{
-                        distanceSum = TimeUtil.getMyTimeUtils().getDistance(lastLongitude,lastLatitude,
-                                getTest(number).longitude,getTest(number).latitude,distanceSum);
-                        LogUtils.i(TAG,"distance="+distanceSum+"number="+number);
-                        if(number <= 12){
-//                            LogUtils.i(TAG,"发送？");
+                        if(lastLongitude != location.getLongitude() && lastLatitude != location.getLatitude()){
+                            distanceSum = TimeUtil.getMyTimeUtils().getDistance(lastLongitude,lastLatitude,
+                                    location.getLongitude(),location.getLatitude(),distanceSum);
+                            sendDistance(distanceSum);//Magic，2016.10.31
+                            lastLatitude = location.getLatitude();
+                            lastLongitude = location.getLongitude();
                             Intent intent_location = new Intent(FragmentPageRun.REFREH_MESSAGE);
-//                            LogUtils.i(TAG,"发送1？");
-                            intent_location.putExtra("Longitude",getTest(number).longitude);
-//                            LogUtils.i(TAG,"发送2？");
-                            intent_location.putExtra("latitude",getTest(number).latitude);
-//                            LogUtils.i(TAG,"发送3？");
+                            intent_location.putExtra("Longitude",location.getLongitude());
+                            intent_location.putExtra("latitude",location.getLatitude());
                             context.sendBroadcast(intent_location);
                         }
-                        sendDistance(distanceSum);//Magic，2016.10.31
-                        lastLongitude = getTest(number).longitude;
-                        lastLatitude = getTest(number).latitude;
                     }
-                    number++;
+
                     LogUtils.i(TAG, "location="+location.getLongitude()+"number="+number);
                 }
             }
